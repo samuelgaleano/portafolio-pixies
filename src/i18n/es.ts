@@ -31,8 +31,6 @@ export const es = {
     title: 'Proyectos que ya corren',
     intro: 'Cada uno es real: stack a la vista, decisión de ingeniería explicada, enlace que funciona.',
     navLabel: 'Categorías del portafolio',
-    soon: 'Próximamente',
-    soonBody: 'Exhibición especial en camino: recorrido de arquitectura y detalle técnico.',
     statusLive: '● En producción',
     statusCode: '⌥ Ver código',
     openLive: 'Abrir sitio →',
@@ -44,6 +42,13 @@ export const es = {
     title: '¿Tienes un proyecto en mente?',
     body: 'Cuéntanos qué necesitas. Respondemos con opciones concretas, no con un tarifario genérico.',
     cta: 'Hablemos de tu proyecto',
+  },
+  exhibit: {
+    viewCode: 'Ver el código en GitHub →',
+    erpRepoMissing: '[COMPLETAR: enlace al repo del ERP]',
+    replay: '↻ Reproducir',
+    running: '· ejecutando',
+    consoleLabel: 'agente · replay (datos de ejemplo)',
   },
   contact: {
     title: 'Cuéntanos tu proyecto',

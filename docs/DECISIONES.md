@@ -24,6 +24,20 @@ Decisiones tomadas durante la implementación, con su porqué. Las decisiones de
 | Sociales del footer como texto plano con `[COMPLETAR]` | Un link roto es peor que un placeholder visible; se vuelven `<a>` cuando `site.ts` tenga URLs reales |
 | Tema único oscuro declarado como decisión (`color-scheme: dark`), sin modo claro | Auditoría /artifact-design: el "mundo void" ES la identidad de marca; declararlo hace que controles nativos y scrollbars rendericen oscuros. Reglas transversales nuevas en DESIGN.md §Reglas |
 
+## Fase 3 — Exhibiciones especiales (2026-07-11)
+
+| Decisión | Porqué |
+|---|---|
+| ERP como **scrollytelling** (§12.A opción 3) | Cero riesgo de demo rota, cero mantenimiento; el visitante entiende qué y cómo sin backend |
+| IA como **diagrama + consola en UNA isla** (`AgentExhibit`) en vez de dos | Van sincronizadas por un índice compartido; una isla es más simple que dos comunicándose (ponytail). El plan §6 las listaba separadas; se combinan justificadamente |
+| Islas con **mejora progresiva**: SSR renderiza todo el contenido, JS añade scroll-spy (ERP) y animación (IA) | Sin JS o con reduced-motion, el contenido completo es legible (verificado en dist/index.html); la animación es un extra, no un requisito |
+| `datos` pasa a **tarjetas estándar** (no exhibición especial) | El plan solo mandaba exhibición especial para ERP e IA; datos es tarjeta + reporte estático futuro (F6) |
+| **Números 01–05 del pipeline y contador 01/5 del ERP: SE MANTIENEN** pese al detector | A diferencia de las categorías (paralelas, número = decoración), el pipeline ES secuencia con dependencia de orden (Brief→Investiga→…→Entrega) y en móvil los números son lo único que comunica el flujo (las flechas → se ocultan). El "01/5" es wayfinding de un recorrido. Push-back razonado al heurístico del detector |
+| `class`→`className` + `key` en los `.map` de las islas | Bug real: en React el atributo es `className`; sin él los estilos no aplican. Detectado por astro check |
+| Reinstalado `.claude/skills` (impeccable) tras el ff-merge | El squash-merge que sacó skills de git también los borró del working tree (eran trackeados); se reinstalan localmente (gitignoreados, no vuelven al repo) |
+
+Evidencia F3: astro check 0 errores (25 archivos), build limpio, JS hidratado **49.8 KB gz** (presupuesto 90), Lighthouse **98/100/100/100**, ambas islas verificadas en navegador (hidratan, animan, replay funciona; error inicial `useState null` era caché de vite viciada del dev server, resuelto al reiniciar limpio).
+
 ## Revisión externa post-F2 (2026-07-11) — requesting-code-review
 
 Revisor con ojos frescos (subagente) auditó `3ebbc57..edd1426` contra el plan. Veredicto: "With fixes". Todo aplicado:
