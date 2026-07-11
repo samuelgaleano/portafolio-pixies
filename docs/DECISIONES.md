@@ -21,4 +21,6 @@ Decisiones tomadas durante la implementación, con su porqué. Las decisiones de
 - `astro build`: 2 páginas + sitemap, sin errores.
 - Lighthouse (build de producción, headless): **Performance 99 · Accessibility 100 · Best Practices 100 · SEO 100**.
 - Verificación visual en dev server: hero con animación de ensamblaje funcionando, responsive a 360px y desktop, consola sin errores ni warnings.
+- Detector impeccable (45 reglas, sin LLM): 4 hallazgos → 1 corregido (bounce-easing del scroll cue), 2 falsos positivos aceptados (flat-type-hierarchy: el detector no evalúa `clamp()`, la jerarquía real va de 12px a ~144px), 1 aceptado parcialmente (em-dash: se eliminaron 2; las restantes son el byline oficial "Design Group by… — Ingeniero de Sistemas", la voz del footer y placeholders que desaparecen en F2/F5).
+- ponytail-review del diff: sin sobre-ingeniería; única holgura deliberada: React instalado sin islas aún (mandato del plan, primeras islas en F3/F5).
 - Pendiente de Samuel: crear repo GitHub (decisión público/privado) y conectar Cloudflare Pages (instrucciones en el resumen de cierre).
