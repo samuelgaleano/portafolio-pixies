@@ -74,6 +74,24 @@ export const projects: Project[] = [
     featured: true,
   },
 
+  // D — Analítica e ingeniería de datos (tarjeta estándar; reporte estático en F6 si hay material)
+  {
+    id: 'datos-ejemplo-1',
+    category: 'datos',
+    name: '[COMPLETAR: nombre del análisis]',
+    tagline: 'De datos crudos a un reporte que responde una pregunta concreta del negocio.',
+    bullets: [
+      '[COMPLETAR: stack, ej. Python (pandas) + notebook]',
+      '[COMPLETAR: fuente y volumen de datos]',
+      '[COMPLETAR: hallazgo o decisión que habilitó]',
+    ],
+    stack: ['python'],
+    status: 'codigo',
+    repoUrl: '', // [COMPLETAR: URL del repo/notebook]
+    preview: { src: '', alt: 'Vista previa del análisis de datos' },
+    featured: true,
+  },
+
   // F — Soluciones integrales empresariales
   {
     id: 'empresarial-tvs-red-local',

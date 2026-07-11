@@ -1,15 +1,15 @@
 ---
 import type { Category } from '@/data/categories';
 import { projectsByCategory } from '@/data/projects';
-import { t } from '@/i18n';
 import ProjectCard from './ProjectCard.astro';
+import ErpScrollytelling from '@/islands/ErpScrollytelling.tsx';
+import AgentExhibit from '@/islands/AgentExhibit.tsx';
 
 interface Props {
   category: Category;
 }
 const { category } = Astro.props;
 const items = projectsByCategory(category.id);
-const upcoming = category.phase === 3;
 ---
 
 <section id={category.id} class="scroll-mt-28">
@@ -19,11 +19,10 @@ const upcoming = category.phase === 3;
   </header>
 
   {
-    upcoming ? (
-      <div class="mt-6 grid-bg rounded-(--radius-m) border border-dashed border-line px-6 py-12 text-center">
-        <p class="font-mono text-sm text-data">{t.portfolio.soon}</p>
-        <p class="mx-auto mt-2 max-w-md text-sm text-dim">{t.portfolio.soonBody}</p>
-      </div>
+    category.exhibit === 'erp-tour' ? (
+      <ErpScrollytelling client:visible />
+    ) : category.exhibit === 'agent-replay' ? (
+      <AgentExhibit client:visible />
     ) : (
       <div class="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {items.map((project) => (
