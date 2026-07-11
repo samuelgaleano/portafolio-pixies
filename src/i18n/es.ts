@@ -18,7 +18,7 @@ export const es = {
     cta: 'Quiero trabajar con Pixies',
     photoAlt: '[COMPLETAR: foto profesional del Ing. Samuel Galeano]',
     photoCta: 'Conoce al ingeniero',
-    scroll: 'El trabajo habla — desliza',
+    scroll: 'El trabajo habla. Desliza',
   },
   placeholder: {
     portfolio: 'Portafolio en construcción — Fase 2',
@@ -29,7 +29,7 @@ export const es = {
     madeBy: 'Hecho por Pixies — sí, este sitio también.',
   },
   notFound: {
-    title: '404 — píxel no encontrado',
+    title: '404: píxel no encontrado',
     body: 'Esta página todavía no se ensambla. El resto del sitio, sí.',
     back: 'Volver al inicio',
   },

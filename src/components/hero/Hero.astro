@@ -54,7 +54,7 @@ import PixelCanvas from './PixelCanvas.astro';
     class="hero-in absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-xs text-dim transition-colors hover:text-ink"
     style="--d: 2.3s"
   >
-    <span class="mx-auto mb-2 block size-2 animate-bounce bg-pixel" aria-hidden="true"></span>
+    <span class="cue-pixel mx-auto mb-2 block size-2 bg-pixel" aria-hidden="true"></span>
     {t.hero.scroll}
   </a>
 </section>
@@ -73,6 +73,23 @@ import PixelCanvas from './PixelCanvas.astro';
     to {
       opacity: 1;
       transform: none;
+    }
+  }
+  /* caída suave con ease-out, no bounce */
+  .cue-pixel {
+    animation: cue-drop 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+  @keyframes cue-drop {
+    0% {
+      transform: translateY(-8px);
+      opacity: 0;
+    }
+    45% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(8px);
+      opacity: 0;
     }
   }
 </style>
