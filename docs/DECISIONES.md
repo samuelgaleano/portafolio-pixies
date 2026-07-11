@@ -2,6 +2,14 @@
 
 Decisiones tomadas durante la implementación, con su porqué. Las decisiones de arquitectura/diseño mayores están en [PLAN-MAESTRO-FASE-0.md](./PLAN-MAESTRO-FASE-0.md) §12 y §17.
 
+## Infraestructura (2026-07-11)
+
+| Decisión | Porqué |
+|---|---|
+| Repo GitHub **público**: [samuelgaleano/portafolio-pixies](https://github.com/samuelgaleano/portafolio-pixies) | Decisión #16 de Samuel; público suma señal ante reclutadores |
+| `gh` instalado portable en `%LOCALAPPDATA%\ghcli` (no winget) | winget se colgó >40 min; el zip portable fue inmediato y reversible |
+| Repo creado vía **REST API + git** (no `gh`) | El token de Samuel tenía scope `repo` pero no `read:org` que exige `gh --with-token`; la API REST solo necesita `repo`. Token usado en un push de un solo uso; `origin` quedó con URL limpia (sin token en `.git/config`) |
+
 ## Fase 1 (2026-07-11)
 
 | Decisión | Porqué |

@@ -562,7 +562,8 @@ export const site = {
 |---|---|---|---|
 | Fase 0 — Planificación | ✅ ENTREGADA | 2026-07-08 | Este documento. Esperando "APROBADO" |
 | Fase 0b — Toolchain de skills (§17) | ✅ INSTALADA | 2026-07-08 | superpowers + ponytail + impeccable en `.claude/skills/`; ruflo disponible sin inicializar |
-| Fase 1 — Fundaciones | ✅ ENTREGADA (local) | 2026-07-11 | Lighthouse 99/100/100/100. Pendiente de Samuel: repo GitHub (decisión #16) + conexión Cloudflare Pages |
+| Fase 1 — Fundaciones | ✅ ENTREGADA | 2026-07-11 | Lighthouse 99/100/100/100. Repo público creado y con push: github.com/samuelgaleano/portafolio-pixies. Pendiente: conexión Cloudflare Pages |
+| Fase 2 — Portafolio A/B/F | ✅ ENTREGADA | 2026-07-11 | Data-driven (projects/categories/tech). Lighthouse 99/100/100/100, detector limpio. En GitHub |
 | Fase 2 — Portafolio A/B/F | ⬜ Pendiente | — | |
 | Fase 3 — Exhibiciones C/D/E | ⬜ Pendiente | — | |
 | Fase 4 — /samuel + blog | ⬜ Pendiente | — | |
