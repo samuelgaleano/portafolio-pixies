@@ -1,0 +1,18 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { t } from '@/i18n';
+---
+
+<BaseLayout title={`${t.notFound.title} — Pixies`} description={t.notFound.body}>
+  <section class="grid-bg flex min-h-svh flex-col items-center justify-center px-4 text-center">
+    <p class="font-mono text-sm text-data">error_404</p>
+    <h1 class="mt-4 font-display text-h2 font-bold">{t.notFound.title}</h1>
+    <p class="mt-4 max-w-md text-dim">{t.notFound.body}</p>
+    <a
+      href="/"
+      class="mt-10 rounded-(--radius-s) border border-line px-6 py-3 font-medium text-ink transition-colors hover:border-pixel hover:text-pixel-soft"
+    >
+      {t.notFound.back}
+    </a>
+  </section>
+</BaseLayout>

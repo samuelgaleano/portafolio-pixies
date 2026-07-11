@@ -1,0 +1,32 @@
+/* ÚNICA fuente de verdad del sistema de diseño (§4 del plan).
+   Tailwind v4 genera utilidades desde este @theme: bg-void, text-pixel, font-display, etc. */
+@theme {
+  /* Color — Dirección A "Ensamblaje de píxeles" */
+  --color-void: #0b0d12;        /* fondo base, negro azulado */
+  --color-surface: #141824;     /* tarjetas, paneles */
+  --color-surface-2: #1c2130;   /* hover, código, consola */
+  --color-line: #262c3d;        /* bordes, retícula, divisores */
+  --color-ink: #f2f3f7;         /* texto principal (15.9:1 AAA) */
+  --color-dim: #9aa3b8;         /* texto secundario (7.4:1 AA) */
+  --color-pixel: #7c5cff;       /* primario: marca, enlaces, foco */
+  --color-pixel-soft: #a78bff;  /* texto violeta sobre oscuro (AA) */
+  --color-signal: #ff5d73;      /* SOLO CTAs de conversión, texto void encima */
+  --color-data: #5fd4f5;        /* SOLO capa técnica: mono, badges, logs */
+  --color-ok: #4ade80;
+  --color-err: #f87171;
+
+  /* Tipografía */
+  --font-display: 'Clash Display', system-ui, sans-serif;
+  --font-sans: 'General Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  /* Escala fluida */
+  --text-hero: clamp(3.5rem, 13vw, 9rem);
+  --text-hero--line-height: 0.95;
+  --text-h2: clamp(1.75rem, 4vw, 3rem);
+  --text-h2--line-height: 1.1;
+
+  /* Geometría — cuadrada/pixelada por concepto */
+  --radius-s: 6px;
+  --radius-m: 12px;
+}

@@ -1,0 +1,29 @@
+---
+import { t } from '@/i18n';
+import { site } from '@/data/site';
+---
+
+<footer class="mt-24 border-t border-line">
+  <div class="mx-auto grid w-full max-w-[1200px] gap-10 px-4 py-14 sm:grid-cols-3 sm:px-6">
+    <div>
+      <p class="font-display text-lg font-bold">pixies</p>
+      <p class="mt-2 text-sm text-dim">{t.footer.tagline}</p>
+    </div>
+    <nav aria-label="Pie de página" class="flex flex-col gap-2 text-sm">
+      <a href="/#inicio" class="text-dim transition-colors hover:text-ink">Inicio</a>
+      <a href="/#portafolio" class="text-dim transition-colors hover:text-ink">{t.nav.portfolio}</a>
+      <a href="/samuel" class="text-dim transition-colors hover:text-ink">{t.nav.engineer}</a>
+      <a href="/#contacto" class="text-dim transition-colors hover:text-ink">Contacto</a>
+    </nav>
+    <div class="flex flex-col gap-2 font-mono text-xs text-dim">
+      <!-- Se convierten en enlaces reales cuando site.ts tenga las URLs (§13 del plan) -->
+      <span>github → {site.social.github}</span>
+      <span>linkedin → {site.social.linkedin}</span>
+      <span>instagram → {site.social.instagram}</span>
+      <span>correo → {site.email}</span>
+    </div>
+  </div>
+  <div class="border-t border-line/60 py-4 text-center font-mono text-xs text-dim">
+    {t.footer.madeBy}
+  </div>
+</footer>
