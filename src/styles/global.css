@@ -47,10 +47,22 @@
 
 html {
   scroll-behavior: smooth;
+  /* Tema único oscuro deliberado: formularios y scrollbars nativos renderizan oscuros */
+  color-scheme: dark;
 }
 
 body {
   @apply bg-void text-ink font-sans antialiased;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 /* Header fijo no tapa las anclas */

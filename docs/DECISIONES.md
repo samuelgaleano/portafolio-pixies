@@ -14,6 +14,7 @@ Decisiones tomadas durante la implementación, con su porqué. Las decisiones de
 | Fuentes sin subset adicional | Los woff2 de Fontshare/gwfh ya pesan ~147 KB los 7 archivos (presupuesto §10: ~150 KB) |
 | Canvas del hero con watchdog de 4s | Si fuentes o canvas fallan, el h1 real aparece igual; la firma nunca puede romper el hero |
 | Sociales del footer como texto plano con `[COMPLETAR]` | Un link roto es peor que un placeholder visible; se vuelven `<a>` cuando `site.ts` tenga URLs reales |
+| Tema único oscuro declarado como decisión (`color-scheme: dark`), sin modo claro | Auditoría /artifact-design: el "mundo void" ES la identidad de marca; declararlo hace que controles nativos y scrollbars rendericen oscuros. Reglas transversales nuevas en DESIGN.md §Reglas |
 
 ## Evidencia de cierre Fase 1
 

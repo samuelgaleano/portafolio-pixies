@@ -56,3 +56,14 @@ Escala fluida: `text-hero` = `clamp(3.5rem, 13vw, 9rem)` / `text-h2` = `clamp(1.
 1. Hero: wordmark se ensambla desde píxeles (canvas → h1 real en DOM).
 2. Foto de Samuel: mosaico pixelado grueso → nítida en hover/focus (CSS).
 3. Tarjetas de proyecto: reveal con máscara de bloques en hover.
+
+## Reglas transversales (aplican a TODO el proyecto, fases 2–6)
+
+1. **Tema único oscuro, por decisión.** El "mundo void" ES la identidad; no habrá modo claro. Declarado con `color-scheme: dark` en global.css para que controles nativos y scrollbars rendericen oscuros. No es una omisión: está elegido.
+2. **Medida de línea:** texto corrido ≤ ~65 caracteres (`max-w-xl` o `prose`). Headings con `text-wrap: balance`, párrafos con `text-wrap: pretty` (ya global).
+3. **Cifras en columna** (dashboards de datos F3, tablas): `font-variant-numeric: tabular-nums`.
+4. **Marcadores numerados (`01 /`) solo donde el orden informa.** Las categorías A–F del portafolio son secuencia narrativa: permitido ahí. Prohibido como decoración.
+5. **Contenido ancho** (consola IA, tablas, código en posts): contenedor propio con `overflow-x: auto`; el body nunca scrollea horizontal.
+6. **Copy desde el lado del usuario:** los controles dicen exactamente qué pasa ("Enviar" → "Recibido ✓"); los errores dicen qué falló y cómo resolverlo, sin disculpas vagas. Voz activa, específico gana a ingenioso.
+7. **La estructura codifica información**, no decora: eyebrows, divisores y etiquetas solo si dicen algo verdadero del contenido.
+8. **El acento no pelea con el fondo:** si un color de acento compite, se baja saturación o se mueve a análogo; nunca se agrega un cuarto acento.
