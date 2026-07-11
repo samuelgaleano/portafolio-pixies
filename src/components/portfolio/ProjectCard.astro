@@ -1,6 +1,7 @@
 ---
 import type { Project } from '@/data/projects';
 import { tech } from '@/data/tech';
+import { t } from '@/i18n';
 
 interface Props {
   project: Project;
@@ -10,8 +11,10 @@ const { project } = Astro.props;
 const href = project.status === 'produccion' ? project.liveUrl : project.repoUrl;
 const hasLink = Boolean(href);
 const Tag = hasLink ? 'a' : 'div';
-const linkAttrs = hasLink ? { href, target: '_blank', rel: 'noopener noreferrer' } : {};
-const badges = project.stack.map((id) => tech[id]).filter(Boolean);
+const linkAttrs = hasLink
+  ? { href, target: '_blank', rel: 'noopener noreferrer', 'aria-label': project.name }
+  : {};
+const badges = project.stack.map((id) => tech[id]);
 ---
 
 <Tag
@@ -35,7 +38,7 @@ const badges = project.stack.map((id) => tech[id]).filter(Boolean);
     {
       !project.preview.src && (
         <span class="absolute bottom-2 left-2 font-mono text-[0.65rem] text-dim">
-          [COMPLETAR: screenshot]
+          {t.portfolio.missingShot}
         </span>
       )
     }
@@ -46,13 +49,13 @@ const badges = project.stack.map((id) => tech[id]).filter(Boolean);
         project.status === 'produccion' ? 'bg-void/80 text-ok' : 'bg-void/80 text-data',
       ]}
     >
-      {project.status === 'produccion' ? '● En producción' : '⌥ Ver código'}
+      {project.status === 'produccion' ? t.portfolio.statusLive : t.portfolio.statusCode}
     </span>
   </div>
 
   <div class="flex flex-1 flex-col gap-4 p-5">
     <div>
-      <h3 class="font-display text-lg font-semibold text-ink">{project.name}</h3>
+      <h4 class="font-display text-lg font-semibold text-ink">{project.name}</h4>
       <p class="mt-1 text-sm text-dim">{project.tagline}</p>
     </div>
 
@@ -84,16 +87,12 @@ const badges = project.stack.map((id) => tech[id]).filter(Boolean);
 
     {
       hasLink && (
-        <span class="font-mono text-xs text-pixel-soft opacity-0 transition-opacity group-hover:opacity-100">
-          {project.status === 'produccion' ? 'Abrir sitio →' : 'Ver en GitHub →'}
+        <span class="font-mono text-xs text-pixel-soft opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 max-sm:opacity-100">
+          {project.status === 'produccion' ? t.portfolio.openLive : t.portfolio.openRepo}
         </span>
       )
     }
-    {
-      !hasLink && (
-        <span class="font-mono text-xs text-dim">[COMPLETAR: enlace del proyecto]</span>
-      )
-    }
+    {!hasLink && <span class="font-mono text-xs text-dim">{t.portfolio.missingLink}</span>}
   </div>
 </Tag>
 

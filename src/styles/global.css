@@ -45,39 +45,43 @@
   font-display: swap;
 }
 
-html {
-  scroll-behavior: smooth;
-  /* Tema único oscuro deliberado: formularios y scrollbars nativos renderizan oscuros */
-  color-scheme: dark;
-}
+/* En @layer base para que las utilities de Tailwind (@layer utilities) puedan
+   sobreescribir — una regla sin capa le ganaría a scroll-mt-*, text-*, etc. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Tema único oscuro deliberado: formularios y scrollbars nativos renderizan oscuros */
+    color-scheme: dark;
+  }
 
-body {
-  @apply bg-void text-ink font-sans antialiased;
-}
+  body {
+    @apply bg-void text-ink font-sans antialiased;
+  }
 
-h1,
-h2,
-h3 {
-  text-wrap: balance;
-}
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
 
-p {
-  text-wrap: pretty;
-}
+  p {
+    text-wrap: pretty;
+  }
 
-/* Header fijo no tapa las anclas */
-[id] {
-  scroll-margin-top: 5rem;
-}
+  /* Header fijo no tapa las anclas (por defecto; cada ancla puede subirlo con scroll-mt-*) */
+  [id] {
+    scroll-margin-top: 5rem;
+  }
 
-:focus-visible {
-  outline: 2px solid var(--color-pixel);
-  outline-offset: 2px;
-}
+  :focus-visible {
+    outline: 2px solid var(--color-pixel);
+    outline-offset: 2px;
+  }
 
-::selection {
-  background: var(--color-pixel);
-  color: var(--color-ink);
+  ::selection {
+    background: var(--color-pixel);
+    color: var(--color-ink);
+  }
 }
 
 /* Retícula sutil — eco del píxel (solo hero y separadores) */
@@ -97,6 +101,7 @@ p {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
     transition-duration: 0.01ms !important;
   }
 }

@@ -13,13 +13,17 @@ import PixelCanvas from './PixelCanvas.astro';
       <PixelCanvas />
     </div>
 
-    <p class="hero-in mt-2 font-mono text-lg text-data sm:text-xl" style="--d: 1.55s">
+    <p
+      class="hero-in mt-2 font-mono text-lg text-data sm:text-xl"
+      style="--d: 1.55s"
+      aria-label={t.hero.subtitle}
+    >
       /{t.hero.subtitle.toLowerCase().replaceAll(' ', '·')}
     </p>
 
     <p class="hero-in mt-8 max-w-xl text-lg text-dim" style="--d: 1.75s">
-      Design Group by
-      <a href="/samuel" class="font-medium text-ink underline decoration-pixel decoration-2 underline-offset-4 transition-colors hover:text-pixel-soft">Samuel Galeano</a>, Ingeniero de Sistemas
+      {t.hero.bylinePre}
+      <a href="/samuel" class="font-medium text-ink underline decoration-pixel decoration-2 underline-offset-4 transition-colors hover:text-pixel-soft">{t.hero.bylineName}</a>{t.hero.bylinePost}
     </p>
 
     <div class="hero-in mt-12 flex flex-wrap items-center gap-x-10 gap-y-6" style="--d: 1.95s">
@@ -34,13 +38,13 @@ import PixelCanvas from './PixelCanvas.astro';
       <a href="/samuel" class="group flex items-center gap-4">
         <span
           class="block size-16 rounded-(--radius-s) border border-line transition-transform group-hover:scale-105 sm:size-20"
-          style="background-image: conic-gradient(#1c2130 25%, #262c3d 0 50%, #1c2130 0 75%, #262c3d 0), linear-gradient(#7c5cff33, #7c5cff33); background-size: 16px 16px, 100% 100%;"
+          style="background-image: conic-gradient(var(--color-surface-2) 25%, var(--color-line) 0 50%, var(--color-surface-2) 0 75%, var(--color-line) 0), linear-gradient(color-mix(in srgb, var(--color-pixel) 20%, transparent), color-mix(in srgb, var(--color-pixel) 20%, transparent)); background-size: 16px 16px, 100% 100%;"
           aria-hidden="true"
         ></span>
         <span>
-          <span class="block font-medium text-ink">Samuel Galeano</span>
+          <span class="block font-medium text-ink">{t.hero.bylineName}</span>
           <span class="block font-mono text-xs text-dim">
-            [COMPLETAR: FOTO_SAMUEL] ·
+            {t.hero.photoPlaceholder} ·
             <span class="text-pixel-soft group-hover:underline">{t.hero.photoCta} →</span>
           </span>
         </span>

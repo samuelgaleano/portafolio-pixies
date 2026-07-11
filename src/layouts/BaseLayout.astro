@@ -3,6 +3,7 @@ import '@/styles/global.css';
 import Seo from '@/components/seo/Seo.astro';
 import Header from '@/components/layout/Header.astro';
 import Footer from '@/components/layout/Footer.astro';
+import { t } from '@/i18n';
 
 interface Props {
   title: string;
@@ -20,6 +21,7 @@ const { title, description } = Astro.props;
     <link rel="preload" href="/fonts/ClashDisplay-Bold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/GeneralSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <Seo title={title} description={description} />
+    <meta name="theme-color" content="#0b0d12" />
     <meta name="generator" content={Astro.generator} />
     <!-- [COMPLETAR: snippet de Cloudflare Web Analytics tras activar en el dashboard (Fase 1 paso 15)] -->
   </head>
@@ -28,7 +30,7 @@ const { title, description } = Astro.props;
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-pixel focus:px-4 focus:py-2 focus:text-ink"
     >
-      Saltar al contenido
+      {t.nav.skip}
     </a>
     <Header />
     <main id="main">

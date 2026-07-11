@@ -4,3 +4,5 @@ dist/
 *.log
 .DS_Store
 .claude/settings.local.json
+# Toolchain local de skills (no es código del producto; ver DECISIONES.md)
+.claude/skills/

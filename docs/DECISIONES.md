@@ -24,6 +24,24 @@ Decisiones tomadas durante la implementación, con su porqué. Las decisiones de
 | Sociales del footer como texto plano con `[COMPLETAR]` | Un link roto es peor que un placeholder visible; se vuelven `<a>` cuando `site.ts` tenga URLs reales |
 | Tema único oscuro declarado como decisión (`color-scheme: dark`), sin modo claro | Auditoría /artifact-design: el "mundo void" ES la identidad de marca; declararlo hace que controles nativos y scrollbars rendericen oscuros. Reglas transversales nuevas en DESIGN.md §Reglas |
 
+## Revisión externa post-F2 (2026-07-11) — requesting-code-review
+
+Revisor con ojos frescos (subagente) auditó `3ebbc57..edd1426` contra el plan. Veredicto: "With fixes". Todo aplicado:
+
+| Hallazgo (severidad) | Fix aplicado |
+|---|---|
+| **Critical:** `[id]{scroll-margin-top}` sin capa anulaba los `scroll-mt-*` de Tailwind (anclas del mini-nav tapadas por el sticky ~32px) | Reglas propias envueltas en `@layer base` en global.css |
+| **Important:** reduced-motion dejaba el hero invisible hasta 2.3s (faltaba resetear `animation-delay`) | `animation-delay: 0s !important` en el bloque reduce |
+| **Important:** 4 enlaces a `/samuel` daban 404 hasta F4 | Stub `/samuel` con voz de marca y link al portafolio |
+| **Important:** ~15 strings de UI hardcodeados en 9 componentes (violaba §6/DoD) | Barrido completo a `i18n/es.ts` |
+| **Important:** hexes hardcodeados (logo SVG, mosaico hero, canvas) | `var(--color-*)` en SVG/estilos; canvas lee tokens con `getComputedStyle` |
+| **Important:** `stack: string[]` — typo en id de tech desaparecía en silencio | `TechId = keyof typeof tech` (satisfies); typo = error de compilación |
+| Minors aplicados | h4 en tarjetas (jerarquía), hint visible en focus/touch, `aria-label` en tarjeta-link y subtítulo con puntos medios, `aria-current` en chip activo, orden por `featured`, `theme-color`, título de #contacto diferenciado del MidCta, placeholder vercel→cloudflare |
+| **Problema del PLAN:** `#contacto?desde=x` roto por diseño (fragmento≠id) | Mecanismo corregido en plan §8: `data-desde` + listener global → sessionStorage, se implementa con el LeadForm en F5 |
+| **Decisión pendiente registrada:** contrato `preview.src: string` vs `astro:assets` (exige ImageMetadata) | Al llegar screenshots reales (F6): resolver vía `import.meta.glob` en ProjectCard manteniendo el contrato string en data |
+| **Nota F6:** dominio duplicado en astro.config.mjs, site.ts y robots.txt | Al fijar dominio real, cambiar los 3 (checklist F6) |
+| Hallazgos propios pre-revisión | `.claude/skills` (2.4MB, 153 archivos) fuera de git — es toolchain local, no código del producto; string muerto `photoAlt` eliminado |
+
 ## Evidencia de cierre Fase 1
 
 - `astro check`: 0 errores, 0 warnings (12 archivos).

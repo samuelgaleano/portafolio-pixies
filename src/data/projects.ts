@@ -1,4 +1,5 @@
 import type { CategoryId } from './categories';
+import type { TechId } from './tech';
 
 // EL CORAZÓN DATA-DRIVEN (§7.1). Agregar un proyecto = agregar un objeto aquí + un screenshot.
 // status decide el link primario y la etiqueta: 'produccion' → liveUrl; 'codigo' → repoUrl.
@@ -9,7 +10,7 @@ export interface Project {
   name: string;
   tagline: string; // 1–2 líneas de VALOR DE NEGOCIO (no técnicas)
   bullets: string[]; // 3–5 bullets TÉCNICOS: stack, arquitectura, decisiones de ingeniería
-  stack: string[]; // ids de tech.ts → badges
+  stack: TechId[]; // ids de tech.ts → badges (typo = error de compilación)
   status: 'produccion' | 'codigo';
   liveUrl?: string; // requerido si status === 'produccion'
   repoUrl?: string; // requerido si status === 'codigo'
@@ -49,7 +50,7 @@ export const projects: Project[] = [
       '[COMPLETAR: decisión de ingeniería relevante]',
       '[COMPLETAR: integración, ej. WhatsApp Business API]',
     ],
-    stack: ['react', 'tailwind', 'vercel'],
+    stack: ['react', 'tailwind', 'cloudflare'],
     status: 'codigo',
     repoUrl: '', // [COMPLETAR: URL del repo]
     preview: { src: '', alt: 'Vista previa de [COMPLETAR: nombre del proyecto]' },
@@ -87,7 +88,7 @@ export const projects: Project[] = [
     stack: ['nodejs', 'javascript'],
     status: 'codigo',
     repoUrl: '', // [COMPLETAR: URL del repo]
-  preview: { src: '', alt: 'Diagrama del sistema de sincronización de televisores' },
+    preview: { src: '', alt: 'Diagrama del sistema de sincronización de televisores' },
     featured: true,
   },
   {
@@ -108,4 +109,6 @@ export const projects: Project[] = [
 ];
 
 export const projectsByCategory = (id: CategoryId): Project[] =>
-  projects.filter((p) => p.category === id);
+  projects
+    .filter((p) => p.category === id)
+    .sort((a, b) => Number(b.featured ?? false) - Number(a.featured ?? false));

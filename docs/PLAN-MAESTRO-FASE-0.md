@@ -359,7 +359,7 @@ export const site = {
 
 ## 8. SISTEMA DE CAPTACIÓN DE LEADS — Diseño técnico detallado
 
-**Decisión de UI: sección ancla `#contacto`** (no modal). Razones: funciona sin JS, es enlazable desde WhatsApp/IG (`sitio.com/#contacto`), evita gestión de focus-trap, y el one-page narrativo desemboca naturalmente en ella. Todos los CTAs (`hero`, mid-CTA, tarjetas) son anclas a `#contacto` **con parámetro de origen**: `#contacto?desde=erp` → la isla lee el origen y **pre-selecciona el tipo de proyecto** (mapeo en `categories.ts`).
+**Decisión de UI: sección ancla `#contacto`** (no modal). Razones: funciona sin JS, es enlazable desde WhatsApp/IG (`sitio.com/#contacto`), evita gestión de focus-trap, y el one-page narrativo desemboca naturalmente en ella. Todos los CTAs (`hero`, mid-CTA, tarjetas) son anclas a `#contacto` **con atributo de origen** `data-desde="<categoria>"`: un listener global mínimo (se implementa junto al LeadForm en F5) guarda el origen en `sessionStorage` al hacer clic y la isla lo lee para **pre-seleccionar el tipo de proyecto** (mapeo en `categories.ts`). *(Corrección sobre la idea original `#contacto?desde=x`: un fragmento con query no coincide con el `id` del ancla y rompería el scroll — detectado en revisión post-F2.)*
 
 **Campos:** Nombre* · Correo o WhatsApp* (un solo campo "¿Cómo te contactamos?" que valida email O teléfono) · Empresa (opcional) · Tipo de proyecto (select pre-seleccionado por origen) · Mensaje (opcional) · honeypot oculto (`website`, invisible, si viene lleno se descarta) · validación en cliente y en Apps Script.
 
@@ -563,8 +563,7 @@ export const site = {
 | Fase 0 — Planificación | ✅ ENTREGADA | 2026-07-08 | Este documento. Esperando "APROBADO" |
 | Fase 0b — Toolchain de skills (§17) | ✅ INSTALADA | 2026-07-08 | superpowers + ponytail + impeccable en `.claude/skills/`; ruflo disponible sin inicializar |
 | Fase 1 — Fundaciones | ✅ ENTREGADA | 2026-07-11 | Lighthouse 99/100/100/100. Repo público creado y con push: github.com/samuelgaleano/portafolio-pixies. Pendiente: conexión Cloudflare Pages |
-| Fase 2 — Portafolio A/B/F | ✅ ENTREGADA | 2026-07-11 | Data-driven (projects/categories/tech). Lighthouse 99/100/100/100, detector limpio. En GitHub |
-| Fase 2 — Portafolio A/B/F | ⬜ Pendiente | — | |
+| Fase 2 — Portafolio A/B/F | ✅ ENTREGADA | 2026-07-11 | Data-driven (projects/categories/tech). Lighthouse 99/100/100/100, detector limpio. En GitHub. Revisión externa aplicada (ver DECISIONES.md) |
 | Fase 3 — Exhibiciones C/D/E | ⬜ Pendiente | — | |
 | Fase 4 — /samuel + blog | ⬜ Pendiente | — | |
 | Fase 5 — Leads E2E | ⬜ Pendiente | — | Requiere datos #2, #3, #5 |
