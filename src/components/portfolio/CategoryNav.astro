@@ -1,9 +1,10 @@
 ---
 import { categories } from '@/data/categories';
+import { t } from '@/i18n';
 ---
 
 <nav
-  aria-label="Categorías del portafolio"
+  aria-label={t.portfolio.navLabel}
   class="sticky top-14 z-30 -mx-4 mb-12 overflow-x-auto border-y border-line/60 bg-void/80 px-4 backdrop-blur-md sm:-mx-6 sm:px-6"
 >
   <ul class="flex gap-2 py-3">
@@ -27,9 +28,12 @@ import { categories } from '@/data/categories';
   // Scroll-spy: resalta el chip de la categoría visible. ponytail: IntersectionObserver, sin librería.
   const chips = document.querySelectorAll<HTMLAnchorElement>('.cat-chip');
   const active = (id: string) =>
-    chips.forEach((c) =>
-      c.classList.toggle('is-active', c.dataset.cat === id)
-    );
+    chips.forEach((c) => {
+      const on = c.dataset.cat === id;
+      c.classList.toggle('is-active', on);
+      if (on) c.setAttribute('aria-current', 'true');
+      else c.removeAttribute('aria-current');
+    });
   const io = new IntersectionObserver(
     (entries) => {
       const vis = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];

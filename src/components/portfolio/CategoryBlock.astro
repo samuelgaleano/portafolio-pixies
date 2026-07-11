@@ -1,6 +1,7 @@
 ---
 import type { Category } from '@/data/categories';
 import { projectsByCategory } from '@/data/projects';
+import { t } from '@/i18n';
 import ProjectCard from './ProjectCard.astro';
 
 interface Props {
@@ -20,10 +21,8 @@ const upcoming = category.phase === 3;
   {
     upcoming ? (
       <div class="mt-6 grid-bg rounded-(--radius-m) border border-dashed border-line px-6 py-12 text-center">
-        <p class="font-mono text-sm text-data">Próximamente</p>
-        <p class="mx-auto mt-2 max-w-md text-sm text-dim">
-          Exhibición especial en camino: recorrido de arquitectura y detalle técnico.
-        </p>
+        <p class="font-mono text-sm text-data">{t.portfolio.soon}</p>
+        <p class="mx-auto mt-2 max-w-md text-sm text-dim">{t.portfolio.soonBody}</p>
       </div>
     ) : (
       <div class="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
