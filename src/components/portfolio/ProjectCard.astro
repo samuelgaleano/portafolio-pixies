@@ -1,0 +1,122 @@
+---
+import type { Project } from '@/data/projects';
+import { tech } from '@/data/tech';
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+
+const href = project.status === 'produccion' ? project.liveUrl : project.repoUrl;
+const hasLink = Boolean(href);
+const Tag = hasLink ? 'a' : 'div';
+const linkAttrs = hasLink ? { href, target: '_blank', rel: 'noopener noreferrer' } : {};
+const badges = project.stack.map((id) => tech[id]).filter(Boolean);
+---
+
+<Tag
+  {...linkAttrs}
+  class="group flex flex-col overflow-hidden rounded-(--radius-m) border border-line bg-surface transition-colors hover:border-pixel/60 focus-visible:border-pixel"
+>
+  <!-- Preview: firma pixelada (§ DESIGN.md signature #3). Sin screenshot real → placeholder honesto. -->
+  <div class="relative aspect-[16/10] overflow-hidden border-b border-line bg-surface-2">
+    {
+      project.preview.src ? (
+        <img
+          src={project.preview.src}
+          alt={project.preview.alt}
+          loading="lazy"
+          class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+        />
+      ) : (
+        <div class="pixel-mask absolute inset-0" aria-hidden="true" />
+      )
+    }
+    {
+      !project.preview.src && (
+        <span class="absolute bottom-2 left-2 font-mono text-[0.65rem] text-dim">
+          [COMPLETAR: screenshot]
+        </span>
+      )
+    }
+    <!-- etiqueta de estado -->
+    <span
+      class:list={[
+        'absolute right-2 top-2 rounded-(--radius-s) px-2 py-1 font-mono text-[0.65rem] font-medium',
+        project.status === 'produccion' ? 'bg-void/80 text-ok' : 'bg-void/80 text-data',
+      ]}
+    >
+      {project.status === 'produccion' ? '● En producción' : '⌥ Ver código'}
+    </span>
+  </div>
+
+  <div class="flex flex-1 flex-col gap-4 p-5">
+    <div>
+      <h3 class="font-display text-lg font-semibold text-ink">{project.name}</h3>
+      <p class="mt-1 text-sm text-dim">{project.tagline}</p>
+    </div>
+
+    <ul class="flex flex-col gap-1.5 font-mono text-xs text-dim">
+      {
+        project.bullets.map((b) => (
+          <li class="flex gap-2">
+            <span class="text-pixel" aria-hidden="true">
+              ▸
+            </span>
+            <span>{b}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-auto flex flex-wrap items-center gap-2 pt-1">
+      {
+        badges.map((tch) => (
+          <span class="inline-flex items-center gap-1.5 rounded-(--radius-s) border border-line px-2 py-1 text-xs text-dim">
+            <svg viewBox="0 0 24 24" class="size-3.5 fill-data" aria-hidden="true">
+              <path d={tch.d} />
+            </svg>
+            {tch.name}
+          </span>
+        ))
+      }
+    </div>
+
+    {
+      hasLink && (
+        <span class="font-mono text-xs text-pixel-soft opacity-0 transition-opacity group-hover:opacity-100">
+          {project.status === 'produccion' ? 'Abrir sitio →' : 'Ver en GitHub →'}
+        </span>
+      )
+    }
+    {
+      !hasLink && (
+        <span class="font-mono text-xs text-dim">[COMPLETAR: enlace del proyecto]</span>
+      )
+    }
+  </div>
+</Tag>
+
+<style>
+  /* máscara de bloques — eco del píxel; se aclara al hover */
+  .pixel-mask {
+    background-image: conic-gradient(
+        from 0deg,
+        color-mix(in srgb, var(--color-pixel) 18%, transparent) 25%,
+        transparent 0 50%,
+        color-mix(in srgb, var(--color-pixel) 18%, transparent) 0 75%,
+        transparent 0
+      ),
+      linear-gradient(135deg, var(--color-surface-2), var(--color-surface));
+    background-size:
+      24px 24px,
+      100% 100%;
+    transition: opacity 0.4s ease;
+  }
+  .group:hover .pixel-mask,
+  .group:focus-visible .pixel-mask {
+    background-size:
+      12px 12px,
+      100% 100%;
+  }
+</style>

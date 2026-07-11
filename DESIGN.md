@@ -62,7 +62,7 @@ Escala fluida: `text-hero` = `clamp(3.5rem, 13vw, 9rem)` / `text-h2` = `clamp(1.
 1. **Tema único oscuro, por decisión.** El "mundo void" ES la identidad; no habrá modo claro. Declarado con `color-scheme: dark` en global.css para que controles nativos y scrollbars rendericen oscuros. No es una omisión: está elegido.
 2. **Medida de línea:** texto corrido ≤ ~65 caracteres (`max-w-xl` o `prose`). Headings con `text-wrap: balance`, párrafos con `text-wrap: pretty` (ya global).
 3. **Cifras en columna** (dashboards de datos F3, tablas): `font-variant-numeric: tabular-nums`.
-4. **Marcadores numerados (`01 /`) solo donde el orden informa.** Las categorías A–F del portafolio son secuencia narrativa: permitido ahí. Prohibido como decoración.
+4. **Marcadores numerados (`01 /`) solo donde el orden informa** (un proceso real, un timeline tipado). Las categorías del portafolio NO son secuencia: son paralelas, no llevan número. La navegación la da el mini-nav sticky, no una numeración decorativa.
 5. **Contenido ancho** (consola IA, tablas, código en posts): contenedor propio con `overflow-x: auto`; el body nunca scrollea horizontal.
 6. **Copy desde el lado del usuario:** los controles dicen exactamente qué pasa ("Enviar" → "Recibido ✓"); los errores dicen qué falló y cómo resolverlo, sin disculpas vagas. Voz activa, específico gana a ingenioso.
 7. **La estructura codifica información**, no decora: eyebrows, divisores y etiquetas solo si dicen algo verdadero del contenido.

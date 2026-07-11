@@ -2,7 +2,7 @@
 // y resolver por locale en index.ts. Hoy solo español.
 export const es = {
   meta: {
-    title: 'Pixies — Digital Web Design',
+    title: 'Pixies · Digital Web Design',
     description:
       'Pixies Digital Web Design: desarrollo web, software a medida, integraciones de IA y analítica de datos. Design Group by Samuel Galeano, Ingeniero de Sistemas.',
   },
@@ -14,19 +14,17 @@ export const es = {
   hero: {
     title: 'PIXIES',
     subtitle: 'Digital Web Design',
-    byline: 'Design Group by Samuel Galeano — Ingeniero de Sistemas',
     cta: 'Quiero trabajar con Pixies',
     photoAlt: '[COMPLETAR: foto profesional del Ing. Samuel Galeano]',
     photoCta: 'Conoce al ingeniero',
     scroll: 'El trabajo habla. Desliza',
   },
   placeholder: {
-    portfolio: 'Portafolio en construcción — Fase 2',
-    contact: 'Formulario de contacto — Fase 5. Mientras tanto:',
+    contact: 'Formulario de contacto (Fase 5). Mientras tanto:',
   },
   footer: {
     tagline: 'Construimos cosas digitales que funcionan.',
-    madeBy: 'Hecho por Pixies — sí, este sitio también.',
+    madeBy: 'Hecho por Pixies. Sí, este sitio también.',
   },
   notFound: {
     title: '404: píxel no encontrado',
