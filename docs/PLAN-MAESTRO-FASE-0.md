@@ -570,7 +570,8 @@ export const site = {
 | Auditoría + fundamentos | ✅ MERGEADA | 2026-07-12 | PR #5: 6 Important aplicados, TDD (13 tests), ESLint, CI, README. main e8c1483 |
 | Planificación F5-F6 v2 (Next) | 🕐 PROPUESTA | 2026-07-12 | Ver [PLAN-F5-F6.md](./PLAN-F5-F6.md) — esperando aprobación de Samuel (decisiones A/B/C) |
 | Fase 5 — Leads | ✅ ENTREGADA (código) | 2026-07-12 | Route Handler + TDD (23 tests) + Playwright CI + auditoría aplicada (C1 crítico cazado). E2E real pendiente solo de datos #2/#3/#5 |
-| Fase 6 — Pulido y cierre | ⬜ Pendiente | — | Requiere datos reales §13 |
+| Fase 6 — Pulido y cierre | ✅ ENTREGADA | 2026-07-12 | Paquete visual (reveals, hero reactivo, OG, teaser, transiciones), README ops, JSON-LD completo. Auditoría global "Listo con fixes" aplicada. PR #7 |
+| **PROYECTO: TODAS LAS FASES COMPLETAS** | ✅ | 2026-07-12 | Falta solo: datos reales de Samuel (§13) + deploy Vercel + revocar token |
 
 ---
 
