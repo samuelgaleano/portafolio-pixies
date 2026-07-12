@@ -1,7 +1,9 @@
 @import 'tailwindcss';
 @import '../styles/tokens.css';
 
-/* Fuentes self-hosted (public/fonts) — solo pesos usados */
+/* Fuentes self-hosted (public/fonts). Preload manual de las 2 críticas en layout.tsx
+   (Clash Bold del hero + General Regular del cuerpo); el resto carga bajo demanda.
+   Medido: mejor LCP que next/font, que precargaba las 7 y subía el LCP a ~4s. */
 @font-face {
   font-family: 'Clash Display';
   src: url('/fonts/ClashDisplay-Semibold.woff2') format('woff2');

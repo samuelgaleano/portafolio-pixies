@@ -2,6 +2,25 @@
 
 Decisiones tomadas durante la implementación, con su porqué. Las decisiones de arquitectura/diseño mayores están en [PLAN-MAESTRO-FASE-0.md](./PLAN-MAESTRO-FASE-0.md) §12 y §17.
 
+## Auditoría post-migración + fundamentos de ingeniería (2026-07-12)
+
+Auditoría con subagente de contexto aislado (arquitectura, prácticas Next.js, fundamentos). Veredicto: **0 Critical, 6 Important, 12 minors, 6 fundamentos faltantes**. Todo aplicado:
+
+| Hallazgo (Important) | Fix |
+|---|---|
+| Contenido factualmente falso tras migrar: skills decía "Astro: este sitio" y el post afirmaba "sin servidor/estático" | skills.ts intercambia Next↔Astro; post reescrito con claims verdaderos (prerender + CDN + $0) |
+| Canonical y og:url perdidos vs versión Astro (plan §9) | `alternates.canonical` en home, /samuel y posts — verificado en HTML |
+| Validación de frontmatter perdida (Zod de Astro): title vacío/Invalid Date silenciosos | **TDD**: `parsePost` valida y falla el build nombrando archivo+campo (13 tests, rojo→verde) |
+| Path traversal en slug (`getPost(path.join(...slug))`) | `isValidSlug` (kebab-case) + `dynamicParams = false` — con tests |
+| Syntax highlight perdido (plan F4.3 exigía Shiki) | `rehype-pretty-code` en MDXRemote — verificado `data-language` en HTML |
+| `src/styles/global.css` muerto (108 líneas heredadas, nadie lo importa) | Eliminado |
+
+Minors aplicados: `<span>` en vez de `<div>` dentro de `<pre>` (HTML válido), `KIND_COLOR` tipado con `ReplayStep['kind']`, aria del subtítulo del hero (sr-only + aria-hidden), `<Link>` en enlaces internos (3), scroll-spy con estado React en vez de classList imperativo, escape de `<` en JSON-LD, sitemap con `lastModified` estable (fecha del último post), `@vercel/analytics/next`, campo muerto `Project.exhibit` eliminado, `data-desde` en CTAs de hero/header/samuel (F5), "Diseñé" (typo), `error.tsx` con voz de marca.
+
+Fundamentos añadidos: **ESLint** (flat config nativa de eslint-config-next 16; ya cazó un error real: setState síncrono en effect) · **Vitest** (13 tests: parsePost/isValidSlug por TDD + regresión formatDate-UTC y readingTime) · **CI GitHub Actions** (check+lint+test+build en push/PR) · **README** · **.editorconfig** · `*.tsbuildinfo` untrackeado.
+
+Notas: contrato §7.2 `ReplayStep.delay` sigue simplificado a tick fijo 420ms (deliberado). Banda EngineerTeaser del plan §5: pendiente para F6. El listener global de `data-desde` llega con el LeadForm en F5. Scroll-spy re-verificar visualmente (el panel de preview quedó suspendido durante la verificación final; el observer de prueba crudo tampoco disparaba — limitación del entorno, no del código).
+
 ## Migración a Next.js 16 + React 19 (2026-07-11) — a pedido de Samuel
 
 Samuel pidió reestructurar de Astro a **Next.js + React** para desplegar en Vercel con arquitectura *server-capable* (no estática). Se migró todo el proyecto conservando el sistema de diseño, los datos y el contenido intactos.

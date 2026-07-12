@@ -15,7 +15,7 @@ export interface Project {
   liveUrl?: string; // requerido si status === 'produccion'
   repoUrl?: string; // requerido si status === 'codigo'
   preview: { src: string; alt: string }; // src '' = placeholder
-  exhibit?: 'erp-tour' | 'agent-replay'; // exhibición especial (F3)
+  // (el campo exhibit vive en Category, no aquí — limpieza post-auditoría)
   featured?: boolean;
 }
 

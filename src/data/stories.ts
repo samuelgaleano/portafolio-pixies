@@ -13,7 +13,7 @@ export const stories: ProjectStory[] = [
   {
     projectName: '[COMPLETAR: nombre del ERP]',
     category: 'erp',
-    role: 'Diseño la arquitectura completa y lo construí de punta a punta.',
+    role: 'Diseñé la arquitectura completa y lo construí de punta a punta.',
     decision:
       'Puse las reglas críticas (numeración, stock, permisos) en la base de datos, no en el cliente: así ningún error de UI puede corromper la operación.',
   },

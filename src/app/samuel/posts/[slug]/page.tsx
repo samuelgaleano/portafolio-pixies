@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import rehypePrettyCode from 'rehype-pretty-code';
 import SchemaOrg from '@/components/seo/SchemaOrg';
 import { getAllPosts, getPost } from '@/lib/posts';
 import { readingTime } from '@/lib/reading-time';
@@ -12,6 +14,10 @@ export function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
 }
 
+// Solo los slugs de generateStaticParams existen; cualquier otro → 404 (defensa en profundidad
+// junto al isValidSlug de lib/posts).
+export const dynamicParams = false;
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
@@ -19,6 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${post.title} — Foro de Samuel`,
     description: post.description,
+    alternates: { canonical: `/samuel/posts/${post.slug}` },
     openGraph: { type: 'article', title: post.title, description: post.description, publishedTime: post.pubDate.toISOString() },
   };
 }
@@ -37,9 +44,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         type="blogPosting"
         post={{ title: post.title, description: post.description, pubDate: post.pubDate, url }}
       />
-      <a href="/samuel#foro" className="font-mono text-xs text-dim transition-colors hover:text-ink">
+      <Link href="/samuel#foro" className="font-mono text-xs text-dim transition-colors hover:text-ink">
         {t.post.backToForum}
-      </a>
+      </Link>
 
       <header className="mt-6 border-b border-line pb-6">
         <p className="font-mono text-xs text-data">
@@ -49,7 +56,15 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </header>
 
       <div className="prose mt-8">
-        <MDXRemote source={post.content} />
+        <MDXRemote
+          source={post.content}
+          options={{
+            mdxOptions: {
+              // Syntax highlight Shiki (plan F4.3); el fondo lo pone .prose pre (tokens de marca)
+              rehypePlugins: [[rehypePrettyCode, { theme: 'github-dark-default', keepBackground: false }]],
+            },
+          }}
+        />
       </div>
     </article>
   );

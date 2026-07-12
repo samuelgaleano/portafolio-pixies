@@ -11,6 +11,7 @@ import { t } from '@/i18n';
 export const metadata: Metadata = {
   title: t.samuel.metaTitle,
   description: t.samuel.metaDescription,
+  alternates: { canonical: '/samuel' },
   openGraph: { type: 'profile', title: t.samuel.metaTitle, description: t.samuel.metaDescription },
 };
 

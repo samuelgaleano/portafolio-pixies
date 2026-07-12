@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { t } from '@/i18n';
 import { site } from '@/data/site';
 import { tech } from '@/data/tech';
@@ -44,12 +45,13 @@ export default function SocialLinks() {
             );
           })}
         </div>
-        <a
+        <Link
           href="/#contacto"
+          data-desde="samuel"
           className="mt-8 inline-block rounded-(--radius-s) bg-signal px-6 py-3 font-semibold text-void transition hover:brightness-110"
         >
           {t.nav.cta}
-        </a>
+        </Link>
       </div>
     </section>
   );

@@ -32,5 +32,7 @@ export default function SchemaOrg({ type, post }: Props) {
   const data = type === 'person' ? person : blogPosting;
   if (!data) return null;
 
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
+  // Escapar < evita que un título con "</script>" rompa el DOM (hardening estándar de JSON-LD)
+  const json = JSON.stringify(data).replace(/</g, '\\u003c');
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />;
 }
