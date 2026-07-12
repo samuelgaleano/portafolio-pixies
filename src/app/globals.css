@@ -1,0 +1,242 @@
+@import 'tailwindcss';
+@import '../styles/tokens.css';
+
+/* Fuentes self-hosted (public/fonts) — solo pesos usados */
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* En @layer base para que las utilities de Tailwind (@layer utilities) puedan
+   sobreescribir — una regla sin capa le ganaría a scroll-mt-*, text-*, etc. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Tema único oscuro deliberado: formularios y scrollbars nativos renderizan oscuros */
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-void text-ink font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Header fijo no tapa las anclas (por defecto; cada ancla puede subirlo con scroll-mt-*) */
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-pixel);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-pixel);
+    color: var(--color-ink);
+  }
+}
+
+/* Retícula sutil — eco del píxel (solo hero y separadores) */
+.grid-bg {
+  background-image:
+    linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* máscara de bloques de las tarjetas — eco del píxel; se afina al hover */
+.pixel-mask {
+  background-image: conic-gradient(
+      from 0deg,
+      color-mix(in srgb, var(--color-pixel) 18%, transparent) 25%,
+      transparent 0 50%,
+      color-mix(in srgb, var(--color-pixel) 18%, transparent) 0 75%,
+      transparent 0
+    ),
+    linear-gradient(135deg, var(--color-surface-2), var(--color-surface));
+  background-size:
+    24px 24px,
+    100% 100%;
+  transition: background-size 0.4s ease;
+}
+.group:hover .pixel-mask,
+.group:focus-visible .pixel-mask {
+  background-size:
+    12px 12px,
+    100% 100%;
+}
+
+/* chip activo del mini-nav del portafolio (scroll-spy) */
+.cat-chip.is-active {
+  border-color: var(--color-pixel);
+  color: var(--color-ink);
+  background: color-mix(in srgb, var(--color-pixel) 12%, transparent);
+}
+
+/* Entrada orquestada del hero (única secuencia grande del sitio) */
+.hero-in {
+  opacity: 0;
+  animation: hero-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  animation-delay: var(--d, 1.5s);
+}
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* caída suave con ease-out, no bounce */
+.cue-pixel {
+  animation: cue-drop 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@keyframes cue-drop {
+  0% {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  45% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+}
+
+/* Prose editorial de los posts — medida ~68ch, ritmo cuidado (§ DESIGN.md) */
+.prose {
+  color: var(--color-dim);
+  line-height: 1.75;
+}
+.prose > * + * {
+  margin-top: 1.25rem;
+}
+.prose h2 {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+}
+.prose h3 {
+  color: var(--color-ink);
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
+.prose a {
+  color: var(--color-pixel-soft);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose strong {
+  color: var(--color-ink);
+}
+/* Panel editorial en vez de rail lateral (evita el tell de "card con barra de acento") */
+.prose blockquote {
+  background: var(--color-surface);
+  border-radius: var(--radius-m);
+  padding: 1.25rem 1.5rem;
+  color: var(--color-ink);
+  font-size: 1.15rem;
+  font-style: italic;
+}
+.prose blockquote p {
+  margin: 0;
+}
+.prose ul {
+  list-style: none;
+  padding-left: 0;
+}
+.prose li {
+  position: relative;
+  padding-left: 1.25rem;
+}
+.prose li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--color-pixel);
+}
+.prose li + li {
+  margin-top: 0.5rem;
+}
+.prose pre {
+  background: var(--color-surface-2) !important;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-m);
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+}
+.prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--color-data);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+}
