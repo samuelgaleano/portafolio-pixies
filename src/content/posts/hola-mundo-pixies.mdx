@@ -1,6 +1,6 @@
 ---
-title: "Por qué construí este sitio sin un solo servidor"
-description: "Un portafolio que se paga solo: cero costo fijo, máxima velocidad. La decisión de ingeniería detrás de Pixies."
+title: "Cómo este sitio cuesta cero al mes (y por qué eso fue una decisión de ingeniería)"
+description: "Un portafolio en Next.js que se paga solo: páginas pregeneradas, CDN global y ni una base de datos propia. La decisión detrás de Pixies."
 pubDate: 2026-07-11
 tags: ["ingeniería", "emprender", "web"]
 draft: false
@@ -8,19 +8,19 @@ draft: false
 
 > [COMPLETAR: Samuel reemplaza este post de ejemplo por el suyo real. La estructura y el estilo ya están listos.]
 
-Cuando alguien pide un portafolio, casi siempre termina pagando un servidor que el 99% del tiempo está inactivo. Yo hice lo contrario: este sitio no tiene servidor.
+Cuando alguien pide un portafolio, casi siempre termina pagando infraestructura que el 99% del tiempo está inactiva. Yo hice lo contrario: este sitio corre en Next.js, pero cada página se **pregenera** en el build y se sirve desde una CDN global. Costo mensual: cero.
 
 ## La decisión
 
-Todo se genera como archivos estáticos y vive en una CDN gratuita. El resultado:
+El framework tiene toda la capacidad de servidor disponible — y la usaré cuando aporte valor. Pero ninguna página de este sitio necesita renderizarse por petición, así que ninguna lo hace. El resultado:
 
-- Carga en menos de un segundo, incluso desde un dato móvil flojo.
-- Cuesta **cero** al mes, para siempre.
+- Carga rápido, incluso desde un dato móvil flojo.
+- Cuesta **cero** al mes en el plan gratuito.
 - Escala a cualquier cantidad de visitas sin que yo toque nada.
 
 ## El truco de los formularios
 
-¿Y cómo recibo mensajes sin backend? Un `fetch` a un Google Apps Script guarda cada lead en una hoja de cálculo antes de abrir WhatsApp. El lead queda guardado **aunque el visitante nunca envíe el mensaje**.
+¿Y cómo recibo mensajes sin base de datos propia? Cada lead se guarda en una hoja de cálculo de Google antes de abrir WhatsApp. El lead queda registrado **aunque el visitante nunca envíe el mensaje**.
 
 ```ts
 // el guardado ocurre antes de redirigir, no depende de ello
@@ -30,6 +30,6 @@ window.location.href = construirEnlaceWhatsApp(datos);
 
 ## Lo que me llevo
 
-La mejor infraestructura es la que no tienes que mantener. Si un sistema puede ser más simple y aún así cumplir, esa simplicidad es la característica más difícil de lograr.
+La mejor infraestructura es la que no pagas por tener encendida. Usar un framework con servidor no obliga a usar el servidor: la ingeniería está en saber cuándo no hace falta.
 
 [COMPLETAR: cierre con la voz de Samuel.]

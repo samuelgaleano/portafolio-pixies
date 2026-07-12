@@ -4,10 +4,12 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import { agentReplay } from '@/data/agent-replays';
 import { t } from '@/i18n';
 
+import type { ReplayStep } from '@/data/agent-replays';
+
 // Diagrama de pipeline + consola replay, sincronizados (§12.B). Datos quemados.
 // SSR muestra todos los logs y etapas (fallback estático legible); con JS + movimiento
 // permitido, reproduce la secuencia. reduced-motion → estático.
-const KIND_COLOR: Record<string, string> = {
+const KIND_COLOR: Record<ReplayStep['kind'], string> = {
   cmd: 'text-data',
   info: 'text-dim',
   skill: 'text-pixel-soft',
@@ -24,16 +26,19 @@ export default function AgentExhibit() {
 
   const play = () => {
     clearTimeout(timer.current);
-    setDone(false);
-    setCount(0);
-    let i = 0;
-    const tick = () => {
-      i += 1;
-      setCount(i);
-      if (i < total) timer.current = setTimeout(tick, 420);
-      else setDone(true);
-    };
-    timer.current = setTimeout(tick, 300);
+    // arranca en el próximo tick: sin setState síncrono dentro del effect (react-hooks/set-state-in-effect)
+    timer.current = setTimeout(() => {
+      setDone(false);
+      setCount(0);
+      let i = 0;
+      const tick = () => {
+        i += 1;
+        setCount(i);
+        if (i < total) timer.current = setTimeout(tick, 420);
+        else setDone(true);
+      };
+      timer.current = setTimeout(tick, 300);
+    }, 0);
   };
 
   useEffect(() => {
@@ -96,12 +101,13 @@ export default function AgentExhibit() {
           </button>
         </div>
         <div ref={logRef} className="max-h-72 overflow-auto p-4">
+          {/* solo phrasing content dentro de <pre> (HTML válido): spans en bloque */}
           <pre className="font-mono text-xs leading-relaxed">
             {visible.map((s, i) => (
-              <div key={i} className={KIND_COLOR[s.kind]}>
+              <span key={i} className={`block ${KIND_COLOR[s.kind]}`}>
                 {s.text}
                 {!done && i === visible.length - 1 && <span className="animate-pulse text-pixel">▋</span>}
-              </div>
+              </span>
             ))}
           </pre>
         </div>

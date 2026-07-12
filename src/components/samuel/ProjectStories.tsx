@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { t } from '@/i18n';
 import { stories } from '@/data/stories';
 
@@ -22,9 +23,9 @@ export default function ProjectStories() {
                   <p className="mt-1 text-sm text-dim">{s.decision}</p>
                 </div>
               </div>
-              <a href={`/#${s.category}`} className="mt-4 inline-block font-mono text-xs text-pixel-soft hover:underline">
+              <Link href={`/#${s.category}`} className="mt-4 inline-block font-mono text-xs text-pixel-soft hover:underline">
                 {t.samuel.storyLink}
-              </a>
+              </Link>
             </article>
           ))}
         </div>

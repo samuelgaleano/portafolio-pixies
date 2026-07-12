@@ -19,12 +19,10 @@ export default function Hero() {
           <PixelCanvas />
         </div>
 
-        <p
-          className="hero-in mt-2 font-mono text-lg text-data sm:text-xl"
-          style={{ '--d': '1.55s' } as React.CSSProperties}
-          aria-label={t.hero.subtitle}
-        >
-          /{t.hero.subtitle.toLowerCase().replaceAll(' ', '·')}
+        {/* el texto decorado con puntos medios se oculta a lectores; sr-only lleva el texto limpio */}
+        <p className="hero-in mt-2 font-mono text-lg text-data sm:text-xl" style={{ '--d': '1.55s' } as React.CSSProperties}>
+          <span aria-hidden="true">/{t.hero.subtitle.toLowerCase().replaceAll(' ', '·')}</span>
+          <span className="sr-only">{t.hero.subtitle}</span>
         </p>
 
         <p className="hero-in mt-8 max-w-xl text-lg text-dim" style={{ '--d': '1.75s' } as React.CSSProperties}>
@@ -44,6 +42,7 @@ export default function Hero() {
         >
           <a
             href="#contacto"
+            data-desde="hero"
             className="rounded-(--radius-s) bg-signal px-6 py-3 font-semibold text-void transition hover:brightness-110"
           >
             {t.hero.cta}

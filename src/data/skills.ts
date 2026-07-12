@@ -27,11 +27,11 @@ export const skillDomains: SkillDomain[] = [
     title: 'Desarrollo web',
     blurb: 'Sitios y apps que cargan rápido, se ven bien y se indexan.',
     items: [
-      { name: 'Astro', depth: 'produccion', note: 'este sitio' },
-      { name: 'React', depth: 'produccion' },
+      { name: 'Next.js', depth: 'produccion', note: 'este sitio' },
+      { name: 'React', depth: 'produccion', note: 'este sitio' },
       { name: 'TypeScript', depth: 'produccion' },
       { name: 'Tailwind CSS', depth: 'produccion' },
-      { name: 'Next.js', depth: 'solido' },
+      { name: 'Astro', depth: 'solido' },
     ],
   },
   {

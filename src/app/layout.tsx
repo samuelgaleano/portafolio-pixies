@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from '@vercel/analytics/next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { t } from '@/i18n';

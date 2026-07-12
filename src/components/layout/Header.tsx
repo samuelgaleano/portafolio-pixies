@@ -27,6 +27,7 @@ export default function Header() {
           </Link>
           <Link
             href="/#contacto"
+            data-desde="header"
             className="ml-1 rounded-(--radius-s) bg-signal px-3 py-1.5 font-medium text-void transition hover:brightness-110"
           >
             <span className="sm:hidden">{t.nav.ctaShort}</span>

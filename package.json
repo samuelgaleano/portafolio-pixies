@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@vercel/analytics": "^1.4.0",
@@ -21,7 +23,12 @@
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.2.10",
+    "rehype-pretty-code": "^0.14.4",
+    "shiki": "^4.3.1",
     "tailwindcss": "^4.1.0",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "vitest": "^4.1.10"
   }
 }
