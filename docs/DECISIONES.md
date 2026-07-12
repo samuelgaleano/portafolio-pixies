@@ -1,5 +1,14 @@
 # Registro de decisiones
 
+## Auditoría global final (2026-07-12) — ruflo nested-reviewer
+
+Revisor de contexto aislado (con verificación adversarial) contra los **8 criterios de aceptación** del prompt maestro §9. Veredicto: **Listo con fixes**, 0 Critical.
+
+- **Criterios 1,4,5,6,7,8: CUMPLE.** Criterios 2 y 3: PARCIAL solo por contenido placeholder (deliberado, §13) — la estructura cumple.
+- **I1 (aplicado):** faltaba JSON-LD `Organization` + `CreativeWork` que el plan §9 exige para cerrar F6 (el home no emitía JSON-LD). Añadido `type:'organization'` a `SchemaOrg` (founder→Person, sameAs, logo) + un `CreativeWork` por proyecto con nombre real, renderizado en `page.tsx`. Verificado en el HTML.
+- **M1 (documentado, no aplicado):** las OG images usan `sans-serif` del sistema en vez de las fuentes de marca porque Satori (motor de `next/og`) **no soporta woff2** — solo tengo woff2. La OG ya se ve legible y on-brand (mosaico pixel). Agregar TTF por esto sería sobreingeniería; se retoma si algún día se justifica.
+- **Sin hallazgos en el código nuevo de F6** (RevealObserver/PageTransition/HeroGrid/EngineerTeaser): cleanup de listeners/rAF/IO completo, guardas de reduced-motion y pointer, degradación sin-JS verificada, sin acceso a window/document fuera de useEffect, sin hydration mismatch.
+
 ## Fase 6 — Pulido + paquete visual (2026-07-12)
 
 Requerimiento de Samuel: portafolio innovador y visualmente llamativo. Aprobado V1+V2+V3+V4 (V5 framer-motion descartado por "sin sobreingeniería"). Implementado:

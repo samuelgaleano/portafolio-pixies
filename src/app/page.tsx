@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import SchemaOrg from '@/components/seo/SchemaOrg';
 import Hero from '@/components/hero/Hero';
 import PortfolioSection from '@/components/portfolio/PortfolioSection';
 import MidCta from '@/components/cta/MidCta';
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      <SchemaOrg type="organization" />
       <Hero />
 
       <PortfolioSection />
