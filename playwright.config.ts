@@ -13,7 +13,8 @@ export default defineConfig({
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: 'npm run build && npx next start -p 4123',
+    // en CI el build ya corrió como paso previo del workflow — no buildear dos veces
+    command: process.env.CI ? 'npx next start -p 4123' : 'npm run build && npx next start -p 4123',
     url: 'http://localhost:4123',
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,

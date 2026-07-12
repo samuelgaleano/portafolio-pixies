@@ -9,6 +9,14 @@ var SECRET = 'CAMBIA-ESTE-SECRETO';
 
 var COLUMNAS = ['timestamp', 'nombre', 'contacto', 'empresa', 'tipoProyecto', 'mensaje', 'desde', 'userAgent'];
 
+// Anti formula-injection: un valor que empieza con = + - @ o tab se interpretaría como
+// fórmula en Sheets (=IMPORTXML exfiltra datos, =HYPERLINK phishea). El apóstrofe lo
+// neutraliza sin mostrarse, y protege también un futuro export a CSV/Excel.
+function safe(v) {
+  var s = String(v || '');
+  return /^[=+\-@\t\r]/.test(s) ? "'" + s : s;
+}
+
 function doPost(e) {
   var out = ContentService.createTextOutput().setMimeType(ContentService.MimeType.JSON);
 
@@ -23,18 +31,20 @@ function doPost(e) {
     var lock = LockService.getScriptLock();
     lock.waitLock(5000);
     try {
-      var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+      // Por nombre, no por posición: si Samuel añade/reordena pestañas, los leads no se pierden
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var sheet = ss.getSheetByName('Leads') || ss.insertSheet('Leads');
       // Encabezados en la primera fila si la hoja está vacía
       if (sheet.getLastRow() === 0) sheet.appendRow(COLUMNAS);
       sheet.appendRow([
         new Date(),
-        String(body.nombre || ''),
-        String(body.contacto || ''),
-        String(body.empresa || ''),
-        String(body.tipoProyecto || ''),
-        String(body.mensaje || ''),
-        String(body.desde || ''),
-        String(body.userAgent || ''),
+        safe(body.nombre),
+        safe(body.contacto),
+        safe(body.empresa),
+        safe(body.tipoProyecto),
+        safe(body.mensaje),
+        safe(body.desde),
+        safe(body.userAgent),
       ]);
     } finally {
       lock.releaseLock();

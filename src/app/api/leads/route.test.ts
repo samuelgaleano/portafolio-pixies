@@ -2,8 +2,9 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { POST, __resetRateLimit } from './route';
 
 // Única frontera mockeada: el fetch saliente al Apps Script (servicio externo).
+// Response fresca por llamada: el handler consume el body con .json() (C1) y un body solo se lee una vez.
 const okUpstream = () =>
-  vi.fn().mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+  vi.fn().mockImplementation(async () => new Response(JSON.stringify({ ok: true }), { status: 200 }));
 
 function req(body: unknown, ip = '1.2.3.4') {
   return new Request('http://test/api/leads', {
@@ -66,6 +67,29 @@ describe('POST /api/leads (handler, plan F5 §2.1)', () => {
     const res = await POST(req(lead));
     expect(res.status).toBe(502);
     expect(await res.json()).toEqual({ error: 'guardado' });
+  });
+
+  test('C1: Apps Script responde HTTP 200 pero {ok:false} (secret malo, lock agotado) → 502, NO éxito falso', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(new Response(JSON.stringify({ ok: false, error: 'auth' }), { status: 200 }))
+    );
+    const res = await POST(req(lead));
+    expect(res.status).toBe(502);
+    expect(await res.json()).toEqual({ error: 'guardado' });
+  });
+
+  test('C1b: upstream 200 con cuerpo no-JSON → 502', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('<html>login</html>', { status: 200 })));
+    expect((await POST(req(lead))).status).toBe(502);
+  });
+
+  test('I3: desde kilométrico se trunca a ≤40 antes de reenviar', async () => {
+    const res = await POST(req({ ...lead, desde: 'x'.repeat(500) }));
+    expect(res.status).toBe(200);
+    const f = fetch as ReturnType<typeof vi.fn>;
+    const sent = JSON.parse((f.mock.calls[0][1] as RequestInit).body as string);
+    expect(sent.desde.length).toBeLessThanOrEqual(40);
   });
 
   test('env sin configurar → 500 {error:"config"} (falla ruidosa, no silencio)', async () => {

@@ -21,15 +21,19 @@ const isPhone = (v: string) => /^\+?\d{7,15}$/.test(v.replace(/[\s\-()]/g, ''));
 
 export const PROJECT_TYPES = [...categories.map((c) => c.projectType), 'Otro'];
 
+// La frontera recibe JSON arbitrario (curl): coercer a string antes de validar (M1).
+const str = (v: unknown) => (typeof v === 'string' ? v : '');
+
 export function validateLead(p: Partial<LeadPayload>): LeadValidation {
   const campos: string[] = [];
-  const nombre = (p.nombre ?? '').trim();
+  const nombre = str(p.nombre).trim();
   if (nombre.length < 2 || nombre.length > 80) campos.push('nombre');
-  const contacto = (p.contacto ?? '').trim();
-  if (!EMAIL.test(contacto) && !isPhone(contacto)) campos.push('contacto');
-  if ((p.empresa ?? '').length > 120) campos.push('empresa');
-  if (!PROJECT_TYPES.includes(p.tipoProyecto ?? '')) campos.push('tipoProyecto');
-  if ((p.mensaje ?? '').length > 1000) campos.push('mensaje');
+  const contacto = str(p.contacto).trim();
+  // tope 120: la regex de email no limita longitud y todo esto termina en una celda del Sheet (I3)
+  if (contacto.length > 120 || (!EMAIL.test(contacto) && !isPhone(contacto))) campos.push('contacto');
+  if (str(p.empresa).length > 120) campos.push('empresa');
+  if (!PROJECT_TYPES.includes(str(p.tipoProyecto))) campos.push('tipoProyecto');
+  if (str(p.mensaje).length > 1000) campos.push('mensaje');
   return campos.length ? { ok: false, campos } : { ok: true };
 }
 

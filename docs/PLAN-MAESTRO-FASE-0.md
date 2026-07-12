@@ -569,7 +569,7 @@ export const site = {
 | Migración a Next.js 16 (a pedido) | ✅ MERGEADA | 2026-07-11 | PR #4. Tradeoff medido Lighthouse 98-99→90. Astro recuperable en 42f378c |
 | Auditoría + fundamentos | ✅ MERGEADA | 2026-07-12 | PR #5: 6 Important aplicados, TDD (13 tests), ESLint, CI, README. main e8c1483 |
 | Planificación F5-F6 v2 (Next) | 🕐 PROPUESTA | 2026-07-12 | Ver [PLAN-F5-F6.md](./PLAN-F5-F6.md) — esperando aprobación de Samuel (decisiones A/B/C) |
-| Fase 5 — Leads E2E | ⬜ Pendiente | — | Requiere datos #2, #3, #5 |
+| Fase 5 — Leads | ✅ ENTREGADA (código) | 2026-07-12 | Route Handler + TDD (23 tests) + Playwright CI + auditoría aplicada (C1 crítico cazado). E2E real pendiente solo de datos #2/#3/#5 |
 | Fase 6 — Pulido y cierre | ⬜ Pendiente | — | Requiere datos reales §13 |
 
 ---

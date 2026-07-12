@@ -1,5 +1,23 @@
 # Registro de decisiones
 
+## Fase 5 — Captación de leads (2026-07-12)
+
+Arquitectura aprobada por Samuel ("la más óptima sin sobreingeniería"): **Route Handler `/api/leads`** — valida en servidor, oculta URL/secret en env, y **confirma el guardado real antes de redirigir a wa.me** (diseño completo en [PLAN-F5-F6.md](./PLAN-F5-F6.md) §2). TDD: 23 tests de leads (rojo→verde en dos ciclos). Playwright agregado: 4 smoke en CI — cerró la re-verificación pendiente del scroll-spy.
+
+**Auditoría de fase (subagente):** 1 Critical + 3 Important + 6 minors, todos aplicados:
+
+| Hallazgo | Fix |
+|---|---|
+| **C1 (bloqueante):** Apps Script/ContentService responde SIEMPRE HTTP 200 — con secret mal copiado el handler daba "éxito" y el lead se perdía en silencio (violaba la regla de oro) | El handler ahora lee el body y exige `{ok:true}`; test nuevo: 200+`{ok:false}` → 502 |
+| I1: formula injection al Sheet (`=IMPORTXML` exfiltra, `=HYPERLINK` phishea) | `safe()` en Code.gs antepone `'` a valores que empiezan con `= + - @ \t` |
+| I2: empresa/mensaje demasiado largos bloqueaban el submit sin feedback | Errores renderizados + `maxLength` como cinturón |
+| I3: `contacto` y `desde` sin tope de longitud | contacto ≤120 en validación; `desde` truncado ≤40 en el servidor |
+| M1-M6 | Coerción de tipos en la frontera, sweep del Map de rate-limit, focus al primer error (a11y), hoja por nombre `Leads` + zona horaria Bogotá en DESPLIEGUE, log del honeypot, CI sin build doble + artifact del report on-failure |
+
+Verificado OK por el auditor: XFF no spoofeable en Vercel, rate-limit atómico, sin CSRF aplicable, secret nunca expuesto, XSS cubierto por React+i18n estático, doble-submit bloqueado. **E2E real contra Sheet/WhatsApp verdaderos: pendiente SOLO de datos de Samuel** (#2 WhatsApp, #3 correo, #5 Sheet — checklist en DESPLIEGUE.md §5).
+
+
+
 Decisiones tomadas durante la implementación, con su porqué. Las decisiones de arquitectura/diseño mayores están en [PLAN-MAESTRO-FASE-0.md](./PLAN-MAESTRO-FASE-0.md) §12 y §17.
 
 ## Auditoría post-migración + fundamentos de ingeniería (2026-07-12)

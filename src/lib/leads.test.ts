@@ -46,6 +46,18 @@ describe('validateLead — validación en la frontera de confianza (TDD, plan F5
       campos: ['nombre', 'contacto'],
     });
   });
+
+  test('I3: contacto de más de 120 chars falla (email regex sin tope)', () => {
+    expect(validateLead({ ...base, contacto: `${'a'.repeat(150)}@x.co` })).toEqual({
+      ok: false,
+      campos: ['contacto'],
+    });
+  });
+
+  test('M1: tipos no-string (curl malicioso) no lanzan TypeError, fallan limpio', () => {
+    const r = validateLead({ nombre: 123, contacto: null, tipoProyecto: {} } as never);
+    expect(r.ok).toBe(false);
+  });
 });
 
 describe('buildWhatsAppUrl — mensaje prellenado (§8: nombre, tipo, mensaje)', () => {

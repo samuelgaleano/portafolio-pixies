@@ -45,6 +45,9 @@ export default function LeadForm() {
     const valid = validateLead(payload);
     if (!valid.ok) {
       setCampos(valid.campos);
+      // llevar el foco al primer campo con error (lectores de pantalla incluidos)
+      const first = valid.campos[0] === 'tipoProyecto' ? 'tipo' : valid.campos[0];
+      document.getElementById(`lead-${first}`)?.focus();
       return;
     }
     setCampos([]);
@@ -127,9 +130,16 @@ export default function LeadForm() {
             onChange={(e) => setEmpresa(e.target.value)}
             placeholder={t.form.empresaPh}
             autoComplete="organization"
+            maxLength={120}
             aria-invalid={err('empresa')}
+            aria-describedby={err('empresa') ? 'err-empresa' : undefined}
             className={inputCls}
           />
+          {err('empresa') && (
+            <p id="err-empresa" className="mt-1.5 font-mono text-xs text-err">
+              {t.form.errores.empresa}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="lead-tipo" className="mb-1.5 block font-mono text-xs text-dim">
@@ -170,9 +180,16 @@ export default function LeadForm() {
           onChange={(e) => setMensaje(e.target.value)}
           placeholder={t.form.mensajePh}
           rows={4}
+          maxLength={1000}
           aria-invalid={err('mensaje')}
+          aria-describedby={err('mensaje') ? 'err-mensaje' : undefined}
           className={inputCls}
         />
+        {err('mensaje') && (
+          <p id="err-mensaje" className="mt-1.5 font-mono text-xs text-err">
+            {t.form.errores.mensaje}
+          </p>
+        )}
       </div>
 
       {/* honeypot: invisible para humanos; los bots lo llenan y el servidor los descarta */}

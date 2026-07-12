@@ -5,7 +5,8 @@
 ## 1. Crear el Sheet
 
 1. Ve a [sheets.new](https://sheets.new) → nómbralo **"Leads Pixies"**.
-2. No hace falta crear encabezados: el script los crea solos con el primer lead.
+2. No hace falta crear encabezados ni pestañas: el script crea la pestaña **"Leads"** y sus encabezados con el primer lead.
+3. Recomendado: **Archivo → Configuración → Zona horaria → (GMT-05:00) Bogotá**, para que el timestamp se lea en hora local.
 
 ## 2. Pegar el script
 
