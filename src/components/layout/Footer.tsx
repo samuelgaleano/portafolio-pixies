@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { t } from '@/i18n';
 import { site } from '@/data/site';
+import Pending from '@/components/ui/Pending';
+
+const isReal = (v: string) => Boolean(v) && !v.startsWith('[COMPLETAR');
 
 export default function Footer() {
   return (
@@ -24,12 +27,33 @@ export default function Footer() {
             {t.footer.navContact}
           </Link>
         </nav>
-        <div className="flex flex-col gap-2 font-mono text-xs text-dim">
-          {/* Se convierten en enlaces reales cuando site.ts tenga las URLs (§13 del plan) */}
-          <span>github → {site.social.github}</span>
-          <span>linkedin → {site.social.linkedin}</span>
-          <span>instagram → {site.social.instagram}</span>
-          <span>correo → {site.email}</span>
+        <div className="flex flex-col items-start gap-3 font-mono text-xs text-dim">
+          {/* solo enlaces reales; el estado pendiente va diseñado, no en corchetes (critique P0) */}
+          {(
+            [
+              ['github', site.social.github],
+              ['linkedin', site.social.linkedin],
+              ['instagram', site.social.instagram],
+            ] as const
+          )
+            .filter(([, url]) => isReal(url))
+            .map(([label, url]) => (
+              <a key={label} href={url} target="_blank" rel="noopener noreferrer" className="hover:text-ink">
+                {label} →
+              </a>
+            ))}
+          {isReal(site.email) ? (
+            <a href={`mailto:${site.email}`} className="hover:text-ink">
+              {site.email}
+            </a>
+          ) : (
+            <>
+              <Pending>{t.footer.pendingSocial}</Pending>
+              <Link href="/#contacto" className="text-pixel-soft hover:underline">
+                {t.footer.writeUs}
+              </Link>
+            </>
+          )}
         </div>
       </div>
       <div className="border-t border-line/60 py-4 text-center font-mono text-xs text-dim">

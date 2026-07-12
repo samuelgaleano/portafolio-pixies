@@ -9,16 +9,18 @@ export interface ProjectStory {
   decision: string; // la decisión de ingeniería clave y su porqué
 }
 
+// Nombres descriptivos verdaderos hasta tener los nombres comerciales reales
+// [COMPLETAR: Samuel reemplaza con los nombres reales de cada proyecto]
 export const stories: ProjectStory[] = [
   {
-    projectName: '[COMPLETAR: nombre del ERP]',
+    projectName: 'El ERP que corre una operación',
     category: 'erp',
     role: 'Diseñé la arquitectura completa y lo construí de punta a punta.',
     decision:
       'Puse las reglas críticas (numeración, stock, permisos) en la base de datos, no en el cliente: así ningún error de UI puede corromper la operación.',
   },
   {
-    projectName: '[COMPLETAR: sistema de IA]',
+    projectName: 'El agente de contenido',
     category: 'ia',
     role: 'Definí el pipeline de skills y lo orquesté como sistema agéntico.',
     decision:

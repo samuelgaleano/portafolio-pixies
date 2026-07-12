@@ -20,8 +20,9 @@ export default function EngineerTeaser() {
           <span
             className="block size-28 shrink-0 rounded-(--radius-m) border border-line transition-transform group-hover:scale-105 sm:size-36"
             style={{
+              // solo violeta: signal se reserva a conversión (regla propia del DESIGN — critique P2)
               backgroundImage:
-                'conic-gradient(var(--color-surface-2) 25%, var(--color-line) 0 50%, var(--color-surface-2) 0 75%, var(--color-line) 0), linear-gradient(color-mix(in srgb, var(--color-pixel) 22%, transparent), color-mix(in srgb, var(--color-signal) 18%, transparent))',
+                'conic-gradient(var(--color-surface-2) 25%, var(--color-line) 0 50%, var(--color-surface-2) 0 75%, var(--color-line) 0), linear-gradient(color-mix(in srgb, var(--color-pixel) 26%, transparent), color-mix(in srgb, var(--color-pixel) 10%, transparent))',
               backgroundSize: '18px 18px, 100% 100%',
             }}
             aria-hidden="true"

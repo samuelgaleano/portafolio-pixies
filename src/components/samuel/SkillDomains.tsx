@@ -27,7 +27,10 @@ export default function SkillDomains() {
               <h3 className="font-display text-lg font-semibold text-ink">{d.title}</h3>
               <p className="mt-1 text-sm text-dim">{d.blurb}</p>
               <ul className="mt-4 flex flex-col gap-2 font-mono text-xs">
-                {d.items.map((it) => (
+                {/* solo capacidades con nombre real; los huecos no se listan (critique P0) */}
+                {d.items
+                  .filter((it) => !it.name.startsWith('['))
+                  .map((it) => (
                   <li
                     key={it.name}
                     className="flex items-baseline justify-between gap-3 border-t border-line/60 pt-2"
