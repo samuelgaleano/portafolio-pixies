@@ -565,7 +565,7 @@ export const site = {
 | Fase 1 — Fundaciones | ✅ ENTREGADA | 2026-07-11 | Lighthouse 99/100/100/100. Repo público creado y con push: github.com/samuelgaleano/portafolio-pixies. Pendiente: conexión Cloudflare Pages |
 | Fase 2 — Portafolio A/B/F | ✅ ENTREGADA | 2026-07-11 | Data-driven (projects/categories/tech). Lighthouse 99/100/100/100, detector limpio. En GitHub. Revisión externa aplicada (ver DECISIONES.md) |
 | Fase 3 — Exhibiciones C/D/E | ✅ ENTREGADA | 2026-07-11 | ERP scrollytelling + IA diagrama/consola (islas React); datos tarjetas estándar. JS 49.8KB gz, Lighthouse 98/100/100/100. PR #2 |
-| Fase 4 — /samuel + blog | ⬜ Pendiente | — | |
+| Fase 4 — /samuel + blog | ✅ ENTREGADA | 2026-07-11 | Manifiesto + mapa de conocimiento + capacidades + historias + foro MDX. JSON-LD Person/BlogPosting. Lighthouse 99/100/100/100. PR pendiente |
 | Fase 5 — Leads E2E | ⬜ Pendiente | — | Requiere datos #2, #3, #5 |
 | Fase 6 — Pulido y cierre | ⬜ Pendiente | — | Requiere datos reales §13 |
 

@@ -1,0 +1,53 @@
+---
+import { t } from '@/i18n';
+import { site } from '@/data/site';
+import { tech } from '@/data/tech';
+
+// wa.me necesita el número sin +, espacios ni guiones
+const waNumber = site.whatsapp.replace(/[^0-9]/g, '');
+const links = [
+  { label: 'GitHub', href: site.social.github, icon: tech.github.d, external: true },
+  { label: 'LinkedIn', href: site.social.linkedin, icon: null, external: true },
+  { label: 'WhatsApp', href: waNumber ? `https://wa.me/${waNumber}` : '', icon: tech.whatsapp.d, external: true },
+  { label: 'Instagram', href: site.social.instagram, icon: null, external: true },
+];
+const valid = (href: string) => href && !href.startsWith('[COMPLETAR');
+---
+
+<section id="contacto-samuel" class="border-t border-line">
+  <div class="mx-auto w-full max-w-[1200px] px-4 py-20 sm:px-6">
+    <h2 class="font-display text-h2 font-semibold">{t.samuel.socialTitle}</h2>
+    <div class="mt-8 flex flex-wrap gap-3">
+      {
+        links.map((l) => (
+          <a
+            href={valid(l.href) ? l.href : undefined}
+            target={valid(l.href) ? '_blank' : undefined}
+            rel={valid(l.href) ? 'noopener noreferrer' : undefined}
+            aria-disabled={!valid(l.href)}
+            class:list={[
+              'inline-flex items-center gap-2 rounded-(--radius-s) border px-4 py-2.5 font-mono text-sm transition-colors',
+              valid(l.href)
+                ? 'border-line text-ink hover:border-pixel hover:text-pixel-soft'
+                : 'pointer-events-none border-line/50 text-dim',
+            ]}
+          >
+            {l.icon && (
+              <svg viewBox="0 0 24 24" class="size-4 fill-current" aria-hidden="true">
+                <path d={l.icon} />
+              </svg>
+            )}
+            {l.label}
+            {!valid(l.href) && <span class="text-dim">· [COMPLETAR]</span>}
+          </a>
+        ))
+      }
+    </div>
+    <a
+      href="/#contacto"
+      class="mt-8 inline-block rounded-(--radius-s) bg-signal px-6 py-3 font-semibold text-void transition hover:brightness-110"
+    >
+      {t.nav.cta}
+    </a>
+  </div>
+</section>
