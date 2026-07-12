@@ -73,7 +73,9 @@ export default function AgentExhibit() {
                       : 'border-line'
                 }`}
               >
-                <p className={`font-mono text-xs ${state === 'idle' ? 'text-dim' : 'text-pixel-soft'}`}>
+                <p
+                  className={`font-mono text-xs [font-variant-numeric:tabular-nums] ${state === 'idle' ? 'text-dim' : 'text-pixel-soft'}`}
+                >
                   {String(i + 1).padStart(2, '0')} {s.label}
                 </p>
                 <p className="mt-1 text-xs text-dim">{s.description}</p>

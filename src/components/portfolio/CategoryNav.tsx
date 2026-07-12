@@ -29,7 +29,7 @@ export default function CategoryNav() {
   return (
     <nav
       aria-label={t.portfolio.navLabel}
-      className="sticky top-14 z-30 -mx-4 mb-12 overflow-x-auto border-y border-line/60 bg-void/80 px-4 backdrop-blur-md sm:-mx-6 sm:px-6"
+      className="nav-scroll-fade sticky top-14 z-30 -mx-4 mb-12 overflow-x-auto border-y border-line/60 bg-void/80 px-4 backdrop-blur-md sm:-mx-6 sm:px-6"
     >
       <ul className="flex gap-2 py-3">
         {categories.map((c) => {

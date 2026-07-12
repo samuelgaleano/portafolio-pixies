@@ -22,12 +22,13 @@ export default function Hero() {
         </div>
 
         {/* el texto decorado con puntos medios se oculta a lectores; sr-only lleva el texto limpio */}
-        <p className="hero-in mt-2 font-mono text-lg text-data sm:text-xl" style={{ '--d': '1.55s' } as React.CSSProperties}>
+        {/* stagger corto: Casey scrollea a los ~1.5s; el contenido no puede llegar tarde */}
+        <p className="hero-in mt-2 font-mono text-lg text-data sm:text-xl" style={{ '--d': '0.9s' } as React.CSSProperties}>
           <span aria-hidden="true">/{t.hero.subtitle.toLowerCase().replaceAll(' ', '·')}</span>
           <span className="sr-only">{t.hero.subtitle}</span>
         </p>
 
-        <p className="hero-in mt-8 max-w-xl text-lg text-dim" style={{ '--d': '1.75s' } as React.CSSProperties}>
+        <p className="hero-in mt-8 max-w-xl text-lg text-dim" style={{ '--d': '1.05s' } as React.CSSProperties}>
           {t.hero.bylinePre}{' '}
           <Link
             href="/samuel"
@@ -40,7 +41,7 @@ export default function Hero() {
 
         <div
           className="hero-in mt-12 flex flex-wrap items-center gap-x-10 gap-y-6"
-          style={{ '--d': '1.95s' } as React.CSSProperties}
+          style={{ '--d': '1.2s' } as React.CSSProperties}
         >
           <a
             href="#contacto"
@@ -64,7 +65,7 @@ export default function Hero() {
             <span>
               <span className="block font-medium text-ink">{t.hero.bylineName}</span>
               <span className="block font-mono text-xs text-dim">
-                {t.hero.photoPlaceholder} ·{' '}
+                {t.hero.photoRole} ·{' '}
                 <span className="text-pixel-soft group-hover:underline">{t.hero.photoCta} →</span>
               </span>
             </span>
@@ -75,7 +76,7 @@ export default function Hero() {
       <a
         href="#portafolio"
         className="hero-in absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-xs text-dim transition-colors hover:text-ink"
-        style={{ '--d': '2.3s' } as React.CSSProperties}
+        style={{ '--d': '1.5s' } as React.CSSProperties}
       >
         <span className="cue-pixel mx-auto mb-2 block size-2 bg-pixel" aria-hidden="true" />
         {t.hero.scroll}

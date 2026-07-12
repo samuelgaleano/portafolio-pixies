@@ -61,7 +61,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           options={{
             mdxOptions: {
               // Syntax highlight Shiki (plan F4.3); el fondo lo pone .prose pre (tokens de marca)
-              rehypePlugins: [[rehypePrettyCode, { theme: 'github-dark-default', keepBackground: false }]],
+              // poimandres: violetas/cianes — el único tema Shiki que habla el idioma del sitio
+              rehypePlugins: [[rehypePrettyCode, { theme: 'poimandres', keepBackground: false }]],
             },
           }}
         />

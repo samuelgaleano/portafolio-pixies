@@ -23,20 +23,24 @@ export const es = {
     bylinePost: ', Ingeniero de Sistemas',
     cta: 'Quiero trabajar con Pixies',
     photoCta: 'Conoce al ingeniero',
-    photoPlaceholder: '[COMPLETAR: FOTO_SAMUEL]',
+    photoRole: 'Ingeniero de Sistemas',
     scroll: 'El trabajo habla. Desliza',
   },
   portfolio: {
     eyebrow: '/portafolio',
     title: 'Proyectos que ya corren',
-    intro: 'Cada uno es real: stack a la vista, decisión de ingeniería explicada, enlace que funciona.',
+    // copy honesto mientras los casos se publican por tandas (critique P1)
+    intro: 'El trabajo real de Pixies: stack a la vista y decisiones de ingeniería explicadas. Los casos se están publicando por tandas.',
     navLabel: 'Categorías del portafolio',
     statusLive: '● En producción',
-    statusCode: '⌥ Ver código',
+    statusCode: '‹/› Código',
     openLive: 'Abrir sitio →',
     openRepo: 'Ver en GitHub →',
-    missingLink: '[COMPLETAR: enlace del proyecto]',
-    missingShot: '[COMPLETAR: screenshot]',
+    pendingLink: 'enlace en publicación',
+    pendingShot: 'vista previa en producción',
+    emptyTitle: 'Casos en curado',
+    emptyBody: 'Los proyectos de esta categoría se están documentando para publicarse. Si quieres verlos ya, pídelos directo:',
+    emptyCta: 'Ver casos por WhatsApp →',
   },
   midCta: {
     title: '¿Tienes un proyecto en mente?',
@@ -51,7 +55,8 @@ export const es = {
   },
   exhibit: {
     viewCode: 'Ver el código en GitHub →',
-    erpRepoMissing: '[COMPLETAR: enlace al repo del ERP]',
+    pendingRepo: 'repositorio en preparación',
+    pendingTech: 'detalle técnico en redacción',
     replay: '↻ Reproducir',
     running: '· ejecutando',
     consoleLabel: 'agente · replay (datos de ejemplo)',
@@ -94,8 +99,10 @@ export const es = {
       'Samuel Galeano, ingeniero de sistemas: el cerebro detrás de Pixies. Trayectoria, capacidades por dominio, proyectos y su foro sobre IA, tecnología y emprender.',
     eyebrow: '/el-ingeniero',
     manifestoTitle: 'El cerebro detrás de Pixies',
+    // [COMPLETAR: Samuel puede reescribir este manifiesto con su propia voz]
+    // (provisional verdadero: solo afirma cosas comprobables en este repositorio)
     manifesto:
-      '[COMPLETAR: manifiesto personal, 3–4 frases con voz propia. Ej.: No vendo horas, resuelvo problemas. Cada sistema que construyo tiene que sobrevivir sin mí: documentado, medible y a prueba del día en que algo falle a las 3am.]',
+      'No vendo horas: construyo sistemas que siguen funcionando cuando nadie los mira. Este sitio es el primer ejemplo — cada decisión medida, testeada y documentada en su repositorio. Así trabajo: evidencia antes que promesas.',
     knowledgeTitle: 'Mapa de conocimiento',
     knowledgeIntro: 'Dónde me formé y qué he certificado. Los enlaces llevan a la fuente verificable.',
     skillsTitle: 'Capacidades por dominio',
@@ -122,6 +129,13 @@ export const es = {
     navLabel: 'Pie de página',
     navHome: 'Inicio',
     navContact: 'Contacto',
+    pendingSocial: 'redes en conexión',
+    writeUs: 'escríbenos por el formulario →',
+  },
+  common: {
+    pending: 'en construcción',
+    toConfirm: 'por confirmar',
+    credsPending: 'certificados en verificación',
   },
   notFound: {
     title: '404: píxel no encontrado',

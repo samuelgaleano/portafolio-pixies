@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { erpTour } from '@/data/erp-tour';
 import { t } from '@/i18n';
+import Pending from '@/components/ui/Pending';
 
 // Recorrido guiado del ERP (§12.A). El JS añade el panel sticky que sigue al scroll;
 // todo el contenido de los pasos se renderiza en el servidor (legible sin JS).
@@ -46,7 +47,7 @@ export default function ErpScrollytelling() {
               }}
             />
           )}
-          <span className="absolute bottom-3 left-3 font-mono text-xs text-data">
+          <span className="absolute bottom-3 left-3 font-mono text-xs text-data [font-variant-numeric:tabular-nums]">
             {String(active + 1).padStart(2, '0')} / {erpTour.steps.length} · {step.title}
           </span>
         </div>
@@ -69,7 +70,9 @@ export default function ErpScrollytelling() {
             {t.exhibit.viewCode}
           </a>
         ) : (
-          <p className="mt-4 font-mono text-xs text-dim">{t.exhibit.erpRepoMissing}</p>
+          <p className="mt-4">
+            <Pending>{t.exhibit.pendingRepo}</Pending>
+          </p>
         )}
       </div>
 
@@ -90,7 +93,7 @@ export default function ErpScrollytelling() {
             <p className="mt-2 text-sm text-dim">{s.business}</p>
             <p className="mt-3 flex gap-2 font-mono text-xs text-data">
               <span aria-hidden="true">▸</span>
-              <span>{s.tech}</span>
+              {s.tech.startsWith('[') ? <Pending>{t.exhibit.pendingTech}</Pending> : <span>{s.tech}</span>}
             </p>
           </li>
         ))}

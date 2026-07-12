@@ -81,8 +81,9 @@
   }
 
   ::selection {
-    background: var(--color-pixel);
-    color: var(--color-ink);
+    /* pixel-soft + void ≈ 8:1 (pixel + ink no llegaba a AA) */
+    background: var(--color-pixel-soft);
+    color: var(--color-void);
   }
 }
 
@@ -140,6 +141,16 @@
   background-size:
     12px 12px,
     100% 100%;
+}
+
+/* fade en el borde derecho del mini-nav: pista de que scrollea horizontal (móvil) */
+.nav-scroll-fade {
+  mask-image: linear-gradient(90deg, black calc(100% - 40px), transparent);
+}
+@media (min-width: 1024px) {
+  .nav-scroll-fade {
+    mask-image: none;
+  }
 }
 
 /* chip activo del mini-nav del portafolio (scroll-spy) */

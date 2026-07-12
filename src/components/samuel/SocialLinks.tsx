@@ -4,12 +4,13 @@ import { site } from '@/data/site';
 import { tech } from '@/data/tech';
 
 export default function SocialLinks() {
-  // wa.me necesita el número sin +, espacios ni guiones
+  // wa.me necesita el número sin +, espacios ni guiones; con el placeholder los dígitos
+  // quedan en "57" (2), así que el mínimo de 10 evita publicar un wa.me roto (bug del critique)
   const waNumber = site.whatsapp.replace(/[^0-9]/g, '');
   const links = [
     { label: 'GitHub', href: site.social.github, icon: tech.github.d },
     { label: 'LinkedIn', href: site.social.linkedin, icon: null },
-    { label: 'WhatsApp', href: waNumber ? `https://wa.me/${waNumber}` : '', icon: tech.whatsapp.d },
+    { label: 'WhatsApp', href: waNumber.length >= 10 ? `https://wa.me/${waNumber}` : '', icon: tech.whatsapp.d },
     { label: 'Instagram', href: site.social.instagram, icon: null },
   ];
   const valid = (href: string) => Boolean(href) && !href.startsWith('[COMPLETAR');
@@ -40,7 +41,7 @@ export default function SocialLinks() {
                   </svg>
                 )}
                 {l.label}
-                {!ok && <span className="text-dim">· [COMPLETAR]</span>}
+                {!ok && <span className="text-dim">· {t.common.toConfirm}</span>}
               </a>
             );
           })}

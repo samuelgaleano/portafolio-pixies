@@ -1,5 +1,25 @@
 # Registro de decisiones
 
+## Critique visual completo + mejoras (2026-07-12) — /impeccable critique dual-agent
+
+Método del skill: **dos subagentes aislados** (A: design director con Nielsen/personas; B: detector determinista). Score inicial: **32/40**. Veredicto: "NO es slop — pero hoy nadie lo puede comprobar": los `[COMPLETAR]` crudos convertían 'boutique en construcción' en 'build rota'. Snapshot en `.impeccable/critique/`.
+
+**Mejoras aplicadas (todas):**
+| Hallazgo | Fix |
+|---|---|
+| **P0** ~25 placeholders crudos visibles | Componente `Pending` (chip ▚ de marca); tarjetas-esqueleto ocultas (mejor 1 real que 7 vacías); **estado vacío por categoría que convierte** (CTA WhatsApp con `data-desde`); manifiesto provisional VERDADERO (solo afirma lo comprobable en el repo); footer/credenciales/skills filtrados con estados diseñados. **Resultado medido: 0 `[COMPLETAR]` en el HTML servido** (incluido el payload RSC — los keys de bullets filtraban el texto crudo) |
+| **P1** promesa "enlace que funciona" | Copy honesto: "los casos se están publicando por tandas" |
+| **P1** /samuel sin identidad (firma #2 ausente) | Retrato-mosaico pixelado en el Manifesto (recibirá la foto real con reveal); historias → lista editorial full-width (rompe el ritmo de 5 tarjetas idénticas) |
+| **P2** grids semivacíos | Layout adaptativo por conteo: 1 → case-study horizontal; 2 → 2 col; 3+ → 3 col |
+| **P2** fugas del sistema | Coral fuera del teaser (solo violeta); link de tarjeta siempre visible; "⌥"→"‹/› Código"; badges 10.4→12px; skip-link y ::selection a pixel-soft+void (~8:1); **bug corregido: wa.me/57 se publicaba habilitado en /samuel** (mínimo 10 dígitos) |
+| **B** wordmark 144px > espec | `--text-hero` max 9rem→7rem |
+| Casey (móvil) | Stagger del hero 1.55-2.3s→0.9-1.5s; fade-hint en el borde del mini-nav scrolleable |
+| Detalle | Shiki → `poimandres` (violetas/cianes de la marca); `tabular-nums` en contadores; pull-quote real en el post en vez de instrucciones internas |
+
+Gates post-mejora: tsc, lint 0, 36/36 unit, 4/4 e2e (expectativas actualizadas al nuevo estado vacío), build, detector: solo el falso positivo aceptado (secuencia 01-05). Los `[COMPLETAR]` siguen en el CÓDIGO (comentarios/data) como guía para Samuel — ya no en lo que ve el visitante.
+
+
+
 ## Auditoría global final (2026-07-12) — ruflo nested-reviewer
 
 Revisor de contexto aislado (con verificación adversarial) contra los **8 criterios de aceptación** del prompt maestro §9. Veredicto: **Listo con fixes**, 0 Critical.
