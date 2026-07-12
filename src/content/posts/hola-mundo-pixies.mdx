@@ -1,0 +1,35 @@
+---
+title: "Por qué construí este sitio sin un solo servidor"
+description: "Un portafolio que se paga solo: cero costo fijo, máxima velocidad. La decisión de ingeniería detrás de Pixies."
+pubDate: 2026-07-11
+tags: ["ingeniería", "emprender", "web"]
+draft: false
+---
+
+> [COMPLETAR: Samuel reemplaza este post de ejemplo por el suyo real. La estructura y el estilo ya están listos.]
+
+Cuando alguien pide un portafolio, casi siempre termina pagando un servidor que el 99% del tiempo está inactivo. Yo hice lo contrario: este sitio no tiene servidor.
+
+## La decisión
+
+Todo se genera como archivos estáticos y vive en una CDN gratuita. El resultado:
+
+- Carga en menos de un segundo, incluso desde un dato móvil flojo.
+- Cuesta **cero** al mes, para siempre.
+- Escala a cualquier cantidad de visitas sin que yo toque nada.
+
+## El truco de los formularios
+
+¿Y cómo recibo mensajes sin backend? Un `fetch` a un Google Apps Script guarda cada lead en una hoja de cálculo antes de abrir WhatsApp. El lead queda guardado **aunque el visitante nunca envíe el mensaje**.
+
+```ts
+// el guardado ocurre antes de redirigir, no depende de ello
+await guardarLead(datos);
+window.location.href = construirEnlaceWhatsApp(datos);
+```
+
+## Lo que me llevo
+
+La mejor infraestructura es la que no tienes que mantener. Si un sistema puede ser más simple y aún así cumplir, esa simplicidad es la característica más difícil de lograr.
+
+[COMPLETAR: cierre con la voz de Samuel.]

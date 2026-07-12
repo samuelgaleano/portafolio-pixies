@@ -23,6 +23,7 @@ const { title, description } = Astro.props;
     <Seo title={title} description={description} />
     <meta name="theme-color" content="#0b0d12" />
     <meta name="generator" content={Astro.generator} />
+    <slot name="head" />
     <!-- [COMPLETAR: snippet de Cloudflare Web Analytics tras activar en el dashboard (Fase 1 paso 15)] -->
   </head>
   <body>

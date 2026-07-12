@@ -24,6 +24,21 @@ Decisiones tomadas durante la implementación, con su porqué. Las decisiones de
 | Sociales del footer como texto plano con `[COMPLETAR]` | Un link roto es peor que un placeholder visible; se vuelven `<a>` cuando `site.ts` tenga URLs reales |
 | Tema único oscuro declarado como decisión (`color-scheme: dark`), sin modo claro | Auditoría /artifact-design: el "mundo void" ES la identidad de marca; declararlo hace que controles nativos y scrollbars rendericen oscuros. Reglas transversales nuevas en DESIGN.md §Reglas |
 
+## Fase 4 — "El Ingeniero" (/samuel) + blog MDX (2026-07-11)
+
+| Decisión | Porqué |
+|---|---|
+| Mapa de conocimiento agrupado por **tipo** (Formación/Certificaciones/Cursos), nodos en columnas | No lista plana ni timeline genérico (§7.3); en móvil se apila caminable |
+| Profundidad de skills con **etiquetas de color** (En producción/Base sólida/Explorando), no barras | Honestidad de ingeniería (§7.3); barras de progreso son cliché de CV |
+| Blog con **Content Layer API de Astro 5** (`src/content.config.ts` + `glob` loader) | API vigente en Astro 5; schema Zod falla el build si un post está mal formado |
+| Prose editorial **a mano** (sin plugin @tailwindcss/typography) | ~40 líneas cubren lo necesario; evita una dependencia entera (ponytail) |
+| `formatDate` con `timeZone: 'UTC'` | Una fecha-solo del frontmatter (medianoche UTC) se corría un día en Colombia (UTC-5); se veía "10 de julio" en vez de 11 |
+| Blockquote como **panel** (fondo surface) en vez de rail izquierdo | Detector `side-tab`: el borde lateral es un tell de UI generada; el panel es editorial y on-brand |
+| Slot `head` añadido a BaseLayout | Para inyectar JSON-LD (Person en /samuel, BlogPosting por post) en el `<head>` |
+| Stub `/samuel` reemplazado por página completa | Manifiesto + mapa + capacidades + historias + foro + sociales |
+
+Evidencia F4: astro check 0 errores (40 archivos), build limpio (4 páginas incl. post renderizado), Lighthouse **99/100/100/100** en /samuel, detector del post limpio (queda 1 falso positivo conocido: flat-type-hierarchy en /samuel porque el detector no lee `clamp()`; jerarquía real 12px→144px). Verificado en navegador desktop + móvil: la página lee como **fundador, no como CV** (criterio de aceptación #3). JSON-LD Person y BlogPosting confirmados en el HTML.
+
 ## Fase 3 — Exhibiciones especiales (2026-07-11)
 
 | Decisión | Porqué |
