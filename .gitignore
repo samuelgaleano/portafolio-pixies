@@ -13,3 +13,6 @@ next-env.d.ts
 .claude/settings.local.json
 # Toolchain local de skills (no es código del producto; ver DECISIONES.md)
 .claude/skills/
+# artefactos de Playwright
+test-results/
+playwright-report/

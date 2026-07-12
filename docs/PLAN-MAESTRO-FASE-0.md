@@ -565,7 +565,10 @@ export const site = {
 | Fase 1 — Fundaciones | ✅ ENTREGADA | 2026-07-11 | Lighthouse 99/100/100/100. Repo público creado y con push: github.com/samuelgaleano/portafolio-pixies. Pendiente: conexión Cloudflare Pages |
 | Fase 2 — Portafolio A/B/F | ✅ ENTREGADA | 2026-07-11 | Data-driven (projects/categories/tech). Lighthouse 99/100/100/100, detector limpio. En GitHub. Revisión externa aplicada (ver DECISIONES.md) |
 | Fase 3 — Exhibiciones C/D/E | ✅ ENTREGADA | 2026-07-11 | ERP scrollytelling + IA diagrama/consola (islas React); datos tarjetas estándar. JS 49.8KB gz, Lighthouse 98/100/100/100. PR #2 |
-| Fase 4 — /samuel + blog | ✅ ENTREGADA | 2026-07-11 | Manifiesto + mapa de conocimiento + capacidades + historias + foro MDX. JSON-LD Person/BlogPosting. Lighthouse 99/100/100/100. PR pendiente |
+| Fase 4 — /samuel + blog | ✅ ENTREGADA | 2026-07-11 | Manifiesto + mapa de conocimiento + capacidades + historias + foro MDX. JSON-LD Person/BlogPosting. Lighthouse 99/100/100/100. PR #3 |
+| Migración a Next.js 16 (a pedido) | ✅ MERGEADA | 2026-07-11 | PR #4. Tradeoff medido Lighthouse 98-99→90. Astro recuperable en 42f378c |
+| Auditoría + fundamentos | ✅ MERGEADA | 2026-07-12 | PR #5: 6 Important aplicados, TDD (13 tests), ESLint, CI, README. main e8c1483 |
+| Planificación F5-F6 v2 (Next) | 🕐 PROPUESTA | 2026-07-12 | Ver [PLAN-F5-F6.md](./PLAN-F5-F6.md) — esperando aprobación de Samuel (decisiones A/B/C) |
 | Fase 5 — Leads E2E | ⬜ Pendiente | — | Requiere datos #2, #3, #5 |
 | Fase 6 — Pulido y cierre | ⬜ Pendiente | — | Requiere datos reales §13 |
 
