@@ -1,17 +1,19 @@
 import Link from 'next/link';
 import { t } from '@/i18n';
 import PixelCanvas from './PixelCanvas';
+import HeroGrid from './HeroGrid';
 
 export default function Hero() {
   return (
     <section id="inicio" className="grid-bg relative flex min-h-svh flex-col justify-center overflow-hidden">
+      <HeroGrid />
       {/* la retícula se desvanece hacia el contenido */}
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-void/40 via-transparent to-void"
+        className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-void/40 via-transparent to-void"
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto w-full max-w-[1200px] px-4 pt-24 pb-20 sm:px-6">
+      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pt-24 pb-20 sm:px-6">
         <div className="relative inline-block">
           <h1 id="wordmark" className="font-display text-hero font-bold tracking-tight text-ink">
             {t.hero.title}

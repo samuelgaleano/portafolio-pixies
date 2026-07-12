@@ -43,6 +43,12 @@ export const es = {
     body: 'Cuéntanos qué necesitas. Respondemos con opciones concretas, no con un tarifario genérico.',
     cta: 'Hablemos de tu proyecto',
   },
+  engineerTeaser: {
+    eyebrow: '/el-ingeniero',
+    title: 'Detrás de cada proyecto hay un ingeniero',
+    body: 'La fortaleza de Pixies es el conocimiento de quien la construye. Conoce a Samuel: su trayectoria, sus decisiones y su forma de pensar la tecnología.',
+    cta: 'Conoce al ingeniero →',
+  },
   exhibit: {
     viewCode: 'Ver el código en GitHub →',
     erpRepoMissing: '[COMPLETAR: enlace al repo del ERP]',

@@ -6,7 +6,7 @@ import CategoryBlock from './CategoryBlock';
 export default function PortfolioSection() {
   return (
     <section id="portafolio" className="mx-auto w-full max-w-[1200px] scroll-mt-16 px-4 py-24 sm:px-6">
-      <header className="mb-4">
+      <header data-reveal className="mb-4">
         <p className="font-mono text-sm text-data">{t.portfolio.eyebrow}</p>
         <h2 className="mt-2 font-display text-h2 font-semibold">{t.portfolio.title}</h2>
         <p className="mt-3 max-w-xl text-dim">{t.portfolio.intro}</p>

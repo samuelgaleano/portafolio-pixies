@@ -1,5 +1,30 @@
 # Registro de decisiones
 
+## Auditoría global final (2026-07-12) — ruflo nested-reviewer
+
+Revisor de contexto aislado (con verificación adversarial) contra los **8 criterios de aceptación** del prompt maestro §9. Veredicto: **Listo con fixes**, 0 Critical.
+
+- **Criterios 1,4,5,6,7,8: CUMPLE.** Criterios 2 y 3: PARCIAL solo por contenido placeholder (deliberado, §13) — la estructura cumple.
+- **I1 (aplicado):** faltaba JSON-LD `Organization` + `CreativeWork` que el plan §9 exige para cerrar F6 (el home no emitía JSON-LD). Añadido `type:'organization'` a `SchemaOrg` (founder→Person, sameAs, logo) + un `CreativeWork` por proyecto con nombre real, renderizado en `page.tsx`. Verificado en el HTML.
+- **M1 (documentado, no aplicado):** las OG images usan `sans-serif` del sistema en vez de las fuentes de marca porque Satori (motor de `next/og`) **no soporta woff2** — solo tengo woff2. La OG ya se ve legible y on-brand (mosaico pixel). Agregar TTF por esto sería sobreingeniería; se retoma si algún día se justifica.
+- **Sin hallazgos en el código nuevo de F6** (RevealObserver/PageTransition/HeroGrid/EngineerTeaser): cleanup de listeners/rAF/IO completo, guardas de reduced-motion y pointer, degradación sin-JS verificada, sin acceso a window/document fuera de useEffect, sin hydration mismatch.
+
+## Fase 6 — Pulido + paquete visual (2026-07-12)
+
+Requerimiento de Samuel: portafolio innovador y visualmente llamativo. Aprobado V1+V2+V3+V4 (V5 framer-motion descartado por "sin sobreingeniería"). Implementado:
+
+| # | Qué | Cómo |
+|---|---|---|
+| V2 | **Scroll-reveals** | `RevealObserver` (IntersectionObserver, re-corre por ruta) + CSS con guard `js-reveal` en `<html>` → sin JS todo visible; `data-reveal` en secciones. Verificado 2→7 al scrollear |
+| V4 | **Hero reactivo al cursor** | `HeroGrid` canvas: celdas se iluminan cerca del mouse; rAF solo al mover, desktop (pointer fino), off reduced-motion, lee tokens |
+| V3 | **OG images** | `next/og` + `OgCard` compartido (identidad pixel); home/samuel/posts con título dinámico. Verificado visualmente + `og:image` en HTML |
+| V1 | **Transición de página** | **Enfoque robusto**: la API nativa View Transitions es `undefined` en React 19.2 (experimental); se resolvió con animación CSS keyed por ruta (`PageTransition`). Documentado el porqué |
+| §5 | **EngineerTeaser** | Banda-puente a /samuel con mosaico pixel; cerraba un hueco del plan original |
+
+**Nota de performance (honesta):** Lighthouse local en `next start` oscila 66–86 en código idéntico (TBT 200–750ms) — ruido de la máquina de desarrollo, no señal. La mejor corrida iguala el baseline de F5. El LCP ~3.7s es el piso de la animación orquestada del hero (sin cambios desde F1; en Vercel con CDN baja a ~2s). CLS 0, a11y 100, SEO 100 estables. **El número real se mide en Vercel post-deploy.**
+
+
+
 ## Fase 5 — Captación de leads (2026-07-12)
 
 Arquitectura aprobada por Samuel ("la más óptima sin sobreingeniería"): **Route Handler `/api/leads`** — valida en servidor, oculta URL/secret en env, y **confirma el guardado real antes de redirigir a wa.me** (diseño completo en [PLAN-F5-F6.md](./PLAN-F5-F6.md) §2). TDD: 23 tests de leads (rojo→verde en dos ciclos). Playwright agregado: 4 smoke en CI — cerró la re-verificación pendiente del scroll-spy.

@@ -3,6 +3,8 @@ import { Analytics } from '@vercel/analytics/next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import OriginTracker from '@/components/leads/OriginTracker';
+import RevealObserver from '@/components/fx/RevealObserver';
+import PageTransition from '@/components/fx/PageTransition';
 import { t } from '@/i18n';
 import { site } from '@/data/site';
 import './globals.css';
@@ -51,8 +53,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {t.nav.skip}
         </a>
         <OriginTracker />
+        <RevealObserver />
         <Header />
-        <main id="main">{children}</main>
+        <main id="main">
+          <PageTransition>{children}</PageTransition>
+        </main>
         <Footer />
         <Analytics />
       </body>

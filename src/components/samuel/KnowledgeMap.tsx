@@ -8,7 +8,7 @@ export default function KnowledgeMap() {
     .filter((g) => g.items.length > 0);
 
   return (
-    <section className="mx-auto w-full max-w-[1200px] px-4 py-20 sm:px-6">
+    <section data-reveal className="mx-auto w-full max-w-[1200px] px-4 py-20 sm:px-6">
       <h2 className="font-display text-h2 font-semibold">{t.samuel.knowledgeTitle}</h2>
       <p className="mt-3 max-w-xl text-dim">{t.samuel.knowledgeIntro}</p>
 

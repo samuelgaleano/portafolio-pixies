@@ -8,7 +8,7 @@ export default function CategoryBlock({ category }: { category: Category }) {
   const items = projectsByCategory(category.id);
 
   return (
-    <section id={category.id} className="scroll-mt-28">
+    <section id={category.id} data-reveal className="scroll-mt-28">
       <header>
         <h3 className="font-display text-2xl font-semibold text-ink sm:text-3xl">{category.title}</h3>
         <p className="mt-1 max-w-xl text-dim">{category.description}</p>

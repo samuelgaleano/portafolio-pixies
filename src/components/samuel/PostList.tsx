@@ -9,7 +9,7 @@ export default function PostList() {
 
   return (
     <section id="foro" className="scroll-mt-20 border-t border-line">
-      <div className="mx-auto w-full max-w-[1200px] px-4 py-20 sm:px-6">
+      <div data-reveal className="mx-auto w-full max-w-[1200px] px-4 py-20 sm:px-6">
         <h2 className="font-display text-h2 font-semibold">{t.samuel.postsTitle}</h2>
         <p className="mt-3 max-w-xl text-dim">{t.samuel.postsIntro}</p>
 

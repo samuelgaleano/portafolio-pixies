@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
+import SchemaOrg from '@/components/seo/SchemaOrg';
 import Hero from '@/components/hero/Hero';
 import PortfolioSection from '@/components/portfolio/PortfolioSection';
 import MidCta from '@/components/cta/MidCta';
+import EngineerTeaser from '@/components/cta/EngineerTeaser';
 import LeadForm from '@/components/leads/LeadForm';
 import { t } from '@/i18n';
 
@@ -12,11 +14,14 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      <SchemaOrg type="organization" />
       <Hero />
 
       <PortfolioSection />
 
       <MidCta />
+
+      <EngineerTeaser />
 
       <section id="contacto" className="border-t border-line">
         <div className="mx-auto w-full max-w-[1200px] px-4 py-24 sm:px-6">

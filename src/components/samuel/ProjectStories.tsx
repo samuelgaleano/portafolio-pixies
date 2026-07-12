@@ -5,7 +5,7 @@ import { stories } from '@/data/stories';
 export default function ProjectStories() {
   return (
     <section className="border-t border-line">
-      <div className="mx-auto w-full max-w-[1200px] px-4 py-20 sm:px-6">
+      <div data-reveal className="mx-auto w-full max-w-[1200px] px-4 py-20 sm:px-6">
         <h2 className="font-display text-h2 font-semibold">{t.samuel.storiesTitle}</h2>
         <p className="mt-3 max-w-xl text-dim">{t.samuel.storiesIntro}</p>
 
