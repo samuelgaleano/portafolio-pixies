@@ -1,8 +1,14 @@
 node_modules/
+.next/
+out/
+# artefactos de la versión Astro anterior (la fuente Astro vive en la rama main)
 dist/
 .astro/
 *.log
 .DS_Store
+.env*.local
+.vercel
+next-env.d.ts
 .claude/settings.local.json
 # Toolchain local de skills (no es código del producto; ver DECISIONES.md)
 .claude/skills/

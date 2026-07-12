@@ -2,6 +2,33 @@
 
 Decisiones tomadas durante la implementación, con su porqué. Las decisiones de arquitectura/diseño mayores están en [PLAN-MAESTRO-FASE-0.md](./PLAN-MAESTRO-FASE-0.md) §12 y §17.
 
+## Migración a Next.js 16 + React 19 (2026-07-11) — a pedido de Samuel
+
+Samuel pidió reestructurar de Astro a **Next.js + React** para desplegar en Vercel con arquitectura *server-capable* (no estática). Se migró todo el proyecto conservando el sistema de diseño, los datos y el contenido intactos.
+
+**Qué se conservó sin cambios:** `src/styles/tokens.css`, todo `src/data/*`, `src/i18n/*`, `src/content/posts/*.mdx`, `public/fonts`, favicon. La identidad visual, la firma pixelada, las exhibiciones y el copy son idénticos.
+
+**Qué cambió (mapeo Astro → Next):**
+| Astro | Next.js |
+|---|---|
+| `src/pages/*.astro` | `src/app/**/page.tsx` (App Router) |
+| `src/layouts/BaseLayout.astro` | `src/app/layout.tsx` + Metadata API |
+| Componentes `.astro` | Componentes `.tsx` (server por defecto) |
+| Islas `client:visible` | Componentes `'use client'` (Hero canvas, CategoryNav, ErpScrollytelling, AgentExhibit) |
+| Content Collections + `render()` | `gray-matter` + `next-mdx-remote/rsc` (`lib/posts.ts`) |
+| `@astrojs/sitemap` | `app/sitemap.ts` |
+| `public/robots.txt` | `app/robots.ts` |
+| SchemaOrg `.astro` | SchemaOrg `.tsx` (JSON-LD) |
+| Cloudflare Web Analytics | `@vercel/analytics` |
+
+**Tradeoff medido y aceptado por Samuel (advertido antes de ejecutar):**
+- **Performance Lighthouse: 98-99 → 90** (Best Practices 100 → 96). Next envía React + su runtime (~100 KB) como base aunque las páginas se prerendericen; Astro enviaba ~0 KB en estático. Sigue cumpliendo el umbral ≥90 del plan, pero es una regresión real.
+- **Ganancia:** el proyecto ya corre sobre Next.js en la plataforma de cómputo de Vercel. Cualquier página puede volverse dinámica (Server Actions, Route Handlers, datos por petición) sin reescribir. Los leads de F5 usarán un Route Handler real (servidor de verdad, no el truco de Apps Script — opcional).
+
+**Nota honesta sobre "estático":** Next prerenderiza como estáticas las páginas que *pueden* serlo (buena práctica, no limitación). El proyecto NO es "un sitio estático": es una app Next.js server-capable cuyas páginas actuales no necesitan render por petición todavía. Forzar `dynamic` en todo sería mala ingeniería (peor performance, cero beneficio).
+
+**La versión Astro queda intacta en `main`** hasta que se apruebe/mergee esta migración (rama `feat/migracion-nextjs`).
+
 ## Infraestructura (2026-07-11)
 
 | Decisión | Porqué |
