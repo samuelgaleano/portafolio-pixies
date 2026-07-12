@@ -5,7 +5,10 @@ import { t } from '@/i18n';
 export default function MidCta() {
   return (
     <section className="border-y border-line">
-      <div className="grid-bg mx-auto flex w-full max-w-[1200px] flex-col items-start gap-6 px-4 py-20 sm:px-6 md:flex-row md:items-center md:justify-between">
+      <div
+        data-reveal
+        className="grid-bg mx-auto flex w-full max-w-[1200px] flex-col items-start gap-6 px-4 py-20 sm:px-6 md:flex-row md:items-center md:justify-between"
+      >
         <div>
           <h2 className="font-display text-h2 font-semibold text-ink">{t.midCta.title}</h2>
           <p className="mt-2 max-w-md text-dim">{t.midCta.body}</p>

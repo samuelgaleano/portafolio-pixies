@@ -1,5 +1,21 @@
 # Registro de decisiones
 
+## Fase 6 — Pulido + paquete visual (2026-07-12)
+
+Requerimiento de Samuel: portafolio innovador y visualmente llamativo. Aprobado V1+V2+V3+V4 (V5 framer-motion descartado por "sin sobreingeniería"). Implementado:
+
+| # | Qué | Cómo |
+|---|---|---|
+| V2 | **Scroll-reveals** | `RevealObserver` (IntersectionObserver, re-corre por ruta) + CSS con guard `js-reveal` en `<html>` → sin JS todo visible; `data-reveal` en secciones. Verificado 2→7 al scrollear |
+| V4 | **Hero reactivo al cursor** | `HeroGrid` canvas: celdas se iluminan cerca del mouse; rAF solo al mover, desktop (pointer fino), off reduced-motion, lee tokens |
+| V3 | **OG images** | `next/og` + `OgCard` compartido (identidad pixel); home/samuel/posts con título dinámico. Verificado visualmente + `og:image` en HTML |
+| V1 | **Transición de página** | **Enfoque robusto**: la API nativa View Transitions es `undefined` en React 19.2 (experimental); se resolvió con animación CSS keyed por ruta (`PageTransition`). Documentado el porqué |
+| §5 | **EngineerTeaser** | Banda-puente a /samuel con mosaico pixel; cerraba un hueco del plan original |
+
+**Nota de performance (honesta):** Lighthouse local en `next start` oscila 66–86 en código idéntico (TBT 200–750ms) — ruido de la máquina de desarrollo, no señal. La mejor corrida iguala el baseline de F5. El LCP ~3.7s es el piso de la animación orquestada del hero (sin cambios desde F1; en Vercel con CDN baja a ~2s). CLS 0, a11y 100, SEO 100 estables. **El número real se mide en Vercel post-deploy.**
+
+
+
 ## Fase 5 — Captación de leads (2026-07-12)
 
 Arquitectura aprobada por Samuel ("la más óptima sin sobreingeniería"): **Route Handler `/api/leads`** — valida en servidor, oculta URL/secret en env, y **confirma el guardado real antes de redirigir a wa.me** (diseño completo en [PLAN-F5-F6.md](./PLAN-F5-F6.md) §2). TDD: 23 tests de leads (rojo→verde en dos ciclos). Playwright agregado: 4 smoke en CI — cerró la re-verificación pendiente del scroll-spy.
