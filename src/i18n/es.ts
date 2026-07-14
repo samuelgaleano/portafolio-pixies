@@ -131,6 +131,24 @@ export const es = {
     navContact: 'Contacto',
     pendingSocial: 'redes en conexión',
     writeUs: 'escríbenos por el formulario →',
+    ctaLine: '¿Construimos algo juntos?',
+    ctaAction: 'Hablemos →',
+  },
+  marquee: {
+    label: 'Servicios de Pixies',
+  },
+  status: {
+    city: 'bogotá',
+    available: 'disponible para proyectos',
+  },
+  statement: {
+    label: 'Principios de Pixies',
+    footnote: '/principios — la evidencia está una sección más arriba.',
+    lines: [
+      { plain: 'produccion', pre: 'El software que mostramos ', em: 'corre en producción', post: '.' },
+      { plain: 'stack', pre: 'El stack que listamos ', em: 'es el que de verdad usamos', post: '.' },
+      { plain: 'demo', pre: 'El diseño que ves ', em: 'es la demo', post: '.' },
+    ],
   },
   common: {
     pending: 'en construcción',

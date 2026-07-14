@@ -2,16 +2,30 @@ import Link from 'next/link';
 import { t } from '@/i18n';
 import { site } from '@/data/site';
 import Pending from '@/components/ui/Pending';
+import LiveStatus from '@/components/fx/LiveStatus';
+import PixelGlyph from '@/components/ui/PixelGlyph';
 
 const isReal = (v: string) => Boolean(v) && !v.startsWith('[COMPLETAR');
 
 export default function Footer() {
   return (
     <footer className="mt-24 border-t border-line">
+      {/* línea CTA grande (patrón de cierre; el formulario vive en #contacto) */}
+      <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-baseline justify-between gap-4 px-4 pt-14 sm:px-6">
+        <p className="font-display text-[clamp(1.6rem,4vw,3rem)] font-semibold text-ink">{t.footer.ctaLine}</p>
+        <Link
+          href="/#contacto"
+          className="rounded-(--radius-s) bg-signal px-5 py-2.5 font-semibold text-void transition hover:brightness-110"
+        >
+          {t.footer.ctaAction}
+        </Link>
+      </div>
+
       <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-4 py-14 sm:grid-cols-3 sm:px-6">
         <div>
           <p className="font-display text-lg font-bold">pixies</p>
           <p className="mt-2 text-sm text-dim">{t.footer.tagline}</p>
+          <PixelGlyph name="spark" className="mt-6 text-[9px] text-pixel-soft/40" />
         </div>
         <nav aria-label={t.footer.navLabel} className="flex flex-col gap-2 text-sm">
           <Link href="/#inicio" className="text-dim transition-colors hover:text-ink">
@@ -56,8 +70,20 @@ export default function Footer() {
           )}
         </div>
       </div>
-      <div className="border-t border-line/60 py-4 text-center font-mono text-xs text-dim">
-        {t.footer.madeBy}
+
+      {/* barra de estado viva (spec capa-viva: reloj BOG + disponibilidad) */}
+      <div className="border-t border-line/60">
+        <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-center justify-between gap-2 px-4 py-4 sm:px-6">
+          <LiveStatus />
+          <p className="font-mono text-xs text-dim">{t.footer.madeBy}</p>
+        </div>
+      </div>
+
+      {/* wordmark recortado por el borde (referencia WAIRK): tinta sutil sobre void */}
+      <div className="overflow-hidden" aria-hidden="true">
+        <span className="footer-wordmark mx-auto block w-full max-w-[1200px] px-4 text-center font-display font-bold sm:px-6">
+          PIXIES
+        </span>
       </div>
     </footer>
   );

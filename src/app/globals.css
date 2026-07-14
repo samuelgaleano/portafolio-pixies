@@ -194,6 +194,95 @@
   }
 }
 
+/* ——— Capa viva (spec 2026-07-14, referencias WAIRK/Barbiana/Heat) ——— */
+
+/* Cursor píxel: activo solo con puntero fino y JS montado (la clase la pone PixelCursor).
+   Sin JS o con reduced-motion el cursor nativo queda intacto. */
+@media (pointer: fine) {
+  .js-pixel-cursor,
+  .js-pixel-cursor * {
+    cursor: none !important;
+  }
+}
+#pixel-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  width: 12px;
+  height: 12px;
+  background: var(--color-pixel);
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    width 0.18s cubic-bezier(0.2, 0.7, 0.2, 1),
+    height 0.18s cubic-bezier(0.2, 0.7, 0.2, 1),
+    background 0.18s,
+    border 0.18s,
+    opacity 0.25s;
+}
+#pixel-cursor.is-on {
+  opacity: 1;
+}
+/* sobre interactivos: de píxel sólido a marco [bracket] */
+#pixel-cursor.is-link {
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  border: 2px solid var(--color-pixel);
+}
+#pixel-cursor.is-down {
+  width: 8px;
+  height: 8px;
+}
+
+/* Marquee de servicios: transform puro (compositor), pausa en hover, estático sin motion */
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-track {
+  display: inline-flex;
+  width: max-content;
+  animation: marquee-scroll 32s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Glifos de píxel en caracteres (eco de la firma; arte ASCII a lo Barbiana) */
+.pixel-glyph {
+  font-family: var(--font-mono);
+  line-height: 1.05;
+  letter-spacing: 0.05em;
+  user-select: none;
+  white-space: pre;
+}
+
+/* Wordmark recortado del footer (WAIRK): la mitad inferior sale del viewport */
+.footer-wordmark {
+  display: block;
+  font-size: clamp(6rem, 24vw, 20rem);
+  line-height: 0.75;
+  transform: translateY(28%);
+  color: color-mix(in srgb, var(--color-pixel) 14%, var(--color-surface));
+  transition: color 0.6s ease;
+  user-select: none;
+}
+footer:hover .footer-wordmark {
+  color: color-mix(in srgb, var(--color-pixel) 26%, var(--color-surface));
+}
+
 /* Prose editorial de los posts — medida ~68ch, ritmo cuidado (§ DESIGN.md) */
 .prose {
   color: var(--color-dim);

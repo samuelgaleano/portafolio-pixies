@@ -5,6 +5,7 @@ import Footer from '@/components/layout/Footer';
 import OriginTracker from '@/components/leads/OriginTracker';
 import RevealObserver from '@/components/fx/RevealObserver';
 import PageTransition from '@/components/fx/PageTransition';
+import PixelCursor from '@/components/fx/PixelCursor';
 import { t } from '@/i18n';
 import { site } from '@/data/site';
 import './globals.css';
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <OriginTracker />
         <RevealObserver />
+        <PixelCursor />
         <Header />
         <main id="main">
           <PageTransition>{children}</PageTransition>

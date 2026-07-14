@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import SchemaOrg from '@/components/seo/SchemaOrg';
 import Hero from '@/components/hero/Hero';
+import ServicesMarquee from '@/components/fx/ServicesMarquee';
 import PortfolioSection from '@/components/portfolio/PortfolioSection';
+import Statement from '@/components/cta/Statement';
 import MidCta from '@/components/cta/MidCta';
 import EngineerTeaser from '@/components/cta/EngineerTeaser';
 import LeadForm from '@/components/leads/LeadForm';
@@ -17,7 +19,11 @@ export default function HomePage() {
       <SchemaOrg type="organization" />
       <Hero />
 
+      <ServicesMarquee />
+
       <PortfolioSection />
+
+      <Statement />
 
       <MidCta />
 
