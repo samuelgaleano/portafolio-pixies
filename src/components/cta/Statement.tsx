@@ -7,7 +7,9 @@ import PixelGlyph from '@/components/ui/PixelGlyph';
 export default function Statement() {
   return (
     <section className="border-t border-line" aria-label={t.statement.label}>
-      <div className="relative mx-auto w-full max-w-[1200px] px-4 py-28 sm:px-6 sm:py-36">
+      {/* py-24 es el ritmo estándar del sitio; sm:py-32 es el acento deliberado de esta
+          sección (respiro editorial), no una tercera escala improvisada */}
+      <div className="relative mx-auto w-full max-w-[1200px] px-4 py-24 sm:px-6 sm:py-32">
         <PixelGlyph
           name="cluster"
           className="absolute right-6 top-10 hidden text-[10px] text-pixel-soft/40 sm:block"
@@ -18,7 +20,7 @@ export default function Statement() {
               key={line.plain}
               data-reveal
               style={{ transitionDelay: `${i * 0.12}s` }}
-              className="font-display text-[clamp(1.9rem,5vw,4.2rem)] font-semibold leading-[1.08] text-ink"
+              className="font-display text-[clamp(1.75rem,4.2vw,3.25rem)] font-semibold leading-[1.12] text-ink"
             >
               {line.pre}
               <span className="text-pixel-soft">{line.em}</span>

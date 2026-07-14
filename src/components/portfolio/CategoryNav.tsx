@@ -39,7 +39,7 @@ export default function CategoryNav() {
               <a
                 href={`#${c.id}`}
                 aria-current={on ? 'true' : undefined}
-                className={`cat-chip whitespace-nowrap rounded-(--radius-s) border px-3 py-1.5 font-mono text-xs transition-colors ${
+                className={`cat-chip flex min-h-11 items-center whitespace-nowrap rounded-(--radius-s) border px-3 font-mono text-xs transition-colors sm:min-h-9 ${
                   on ? 'is-active border-pixel text-ink' : 'border-line text-dim hover:border-pixel/60 hover:text-ink'
                 }`}
               >

@@ -7,7 +7,7 @@ export default function MidCta() {
     <section className="border-y border-line">
       <div
         data-reveal
-        className="grid-bg mx-auto flex w-full max-w-[1200px] flex-col items-start gap-6 px-4 py-20 sm:px-6 md:flex-row md:items-center md:justify-between"
+        className="grid-bg mx-auto flex w-full max-w-[1200px] flex-col items-start gap-6 px-4 py-24 sm:px-6 md:flex-row md:items-center md:justify-between"
       >
         <div>
           <h2 className="font-display text-h2 font-semibold text-ink">{t.midCta.title}</h2>

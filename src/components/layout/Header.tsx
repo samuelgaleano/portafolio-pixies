@@ -8,7 +8,10 @@ export default function Header() {
         className="mx-auto flex h-14 w-full max-w-[1200px] items-center justify-between gap-2 px-4 sm:px-6"
         aria-label={t.nav.mainLabel}
       >
-        <Link href="/#inicio" className="flex items-center gap-2 font-display text-lg font-bold tracking-tight">
+        <Link
+          href="/#inicio"
+          className="flex min-h-11 items-center gap-2 font-display text-lg font-bold tracking-tight"
+        >
           <svg width="18" height="18" viewBox="0 0 32 32" aria-hidden="true">
             <rect x="0" y="0" width="14" height="14" fill="var(--color-pixel)" />
             <rect x="18" y="0" width="14" height="14" fill="var(--color-pixel)" opacity="0.45" />
@@ -18,17 +21,27 @@ export default function Header() {
           pixies
         </Link>
         {/* ponytail: sin menú hamburguesa; 3 enlaces caben a 360px con el CTA corto en móvil */}
+        {/* ponytail: sin menú hamburguesa; 3 enlaces caben a 360px con el CTA corto en móvil.
+            min-h-11 (44px): área táctil cómoda en móvil sin engordar la barra (h-14 la contiene) */}
         <div className="flex items-center gap-1 text-sm sm:gap-2">
-          <Link href="/#portafolio" className="whitespace-nowrap px-2 py-1.5 text-dim transition-colors hover:text-ink">
+          <Link
+            href="/#portafolio"
+            className="flex min-h-11 items-center whitespace-nowrap px-2 text-dim transition-colors hover:text-ink"
+          >
             {t.nav.portfolio}
           </Link>
-          <Link href="/samuel" className="whitespace-nowrap px-2 py-1.5 text-dim transition-colors hover:text-ink">
+          {/* por debajo de 375px los 3 enlaces + CTA no caben: el nav se sale 50px del
+              viewport. "El Ingeniero" cede (sigue accesible desde el hero y el footer) */}
+          <Link
+            href="/samuel"
+            className="hidden min-h-11 items-center whitespace-nowrap px-2 text-dim transition-colors hover:text-ink min-[375px]:flex"
+          >
             {t.nav.engineer}
           </Link>
           <Link
             href="/#contacto"
             data-desde="header"
-            className="ml-1 rounded-(--radius-s) bg-signal px-3 py-1.5 font-medium text-void transition hover:brightness-110"
+            className="ml-1 flex min-h-9 items-center rounded-(--radius-s) bg-signal px-3 font-medium text-void transition hover:brightness-110"
           >
             <span className="sm:hidden">{t.nav.ctaShort}</span>
             <span className="hidden sm:inline">{t.nav.cta}</span>

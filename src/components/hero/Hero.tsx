@@ -17,7 +17,7 @@ export default function Hero() {
       <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pt-20 pb-24 sm:px-6">
         <div className="relative inline-block max-w-full">
           {/* tracking normal: a escala mosaico, el tight fusiona letras en el muestreo del canvas */}
-          <h1 id="wordmark" className="font-display text-hero font-bold text-ink">
+          <h1 id="wordmark" className="font-display text-wordmark font-bold text-ink">
             {t.hero.title}
           </h1>
           <PixelCanvas />
@@ -59,7 +59,7 @@ export default function Hero() {
               <a
                 key={c.id}
                 href={`#${c.id}`}
-                className="rounded-(--radius-s) border border-line px-3 py-1.5 font-mono text-xs text-dim transition-colors hover:border-pixel hover:text-ink"
+                className="flex min-h-11 items-center rounded-(--radius-s) border border-line px-3 font-mono text-xs text-dim transition-colors hover:border-pixel hover:text-ink sm:min-h-9"
               >
                 {c.heroLabel}
               </a>

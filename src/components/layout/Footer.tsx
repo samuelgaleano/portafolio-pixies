@@ -12,7 +12,7 @@ export default function Footer() {
     <footer className="mt-24 border-t border-line">
       {/* línea CTA grande (patrón de cierre; el formulario vive en #contacto) */}
       <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-baseline justify-between gap-4 px-4 pt-14 sm:px-6">
-        <p className="font-display text-[clamp(1.6rem,4vw,3rem)] font-semibold text-ink">{t.footer.ctaLine}</p>
+        <p className="font-display text-[clamp(1.5rem,3.2vw,2.5rem)] font-semibold text-ink">{t.footer.ctaLine}</p>
         <Link
           href="/#contacto"
           className="rounded-(--radius-s) bg-signal px-5 py-2.5 font-semibold text-void transition hover:brightness-110"
@@ -27,17 +27,18 @@ export default function Footer() {
           <p className="mt-2 text-sm text-dim">{t.footer.tagline}</p>
           <PixelGlyph name="spark" className="mt-6 text-[9px] text-pixel-soft/40" />
         </div>
-        <nav aria-label={t.footer.navLabel} className="flex flex-col gap-2 text-sm">
-          <Link href="/#inicio" className="text-dim transition-colors hover:text-ink">
+        {/* min-h-11 en los enlaces: área táctil cómoda (el gap-2 ya no basta en móvil) */}
+        <nav aria-label={t.footer.navLabel} className="flex flex-col text-sm">
+          <Link href="/#inicio" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
             {t.footer.navHome}
           </Link>
-          <Link href="/#portafolio" className="text-dim transition-colors hover:text-ink">
+          <Link href="/#portafolio" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
             {t.nav.portfolio}
           </Link>
-          <Link href="/samuel" className="text-dim transition-colors hover:text-ink">
+          <Link href="/samuel" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
             {t.nav.engineer}
           </Link>
-          <Link href="/#contacto" className="text-dim transition-colors hover:text-ink">
+          <Link href="/#contacto" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
             {t.footer.navContact}
           </Link>
         </nav>
