@@ -22,7 +22,7 @@ export const es = {
     bylineName: 'Samuel Galeano',
     bylinePost: ', Ingeniero de Sistemas',
     cta: 'Quiero trabajar con Pixies',
-    photoCta: 'Conoce al ingeniero',
+    chipsLabel: 'Qué construimos',
     photoRole: 'Ingeniero de Sistemas',
     scroll: 'El trabajo habla. Desliza',
   },

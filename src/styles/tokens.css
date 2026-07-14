@@ -21,9 +21,11 @@
   --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
 
   /* Escala fluida */
-  /* techo 7rem: monumental sin gritar (la guía marca 6rem; la marca justifica +1) */
-  --text-hero: clamp(3rem, 11vw, 7rem);
-  --text-hero--line-height: 0.95;
+  /* hero "Píxel vivo" (spec 2026-07-14): el wordmark domina el viewport de borde a
+     borde del contenedor. 27vw / tope 21.5rem: PIXIES con tracking normal llena el
+     ancho útil sin recortarse (el canvas muestrea este mismo texto) */
+  --text-hero: clamp(4rem, 27vw, 21.5rem);
+  --text-hero--line-height: 0.92;
   --text-h2: clamp(1.75rem, 4vw, 3rem);
   --text-h2--line-height: 1.1;
 
