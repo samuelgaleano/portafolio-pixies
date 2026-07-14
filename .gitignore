@@ -13,6 +13,17 @@ next-env.d.ts
 .claude/settings.local.json
 # Toolchain local de skills (no es código del producto; ver DECISIONES.md)
 .claude/skills/
+# Toolchain ruflo/claude-flow (instalado 2026-07-14 a pedido; local, no del producto)
+CLAUDE.md
+.claude/agents/
+.claude/commands/
+.claude/helpers/
+.claude/settings.json
+.mcp.json
+.claude-flow/
+.swarm/
+.hive-mind/
+ruvector.db
 # artefactos de Playwright
 test-results/
 playwright-report/
