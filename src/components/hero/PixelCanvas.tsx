@@ -71,6 +71,7 @@ export default function PixelCanvas() {
         let cell = 8;
         let w = 0;
         let h = 0;
+        let dirty = true; // fuerza un repintado (p. ej. tras resize, que limpia el canvas)
 
         // Muestrea el texto real y (re)construye las partículas. `settled` = sin intro.
         const build = (settled: boolean) => {
@@ -112,6 +113,7 @@ export default function PixelCanvas() {
                   alpha: 0.85 + Math.random() * 0.15,
                   flickUntil: 0,
                 });
+          dirty = true;
         };
         build(false);
         if (parts.length === 0) throw new Error('texto sin píxeles muestreados');
@@ -137,7 +139,6 @@ export default function PixelCanvas() {
           const dt = last ? Math.min((now - last) / 1000, 0.05) : 0.016;
           last = now;
           acc += dt * 1000;
-          ctx.clearRect(0, 0, w, h);
 
           // onda de respiración: frente gaussiano que recorre el texto
           let waveX = -1e9;
@@ -161,6 +162,7 @@ export default function PixelCanvas() {
           }
 
           if (intro) {
+            ctx.clearRect(0, 0, w, h);
             const el = acc;
             let done = true;
             for (const p of parts) {
@@ -179,6 +181,23 @@ export default function PixelCanvas() {
               }
             }
           } else {
+            // en reposo total (sin onda/glitch/shimmer, sin cursor cerca, partículas
+            // quietas) el frame anterior sigue siendo correcto: no se repinta (ahorro
+            // de CPU/batería en móvil; el rAF sigue para que los timers avancen)
+            let alive = dirty || waveX > -1e9 || glitchDx !== 0;
+            dirty = false;
+            const mouseNear = mouse.x > -REPEL_R && mouse.x < w + REPEL_R && mouse.y > -REPEL_R && mouse.y < h + REPEL_R;
+            for (const p of parts) {
+              // shimmer violeta ocasional (se sortea también en reposo para que despierte)
+              if (p.flickUntil < acc && Math.random() < FLICK_P) p.flickUntil = acc + 250 + Math.random() * 350;
+              if (p.flickUntil + 100 > acc || Math.abs(p.vx) + Math.abs(p.vy) > 0.5 || Math.abs(p.x - p.tx) + Math.abs(p.y - p.ty) > 0.5)
+                alive = true;
+            }
+            if (!alive && !mouseNear) {
+              if (visible) raf = requestAnimationFrame(frame);
+              return;
+            }
+            ctx.clearRect(0, 0, w, h);
             for (const p of parts) {
               // resorte amortiguado hacia el destino + repulsión del cursor
               const dxm = p.x - mouse.x;
@@ -193,9 +212,6 @@ export default function PixelCanvas() {
               p.vy += ((p.ty - p.y) * SPRING - p.vy * DAMP) * dt;
               p.x += p.vx * dt;
               p.y += p.vy * dt;
-
-              // shimmer violeta ocasional
-              if (p.flickUntil < acc && Math.random() < FLICK_P) p.flickUntil = acc + 250 + Math.random() * 350;
 
               let ox = 0;
               let oy = 0;
