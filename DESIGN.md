@@ -45,17 +45,20 @@ Escala fluida: `text-hero` = `clamp(4.5rem, 29vw, 23rem)` (el wordmark domina el
 
 ## Motion
 
-- **Hero (única superficie viva del sitio):** ~300–400 píxeles convergen y forman "PIXIES" en ~1.4s (canvas vanilla) y **se quedan vivos**: repelen al cursor con resorte amortiguado, parpadean en violeta, respiran con una onda lenta (~6.5s) y glitchean una banda ocasional. El loop se pausa fuera de viewport. El resto del sitio queda quieto: la vida está concentrada en el wordmark.
+- **Hero (superficie viva mayor):** ~300–400 píxeles convergen y forman "PIXIES" en ~1.4s (canvas vanilla) y **se quedan vivos**: repelen al cursor con resorte amortiguado, parpadean en violeta, respiran con una onda lenta (~6.5s) y glitchean una banda ocasional. El loop se pausa fuera de viewport.
+- **Capa de datos viva** (spec capa-viva 2026-07-14): micro-motion de sistema encendido, de bajo consumo — marquee de servicios (transform en compositor, pausa en hover), reloj BOG en el footer (tick 1s), cursor píxel (rAF solo en movimiento, solo pointer fino). Todo apagado con `prefers-reduced-motion`; sin JS queda el cursor nativo y el marquee estático. Fuera de esto, el sitio queda quieto.
 - Resto: fade-up 300ms al entrar al viewport (una vez) + transitions 150–200ms en hover.
 - `prefers-reduced-motion`: hero estático con fade simple; todo lo demás sin animación.
 - El movimiento tiene propósito o no existe.
 
 ## Signature
 
-**La materialización pixelada — en exactamente 3 lugares y ninguno más:**
+**La materialización pixelada — 3 firmas mayores:**
 1. Hero: wordmark se ensambla desde píxeles y queda vivo e interactivo (canvas persistente; h1 real accesible en el DOM con opacity 0).
 2. Foto de Samuel: mosaico pixelado grueso → nítida en hover/focus (CSS).
 3. Tarjetas de proyecto: reveal con máscara de bloques en hover.
+
+**Ecos menores permitidos** (no compiten con las firmas; solo en zonas de respiro): glifos `PixelGlyph` de caracteres de bloque (statement, footer), cursor píxel, wordmark recortado del footer.
 
 ## Reglas transversales (aplican a TODO el proyecto, fases 2–6)
 
