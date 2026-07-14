@@ -17,15 +17,34 @@ test('marquee: visible en home y estático bajo reduced-motion', async ({ page, 
   await ctx.close();
 });
 
+// el runner de CI no tiene mouse: matchMedia('(pointer: fine)') no matchea y el
+// componente (correctamente) no monta. El test fija el entorno emulando pointer:fine.
+const emulateFinePointer = async (page: import('@playwright/test').Page) => {
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setEmulatedMedia', {
+    features: [
+      { name: 'pointer', value: 'fine' },
+      { name: 'hover', value: 'hover' },
+    ],
+  });
+};
+
 test('cursor píxel: montado con puntero fino, ausente con reduced-motion', async ({ page, browser }) => {
+  await emulateFinePointer(page);
   await page.goto('/');
-  await page.mouse.move(600, 400);
+  // esperar la hidratación: el efecto pone js-pixel-cursor y registra los listeners
+  await expect(page.locator('html')).toHaveClass(/js-pixel-cursor/);
+  // con media emulada el input real de Playwright no genera pointermove: evento sintético
+  await page.evaluate(() =>
+    document.dispatchEvent(new PointerEvent('pointermove', { clientX: 600, clientY: 400, pointerType: 'mouse' }))
+  );
   await expect(page.locator('#pixel-cursor')).toHaveClass(/is-on/);
   const bodyCursor = await page.evaluate(() => getComputedStyle(document.body).cursor);
   expect(bodyCursor).toBe('none');
 
   const ctx = await browser.newContext({ reducedMotion: 'reduce' });
   const p2 = await ctx.newPage();
+  await emulateFinePointer(p2);
   await p2.goto('/');
   await p2.mouse.move(600, 400);
   // el div existe pero nunca se enciende ni roba el cursor nativo
