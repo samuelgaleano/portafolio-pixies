@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { t } from '@/i18n';
+import { categories } from '@/data/categories';
 import PixelCanvas from './PixelCanvas';
 import HeroGrid from './HeroGrid';
 
@@ -13,9 +14,10 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pt-24 pb-20 sm:px-6">
-        <div className="relative inline-block">
-          <h1 id="wordmark" className="font-display text-hero font-bold tracking-tight text-ink">
+      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pt-20 pb-24 sm:px-6">
+        <div className="relative inline-block max-w-full">
+          {/* tracking normal: a escala mosaico, el tight fusiona letras en el muestreo del canvas */}
+          <h1 id="wordmark" className="font-display text-hero font-bold text-ink">
             {t.hero.title}
           </h1>
           <PixelCanvas />
@@ -23,12 +25,12 @@ export default function Hero() {
 
         {/* el texto decorado con puntos medios se oculta a lectores; sr-only lleva el texto limpio */}
         {/* stagger corto: Casey scrollea a los ~1.5s; el contenido no puede llegar tarde */}
-        <p className="hero-in mt-2 font-mono text-lg text-data sm:text-xl" style={{ '--d': '0.9s' } as React.CSSProperties}>
+        <p className="hero-in mt-3 font-mono text-lg text-data sm:text-xl" style={{ '--d': '0.9s' } as React.CSSProperties}>
           <span aria-hidden="true">/{t.hero.subtitle.toLowerCase().replaceAll(' ', '·')}</span>
           <span className="sr-only">{t.hero.subtitle}</span>
         </p>
 
-        <p className="hero-in mt-8 max-w-xl text-lg text-dim" style={{ '--d': '1.05s' } as React.CSSProperties}>
+        <p className="hero-in mt-6 max-w-xl text-lg text-dim" style={{ '--d': '1.05s' } as React.CSSProperties}>
           {t.hero.bylinePre}{' '}
           <Link
             href="/samuel"
@@ -40,7 +42,7 @@ export default function Hero() {
         </p>
 
         <div
-          className="hero-in mt-12 flex flex-wrap items-center gap-x-10 gap-y-6"
+          className="hero-in mt-10 flex flex-wrap items-center gap-x-8 gap-y-5"
           style={{ '--d': '1.2s' } as React.CSSProperties}
         >
           <a
@@ -51,25 +53,18 @@ export default function Hero() {
             {t.hero.cta}
           </a>
 
-          {/* Foto de Samuel: mosaico pixelado placeholder hasta tener [FOTO_SAMUEL] */}
-          <Link href="/samuel" className="group flex items-center gap-4">
-            <span
-              className="block size-16 rounded-(--radius-s) border border-line transition-transform group-hover:scale-105 sm:size-20"
-              style={{
-                backgroundImage:
-                  'conic-gradient(var(--color-surface-2) 25%, var(--color-line) 0 50%, var(--color-surface-2) 0 75%, var(--color-line) 0), linear-gradient(color-mix(in srgb, var(--color-pixel) 20%, transparent), color-mix(in srgb, var(--color-pixel) 20%, transparent))',
-                backgroundSize: '16px 16px, 100% 100%',
-              }}
-              aria-hidden="true"
-            />
-            <span>
-              <span className="block font-medium text-ink">{t.hero.bylineName}</span>
-              <span className="block font-mono text-xs text-dim">
-                {t.hero.photoRole} ·{' '}
-                <span className="text-pixel-soft group-hover:underline">{t.hero.photoCta} →</span>
-              </span>
-            </span>
-          </Link>
+          {/* sustancia real en lugar del placeholder de foto: lo que Pixies construye */}
+          <nav aria-label={t.hero.chipsLabel} className="flex flex-wrap gap-2">
+            {categories.map((c) => (
+              <a
+                key={c.id}
+                href={`#${c.id}`}
+                className="rounded-(--radius-s) border border-line px-3 py-1.5 font-mono text-xs text-dim transition-colors hover:border-pixel hover:text-ink"
+              >
+                {c.heroLabel}
+              </a>
+            ))}
+          </nav>
         </div>
       </div>
 

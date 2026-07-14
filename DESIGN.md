@@ -27,7 +27,7 @@ Dirección: **"Ensamblaje de píxeles"** — Pixies construye cosas digitales; e
 | Texto | General Sans | 400/500/600 | Cuerpo, UI, tarjetas |
 | Mono | JetBrains Mono | 400/700 | Bullets técnicos, badges, consola, fechas |
 
-Escala fluida: `text-hero` = `clamp(3.5rem, 13vw, 9rem)` / `text-h2` = `clamp(1.75rem, 4vw, 3rem)` / cuerpo 1rem/1.7. Self-hosted woff2 en `public/fonts/`, `font-display: swap`, preload de Clash 700 + General 400.
+Escala fluida: `text-hero` = `clamp(4.5rem, 29vw, 23rem)` (el wordmark domina el viewport, spec 2026-07-14) / `text-h2` = `clamp(1.75rem, 4vw, 3rem)` / cuerpo 1rem/1.7. Self-hosted woff2 en `public/fonts/`, `font-display: swap`, preload de Clash 700 + General 400.
 
 ## Layout
 
@@ -45,7 +45,7 @@ Escala fluida: `text-hero` = `clamp(3.5rem, 13vw, 9rem)` / `text-h2` = `clamp(1.
 
 ## Motion
 
-- **Hero (única secuencia grande):** ~400 píxeles convergen y forman "PIXIES" en ~1.8s (canvas vanilla), luego el sitio queda quieto.
+- **Hero (única superficie viva del sitio):** ~300–400 píxeles convergen y forman "PIXIES" en ~1.4s (canvas vanilla) y **se quedan vivos**: repelen al cursor con resorte amortiguado, parpadean en violeta, respiran con una onda lenta (~6.5s) y glitchean una banda ocasional. El loop se pausa fuera de viewport. El resto del sitio queda quieto: la vida está concentrada en el wordmark.
 - Resto: fade-up 300ms al entrar al viewport (una vez) + transitions 150–200ms en hover.
 - `prefers-reduced-motion`: hero estático con fade simple; todo lo demás sin animación.
 - El movimiento tiene propósito o no existe.
@@ -53,7 +53,7 @@ Escala fluida: `text-hero` = `clamp(3.5rem, 13vw, 9rem)` / `text-h2` = `clamp(1.
 ## Signature
 
 **La materialización pixelada — en exactamente 3 lugares y ninguno más:**
-1. Hero: wordmark se ensambla desde píxeles (canvas → h1 real en DOM).
+1. Hero: wordmark se ensambla desde píxeles y queda vivo e interactivo (canvas persistente; h1 real accesible en el DOM con opacity 0).
 2. Foto de Samuel: mosaico pixelado grueso → nítida en hover/focus (CSS).
 3. Tarjetas de proyecto: reveal con máscara de bloques en hover.
 
