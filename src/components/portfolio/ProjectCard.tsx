@@ -6,10 +6,23 @@ import Pending from '@/components/ui/Pending';
 // variant 'wide': tarjeta case-study horizontal para categorías con 1 solo proyecto
 // (un grid de 3 con 1 tarjeta lee como layout sin terminar — critique P2).
 export default function ProjectCard({ project, variant = 'default' }: { project: Project; variant?: 'default' | 'wide' }) {
-  const href = project.status === 'produccion' ? project.liveUrl : project.repoUrl;
+  // demo en vivo tiene prioridad como enlace primario (es lo que un cliente quiere ver);
+  // si no, sitio en producción; si no, el repo.
+  const href = project.demoUrl || (project.status === 'produccion' ? project.liveUrl : project.repoUrl);
   const hasLink = Boolean(href);
+  const isDemo = Boolean(project.demoUrl);
   const badges = project.stack.map((id) => tech[id]);
   const wide = variant === 'wide';
+  const statusLabel = isDemo
+    ? t.portfolio.statusDemo
+    : project.status === 'produccion'
+      ? t.portfolio.statusLive
+      : t.portfolio.statusCode;
+  const linkLabel = isDemo
+    ? t.portfolio.openDemo
+    : project.status === 'produccion'
+      ? t.portfolio.openLive
+      : t.portfolio.openRepo;
 
   const preview = (
     <div
@@ -35,10 +48,10 @@ export default function ProjectCard({ project, variant = 'default' }: { project:
       )}
       <span
         className={`absolute right-2 top-2 rounded-(--radius-s) px-2 py-1 font-mono text-xs font-medium ${
-          project.status === 'produccion' ? 'bg-void/80 text-ok' : 'bg-void/80 text-data'
+          isDemo ? 'bg-void/80 text-pixel-soft' : project.status === 'produccion' ? 'bg-void/80 text-ok' : 'bg-void/80 text-data'
         }`}
       >
-        {project.status === 'produccion' ? t.portfolio.statusLive : t.portfolio.statusCode}
+        {statusLabel}
       </span>
     </div>
   );
@@ -81,7 +94,7 @@ export default function ProjectCard({ project, variant = 'default' }: { project:
       {/* siempre visible: no esconder lo esencial tras el hover (critique P2) */}
       {hasLink ? (
         <span className="font-mono text-xs text-dim transition-colors group-hover:text-pixel-soft">
-          {project.status === 'produccion' ? t.portfolio.openLive : t.portfolio.openRepo}
+          {linkLabel}
         </span>
       ) : (
         <Pending>{t.portfolio.pendingLink}</Pending>

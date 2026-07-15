@@ -14,6 +14,7 @@ export interface Project {
   status: 'produccion' | 'codigo';
   liveUrl?: string; // requerido si status === 'produccion'
   repoUrl?: string; // requerido si status === 'codigo'
+  demoUrl?: string; // demo en vivo con datos ficticios (proyectos sin sitio público real)
   preview: { src: string; alt: string }; // src '' = placeholder
   featured?: boolean;
 }
@@ -113,7 +114,7 @@ export const projects: Project[] = [
     stack: ['nodejs', 'express', 'socketio', 'javascript'],
     status: 'codigo',
     repoUrl: 'https://github.com/samuelgaleano/sincronizacion-tv-red-local', // publicado sanitizado (sin datos del cliente)
-    preview: { src: '', alt: 'Diagrama del sistema de sincronización de televisores en red local' },
+    preview: { src: '/proyectos/tv-panel.png', alt: 'Panel de control del sistema de señalización: tres pantallas con controles de TV y carga de imágenes' },
     featured: true,
   },
   {
