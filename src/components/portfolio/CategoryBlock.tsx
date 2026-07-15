@@ -41,9 +41,16 @@ export default function CategoryBlock({ category }: { category: Category }) {
         </div>
       ) : (
         <div className={`mt-6 grid gap-6 md:grid-cols-2 ${items.length >= 3 ? 'xl:grid-cols-3' : ''}`}>
-          {items.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
+          {items.map((project, i) => {
+            // última tarjeta impar: ocupa las 2 columnas en md–lg (evita el hueco vacío),
+            // vuelve a 1 columna en xl:grid-cols-3
+            const fillOrphan = i === items.length - 1 && items.length % 2 === 1;
+            return (
+              <div key={project.id} className={fillOrphan ? 'md:col-span-2 xl:col-span-1' : ''}>
+                <ProjectCard project={project} />
+              </div>
+            );
+          })}
         </div>
       )}
     </section>

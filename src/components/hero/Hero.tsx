@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { t } from '@/i18n';
 import { categories } from '@/data/categories';
 import PixelCanvas from './PixelCanvas';
 import HeroGrid from './HeroGrid';
+import EngineerSignature from './EngineerSignature';
 
 export default function Hero() {
   return (
@@ -30,16 +30,8 @@ export default function Hero() {
           <span className="sr-only">{t.hero.subtitle}</span>
         </p>
 
-        <p className="hero-in mt-6 max-w-xl text-lg text-dim" style={{ '--d': '1.05s' } as React.CSSProperties}>
-          {t.hero.bylinePre}{' '}
-          <Link
-            href="/samuel"
-            className="font-medium text-ink underline decoration-pixel decoration-2 underline-offset-4 transition-colors hover:text-pixel-soft"
-          >
-            {t.hero.bylineName}
-          </Link>
-          {t.hero.bylinePost}
-        </p>
+        {/* firma interactiva → /samuel: reemplaza el byline plano por la cita del ingeniero */}
+        <EngineerSignature />
 
         <div
           className="hero-in mt-10 flex flex-wrap items-center gap-x-8 gap-y-5"

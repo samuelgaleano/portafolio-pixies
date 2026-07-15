@@ -2,14 +2,22 @@ import { test, expect } from '@playwright/test';
 
 // 4 smoke tests (plan F5-F6 §4): lo que los unit tests no ven — el navegador real.
 
-test('home renderiza: hero, 6 categorías, estado vacío diseñado y tarjeta real', async ({ page }) => {
+test('home renderiza: hero, 6 categorías, proyectos reales y estado vacío diseñado', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#wordmark')).toHaveText('PIXIES');
   await expect(page.locator('.cat-chip')).toHaveCount(6);
-  // sin datos reales, la categoría muestra el estado vacío que convierte (no esqueletos)
-  await expect(page.locator('#landing').getByText('Casos en curado')).toBeVisible();
-  // y la única tarjeta con nombre real es visible en su categoría
-  await expect(page.locator('#empresarial').getByText('Sincronización de televisores')).toBeVisible();
+  // proyectos reales visibles en sus categorías
+  await expect(page.locator('#landing').getByText('Xiaomi CarTech')).toBeVisible();
+  await expect(page.locator('#empresarial').getByText('Sincronización de televisores en red local')).toBeVisible();
+  // 'datos' no tiene caso aún: muestra el estado vacío que convierte (no esqueletos)
+  await expect(page.locator('#datos').getByText('Casos en curado')).toBeVisible();
+});
+
+test('firma del hero: la cita del ingeniero enlaza a /samuel', async ({ page }) => {
+  await page.goto('/');
+  const sig = page.locator('.engineer-signature');
+  await expect(sig).toHaveAttribute('href', '/samuel');
+  await expect(sig).toContainText('la mente detrás de');
 });
 
 test('/samuel y un post renderizan (highlight de código incluido)', async ({ page }) => {
