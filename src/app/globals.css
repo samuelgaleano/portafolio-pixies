@@ -285,6 +285,73 @@ footer:hover .footer-wordmark {
   color: color-mix(in srgb, var(--color-pixel) 26%, var(--color-surface));
 }
 
+/* ——— Firma interactiva del ingeniero en el hero ——— */
+.engineer-signature {
+  --mx: 50%;
+  --my: 50%;
+}
+/* spotlight violeta que sigue al cursor (posición vía --mx/--my desde JS) */
+.sig-glow {
+  background: radial-gradient(
+    220px circle at var(--mx) var(--my),
+    color-mix(in srgb, var(--color-pixel) 26%, transparent),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.engineer-signature:hover .sig-glow,
+.engineer-signature:focus-visible .sig-glow {
+  opacity: 1;
+}
+/* brackets de píxel en 2 esquinas: respiran en idle, se abren y violetan en hover */
+.sig-bracket {
+  width: 12px;
+  height: 12px;
+  border-color: var(--color-dim);
+  transition:
+    border-color 0.25s ease,
+    width 0.25s ease,
+    height 0.25s ease;
+}
+.sig-bracket-tl {
+  top: 8px;
+  left: 8px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+  border-color: var(--color-line);
+}
+.sig-bracket-br {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+  border-color: var(--color-line);
+}
+.engineer-signature:hover .sig-bracket,
+.engineer-signature:focus-visible .sig-bracket {
+  width: 18px;
+  height: 18px;
+  border-color: var(--color-pixel);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sig-bracket {
+    animation: sig-breathe 3.2s ease-in-out infinite;
+  }
+  .sig-bracket-br {
+    animation-delay: 1.6s;
+  }
+}
+@keyframes sig-breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 /* Prose editorial de los posts — medida ~68ch, ritmo cuidado (§ DESIGN.md).
    1.125rem: a 16px la columna de 672px daba ~95 caracteres por línea (auditoría);
    con 18px baja a ~75ch, dentro del rango legible. */

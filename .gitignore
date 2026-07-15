@@ -27,3 +27,6 @@ ruvector.db
 # artefactos de Playwright
 test-results/
 playwright-report/
+
+# Material de entrada de Samuel (ZIPs de proyectos de clientes; NO es código del producto)
+cambios portafolio/
