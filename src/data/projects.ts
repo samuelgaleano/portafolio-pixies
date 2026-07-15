@@ -112,7 +112,7 @@ export const projects: Project[] = [
     ],
     stack: ['nodejs', 'express', 'socketio', 'javascript'],
     status: 'codigo',
-    repoUrl: '', // sistema de red local en operación real; código privado (contiene datos del cliente)
+    repoUrl: 'https://github.com/samuelgaleano/sincronizacion-tv-red-local', // publicado sanitizado (sin datos del cliente)
     preview: { src: '', alt: 'Diagrama del sistema de sincronización de televisores en red local' },
     featured: true,
   },
