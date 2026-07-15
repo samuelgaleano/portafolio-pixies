@@ -30,3 +30,5 @@ playwright-report/
 
 # Material de entrada de Samuel (ZIPs de proyectos de clientes; NO es código del producto)
 cambios portafolio/
+.claude/proven-config.json
+.claude/.proven-config-version

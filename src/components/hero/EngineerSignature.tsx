@@ -41,6 +41,7 @@ export default function EngineerSignature() {
       if (!raf) raf = requestAnimationFrame(frame);
     };
 
+    const clamp = (v: number, max: number) => Math.max(-max, Math.min(max, v));
     const onMove = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
       const mx = e.clientX - r.left;
@@ -48,9 +49,10 @@ export default function EngineerSignature() {
       // spotlight que sigue al cursor (CSS var en %)
       el.style.setProperty('--mx', `${(mx / r.width) * 100}%`);
       el.style.setProperty('--my', `${(my / r.height) * 100}%`);
-      // atracción magnética: el contenido se corre hacia el cursor desde el centro
-      tx = (mx - r.width / 2) * MAG;
-      ty = (my - r.height / 2) * MAG;
+      // atracción magnética: el contenido se corre hacia el cursor desde el centro.
+      // clamp para que nunca se acerque al borde y el texto no se recorte en esquinas.
+      tx = clamp((mx - r.width / 2) * MAG, 14);
+      ty = clamp((my - r.height / 2) * MAG, 9);
       inside = true;
       schedule();
     };
