@@ -23,7 +23,7 @@ export default function ProjectStories() {
                 <p className="mt-1 text-sm text-dim">{s.decision}</p>
                 <Link
                   href={`/#${s.category}`}
-                  className="mt-3 inline-block font-mono text-xs text-pixel-soft hover:underline"
+                  className="mt-2 inline-flex min-h-11 items-center font-mono text-xs text-pixel-soft hover:underline"
                 >
                   {t.samuel.storyLink}
                 </Link>

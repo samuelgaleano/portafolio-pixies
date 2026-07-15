@@ -29,7 +29,7 @@ export default function SocialLinks() {
                 target={ok ? '_blank' : undefined}
                 rel={ok ? 'noopener noreferrer' : undefined}
                 aria-disabled={!ok}
-                className={`inline-flex items-center gap-2 rounded-(--radius-s) border px-4 py-2.5 font-mono text-sm transition-colors ${
+                className={`inline-flex min-h-11 items-center gap-2 rounded-(--radius-s) border px-4 py-2.5 font-mono text-sm transition-colors ${
                   ok
                     ? 'border-line text-ink hover:border-pixel hover:text-pixel-soft'
                     : 'pointer-events-none border-line/50 text-dim'

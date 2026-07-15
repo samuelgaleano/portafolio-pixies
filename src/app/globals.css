@@ -272,7 +272,9 @@
 /* Wordmark recortado del footer (WAIRK): la mitad inferior sale del viewport */
 .footer-wordmark {
   display: block;
-  font-size: clamp(6rem, 24vw, 20rem);
+  /* mín. 4.5rem: a 6rem el texto (333px) excedía el área útil de 288px en 320px y el
+     overflow-hidden recortaba la P y la S por los lados (el recorte inferior sí es intencional) */
+  font-size: clamp(4.5rem, 21vw, 20rem);
   line-height: 0.75;
   transform: translateY(28%);
   color: color-mix(in srgb, var(--color-pixel) 14%, var(--color-surface));
@@ -283,10 +285,34 @@ footer:hover .footer-wordmark {
   color: color-mix(in srgb, var(--color-pixel) 26%, var(--color-surface));
 }
 
-/* Prose editorial de los posts — medida ~68ch, ritmo cuidado (§ DESIGN.md) */
+/* Prose editorial de los posts — medida ~68ch, ritmo cuidado (§ DESIGN.md).
+   1.125rem: a 16px la columna de 672px daba ~95 caracteres por línea (auditoría);
+   con 18px baja a ~75ch, dentro del rango legible. */
 .prose {
   color: var(--color-dim);
+  font-size: 1.125rem;
   line-height: 1.75;
+}
+
+/* Tablas: hoy ningún post usa una, pero sin estas reglas la primera que llegue
+   desborda el body en móvil (el <pre> ya tenía su overflow-x; la tabla no) */
+.prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.875em;
+}
+.prose th,
+.prose td {
+  border-bottom: 1px solid var(--color-line);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.prose th {
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-weight: 700;
 }
 .prose > * + * {
   margin-top: 1.25rem;

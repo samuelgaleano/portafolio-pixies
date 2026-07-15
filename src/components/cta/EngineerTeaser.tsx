@@ -14,7 +14,7 @@ export default function EngineerTeaser() {
       >
         <div
           data-reveal
-          className="mx-auto flex w-full max-w-[1200px] flex-col items-start gap-8 px-4 py-20 sm:px-6 md:flex-row md:items-center"
+          className="mx-auto flex w-full max-w-[1200px] flex-col items-start gap-8 px-4 py-24 sm:px-6 md:flex-row md:items-center"
         >
           {/* mosaico pixelado — mismo lenguaje que la foto del hero */}
           <span

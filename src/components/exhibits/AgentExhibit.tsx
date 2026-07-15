@@ -80,8 +80,9 @@ export default function AgentExhibit() {
                 </p>
                 <p className="mt-1 text-xs text-dim">{s.description}</p>
               </li>
+              {/* text-line (1.4:1) era casi invisible sobre void: si separa pasos, debe verse */}
               {i < agentReplay.pipeline.length - 1 && (
-                <span className="hidden items-center px-1 text-line md:flex" aria-hidden="true">
+                <span className="hidden items-center px-1 text-dim/70 md:flex" aria-hidden="true">
                   →
                 </span>
               )}
@@ -103,8 +104,9 @@ export default function AgentExhibit() {
           </button>
         </div>
         <div ref={logRef} className="max-h-72 overflow-auto p-4">
-          {/* solo phrasing content dentro de <pre> (HTML válido): spans en bloque */}
-          <pre className="font-mono text-xs leading-relaxed">
+          {/* solo phrasing content dentro de <pre> (HTML válido): spans en bloque.
+              pre-wrap: sin esto las líneas de log desbordan 171px la caja en móvil */}
+          <pre className="font-mono text-xs leading-relaxed whitespace-pre-wrap break-words">
             {visible.map((s, i) => (
               <span key={i} className={`block ${KIND_COLOR[s.kind]}`}>
                 {s.text}

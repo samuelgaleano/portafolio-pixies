@@ -21,11 +21,14 @@
   --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
 
   /* Escala fluida */
-  /* hero "Píxel vivo" (spec 2026-07-14): el wordmark domina el viewport de borde a
-     borde del contenedor. 27vw / tope 21.5rem: PIXIES con tracking normal llena el
-     ancho útil sin recortarse (el canvas muestrea este mismo texto) */
-  --text-hero: clamp(4rem, 27vw, 21.5rem);
-  --text-hero--line-height: 0.92;
+  /* --text-wordmark: SOLO el logotipo PIXIES del hero (6 letras). Grande y dominante,
+     pero con aire: a 1440px ocupa ~70% del ancho útil, no de borde a borde.
+     OJO: no reutilizar en titulares de texto largo — para eso está --text-hero. */
+  --text-wordmark: clamp(3.5rem, 21vw, 15rem);
+  --text-wordmark--line-height: 0.9;
+  /* --text-hero: titulares largos (h1 de /samuel). Debe respirar y envolver bien. */
+  --text-hero: clamp(2.25rem, 5.5vw, 4rem);
+  --text-hero--line-height: 1.02;
   --text-h2: clamp(1.75rem, 4vw, 3rem);
   --text-h2--line-height: 1.1;
 

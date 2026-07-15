@@ -13,7 +13,8 @@ export default function CategoryBlock({ category }: { category: Category }) {
   return (
     <section id={category.id} data-reveal className="scroll-mt-28">
       <header>
-        <h3 className="font-display text-2xl font-semibold text-ink sm:text-3xl">{category.title}</h3>
+        {/* fluido como el h2: con tope fijo, la razón h3:h2 caía de 0.86 a 0.63 en desktop */}
+        <h3 className="font-display text-[clamp(1.5rem,2.2vw,2.25rem)] font-semibold text-ink">{category.title}</h3>
         <p className="mt-1 max-w-xl text-dim">{category.description}</p>
       </header>
 

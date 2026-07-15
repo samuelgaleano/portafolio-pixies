@@ -247,10 +247,19 @@ export default function PixelCanvas() {
         io.observe(canvas);
         cleanups.push(() => io.disconnect());
 
-        // cursor/touch relativo al canvas; escuchamos en toda la sección del hero
+        // cursor/touch relativo al canvas; escuchamos en toda la sección del hero.
+        // Las partículas viven en el espacio de dibujo (0..w, 0..h) fijado en build();
+        // el canvas se MUESTRA a rect.width×rect.height, que puede diferir de w×h (reflow
+        // de la fuente al cargar, escalado de pantalla, barra de URL móvil). Sin reescalar,
+        // la repulsión se corre proporcional a x: bien en las primeras letras, desfasada en
+        // las últimas. Mapear pantalla→dibujo lo corrige (factor 1 cuando coinciden).
         const onMove = (e: PointerEvent) => {
           const r = canvas.getBoundingClientRect();
-          mouse = { x: e.clientX - r.left, y: e.clientY - r.top };
+          if (!r.width || !r.height) return;
+          mouse = {
+            x: (e.clientX - r.left) * (w / r.width),
+            y: (e.clientY - r.top) * (h / r.height),
+          };
         };
         const onLeave = () => {
           mouse = { x: -9999, y: -9999 };
@@ -264,18 +273,22 @@ export default function PixelCanvas() {
           hero.removeEventListener('pointerleave', onLeave);
         });
 
-        // resize re-muestrea (el hide de la URL bar en móvil solo cambia alto: se ignora)
-        let lastW = window.innerWidth;
+        // Reconstruir cuando el ANCHO real del contenedor cambia: no solo por resize de
+        // ventana, también por reflow de la fuente al cargar tarde (la causa de que el
+        // buffer y el tamaño mostrado se desincronicen y la repulsión se corriera). Se
+        // ignora el cambio de solo-alto (la URL bar en móvil) para no thrashear el intro.
+        let lastW = Math.round(w);
         let timer = 0;
-        const onResize = () => {
-          if (window.innerWidth === lastW) return;
-          lastW = window.innerWidth;
+        const ro = new ResizeObserver(() => {
+          const nw = Math.round(wrap.getBoundingClientRect().width);
+          if (nw === lastW || nw === 0) return;
+          lastW = nw;
           clearTimeout(timer);
           timer = window.setTimeout(() => build(true), 200);
-        };
-        window.addEventListener('resize', onResize);
+        });
+        ro.observe(wrap);
         cleanups.push(() => {
-          window.removeEventListener('resize', onResize);
+          ro.disconnect();
           clearTimeout(timer);
         });
 
