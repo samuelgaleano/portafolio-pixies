@@ -129,7 +129,7 @@ export const projects: Project[] = [
     ],
     stack: ['php', 'mysql', 'javascript'],
     status: 'codigo',
-    repoUrl: '', // sistema base no desplegado; repo público en evaluación
+    repoUrl: 'https://github.com/samuelgaleano/sistema-pos-restaurante',
     preview: { src: '', alt: 'Vista previa del sistema POS para restaurantes' },
   },
 ];
