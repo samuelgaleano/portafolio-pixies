@@ -1,0 +1,40 @@
+/* ÚNICA fuente de verdad del sistema de diseño (§4 del plan).
+   Tailwind v4 genera utilidades desde este @theme: bg-void, text-pixel, font-display, etc. */
+@theme {
+  /* Color — Dirección E "Lavanda de día": la marca violeta llevada a claro.
+     Fondo lavanda, tinta morada oscura. Elegida por Samuel (2026-07-17). */
+  --color-void: #f2eefc;        /* fondo base, lavanda claro */
+  --color-surface: #ffffff;     /* tarjetas, paneles */
+  --color-surface-2: #ece4fb;   /* hover, consola, marcos claros */
+  --color-line: #ded6f3;        /* bordes, retícula, divisores */
+  --color-ink: #1c1533;         /* texto principal, tinta morada (12.9:1 AAA) */
+  --color-dim: #5b5480;         /* texto secundario sobre claro (5.1:1 AA) */
+  --color-pixel: #6d4aff;       /* primario: marca, enlaces, foco (4.6:1 sobre lavanda) */
+  --color-pixel-soft: #5a37d6;  /* violeta de TEXTO sobre claro: más oscuro que pixel (6.3:1) */
+  --color-signal: #e8395c;      /* SOLO CTAs de conversión, texto void (claro) encima */
+  --color-data: #0d7490;        /* SOLO capa técnica sobre claro: mono, badges, logs (4.7:1) */
+  --color-ok: #15803d;
+  --color-err: #dc2626;
+  --color-code: #171326;        /* fondo OSCURO para bloques de código (Shiki poimandres) */
+
+  /* Tipografía */
+  --font-display: 'Clash Display', system-ui, sans-serif;
+  --font-sans: 'General Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  /* Escala fluida */
+  /* --text-wordmark: SOLO el logotipo PIXIES del hero (6 letras). Grande y dominante,
+     pero con aire: a 1440px ocupa ~70% del ancho útil, no de borde a borde.
+     OJO: no reutilizar en titulares de texto largo — para eso está --text-hero. */
+  --text-wordmark: clamp(4rem, 25vw, 18.5rem);
+  --text-wordmark--line-height: 0.9;
+  /* --text-hero: titulares largos (h1 de /samuel). Debe respirar y envolver bien. */
+  --text-hero: clamp(2.25rem, 5.5vw, 4rem);
+  --text-hero--line-height: 1.02;
+  --text-h2: clamp(1.75rem, 4vw, 3rem);
+  --text-h2--line-height: 1.1;
+
+  /* Geometría — cuadrada/pixelada por concepto */
+  --radius-s: 6px;
+  --radius-m: 12px;
+}

@@ -1,0 +1,37 @@
+node_modules/
+.next/
+out/
+dist/
+.astro/
+*.log
+.DS_Store
+.env*.local
+.vercel
+next-env.d.ts
+*.tsbuildinfo
+
+# artefactos de pruebas (Playwright)
+test-results/
+playwright-report/
+
+# herramientas y configuración locales (no forman parte de la app)
+.claude/
+.mcp.json
+.claude-flow/
+.swarm/
+.hive-mind/
+ruvector.db
+CLAUDE.md
+
+# material de entrada local (ZIPs de proyectos; no es código del producto)
+cambios portafolio/
+
+# Guía de despliegue personal (no forma parte del sitio)
+/paso a paso/
+
+/lab-preview/
+
+# temporales y material de trabajo local (no forman parte del sitio)
+tmp/
+instrucciones_cambios*.md
+scripts/preview-local.bat

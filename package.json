@@ -1,0 +1,38 @@
+{
+  "name": "portafolio-pixies",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@vercel/analytics": "^1.4.0",
+    "gray-matter": "^4.0.3",
+    "gsap": "^3.15.0",
+    "next": "^16.1.0",
+    "next-mdx-remote": "^6.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.2.10",
+    "rehype-pretty-code": "^0.14.4",
+    "shiki": "^4.3.1",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.6.0",
+    "vitest": "^4.1.10"
+  }
+}

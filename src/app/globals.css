@@ -1,0 +1,1784 @@
+@import 'tailwindcss';
+@import '../styles/tokens.css';
+
+/* Fuentes self-hosted (public/fonts). Preload manual de las 2 críticas en layout.tsx
+   (Clash Bold del hero + General Regular del cuerpo); el resto carga bajo demanda.
+   Medido: mejor LCP que next/font, que precargaba las 7 y subía el LCP a ~4s. */
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* En @layer base para que las utilities de Tailwind (@layer utilities) puedan
+   sobreescribir — una regla sin capa le ganaría a scroll-mt-*, text-*, etc. */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Tema claro "Lavanda de día": formularios y scrollbars nativos renderizan claros */
+    color-scheme: light;
+    /* el color base vive en html; el body queda TRANSPARENTE para que el fondo de puntos
+       ambiental (AmbientDots, fixed -z-10) se vea detrás del contenido de las secciones */
+    background-color: var(--color-void);
+  }
+
+  body {
+    @apply text-ink font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Header fijo no tapa las anclas (por defecto; cada ancla puede subirlo con scroll-mt-*) */
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-pixel);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    /* pixel-soft + void ≈ 8:1 (pixel + ink no llegaba a AA) */
+    background: var(--color-pixel-soft);
+    color: var(--color-void);
+  }
+}
+
+/* Transición de página: al navegar, el contenido se REENSAMBLA — barrido diagonal
+   (máscara) + de-blur + leve subida. Rápido para no estorbar. reduced-motion lo neutraliza. */
+@property --pt-wipe {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+.page-enter {
+  --pt-wipe: 0%;
+  -webkit-mask: linear-gradient(125deg, #000 var(--pt-wipe), rgba(0, 0, 0, 0) calc(var(--pt-wipe) + 10%));
+  mask: linear-gradient(125deg, #000 var(--pt-wipe), rgba(0, 0, 0, 0) calc(var(--pt-wipe) + 10%));
+  animation: page-enter 0.68s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.985);
+    filter: blur(5px);
+    --pt-wipe: 0%;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    --pt-wipe: 120%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-enter {
+    -webkit-mask: none;
+    mask: none;
+    filter: none;
+  }
+}
+
+/* Scroll-reveals (V2). `js-reveal` en <html> lo pone RevealObserver: sin JS, nada se oculta.
+   Al entrar, cada bloque se ENSAMBLA: barrido diagonal (máscara) + de-blur + subida.
+   --reveal-wipe se registra con @property para poder transicionar la posición de la máscara. */
+@property --reveal-wipe {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+.js-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(30px);
+  /* blur reducido (Samuel r19): 11px→4px — animar blur es caro; 4px conserva el "de-blur"
+     del ensamblaje pero repinta mucho más barato → scroll sin trabas */
+  filter: blur(4px);
+  --reveal-wipe: 0%;
+  -webkit-mask: linear-gradient(115deg, #000 var(--reveal-wipe), rgba(0, 0, 0, 0) calc(var(--reveal-wipe) + 7%));
+  mask: linear-gradient(115deg, #000 var(--reveal-wipe), rgba(0, 0, 0, 0) calc(var(--reveal-wipe) + 7%));
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.7s ease,
+    --reveal-wipe 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.js-reveal [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  --reveal-wipe: 115%;
+}
+/* Con movimiento reducido no recortamos ni desenfocamos: el contenido solo aparece. */
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal [data-reveal] {
+    filter: none;
+    -webkit-mask: none;
+    mask: none;
+  }
+}
+
+/* Retícula sutil — eco del píxel (solo hero y separadores) */
+.grid-bg {
+  background-image:
+    linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* máscara de bloques de las tarjetas — eco del píxel; se afina al hover */
+.pixel-mask {
+  background-image: conic-gradient(
+      from 0deg,
+      color-mix(in srgb, var(--color-pixel) 18%, transparent) 25%,
+      transparent 0 50%,
+      color-mix(in srgb, var(--color-pixel) 18%, transparent) 0 75%,
+      transparent 0
+    ),
+    linear-gradient(135deg, var(--color-surface-2), var(--color-surface));
+  background-size:
+    24px 24px,
+    100% 100%;
+  transition: background-size 0.4s ease;
+}
+.group:hover .pixel-mask,
+.group:focus-visible .pixel-mask {
+  background-size:
+    12px 12px,
+    100% 100%;
+}
+
+/* fade en el borde derecho del mini-nav: pista de que scrollea horizontal (móvil) */
+/* Entrada orquestada del hero (única secuencia grande del sitio) */
+.hero-in {
+  opacity: 0;
+  animation: hero-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  animation-delay: var(--d, 1.5s);
+}
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* caída suave con ease-out, no bounce */
+.cue-pixel {
+  animation: cue-drop 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@keyframes cue-drop {
+  0% {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  45% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+}
+
+/* ——— Capa viva (spec 2026-07-14, referencias WAIRK/Barbiana/Heat) ——— */
+
+
+/* Glifos de píxel en caracteres (eco de la firma; arte ASCII a lo Barbiana) */
+.pixel-glyph {
+  font-family: var(--font-mono);
+  line-height: 1.05;
+  letter-spacing: 0.05em;
+  user-select: none;
+  white-space: pre;
+}
+
+/* Wordmark recortado del footer (WAIRK): la mitad inferior sale del viewport */
+.footer-wordmark {
+  display: block;
+  /* mín. 4.5rem: a 6rem el texto (333px) excedía el área útil de 288px en 320px y el
+     overflow-hidden recortaba la P y la S por los lados (el recorte inferior sí es intencional) */
+  font-size: clamp(4.5rem, 21vw, 20rem);
+  line-height: 0.75;
+  transform: translateY(28%);
+  color: color-mix(in srgb, var(--color-pixel) 14%, var(--color-surface));
+  transition: color 0.6s ease;
+  user-select: none;
+}
+footer:hover .footer-wordmark {
+  color: color-mix(in srgb, var(--color-pixel) 26%, var(--color-surface));
+}
+
+/* ——— Firma interactiva del ingeniero en el hero ——— */
+.engineer-signature {
+  --mx: 50%;
+  --my: 50%;
+}
+/* spotlight violeta que sigue al cursor (posición vía --mx/--my desde JS) */
+.sig-glow {
+  background: radial-gradient(
+    220px circle at var(--mx) var(--my),
+    color-mix(in srgb, var(--color-pixel) 26%, transparent),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.engineer-signature:hover .sig-glow,
+.engineer-signature:focus-visible .sig-glow {
+  opacity: 1;
+}
+/* brackets de píxel en 2 esquinas: respiran en idle, se abren y violetan en hover */
+.sig-bracket {
+  width: 12px;
+  height: 12px;
+  border-color: var(--color-dim);
+  transition:
+    border-color 0.25s ease,
+    width 0.25s ease,
+    height 0.25s ease;
+}
+.sig-bracket-tl {
+  top: 8px;
+  left: 8px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+  border-color: var(--color-line);
+}
+.sig-bracket-br {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+  border-color: var(--color-line);
+}
+.engineer-signature:hover .sig-bracket,
+.engineer-signature:focus-visible .sig-bracket {
+  width: 18px;
+  height: 18px;
+  border-color: var(--color-pixel);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sig-bracket {
+    animation: sig-breathe 3.2s ease-in-out infinite;
+  }
+  .sig-bracket-br {
+    animation-delay: 1.6s;
+  }
+}
+@keyframes sig-breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Prose editorial de los posts — medida ~68ch, ritmo cuidado (§ DESIGN.md).
+   1.125rem: a 16px la columna de 672px daba ~95 caracteres por línea (auditoría);
+   con 18px baja a ~75ch, dentro del rango legible. */
+.prose {
+  color: var(--color-dim);
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+/* Tablas: hoy ningún post usa una, pero sin estas reglas la primera que llegue
+   desborda el body en móvil (el <pre> ya tenía su overflow-x; la tabla no) */
+.prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.875em;
+}
+.prose th,
+.prose td {
+  border-bottom: 1px solid var(--color-line);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.prose th {
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+.prose > * + * {
+  margin-top: 1.25rem;
+}
+.prose h2 {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+}
+.prose h3 {
+  color: var(--color-ink);
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
+.prose a {
+  color: var(--color-pixel-soft);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose strong {
+  color: var(--color-ink);
+}
+/* Panel editorial en vez de rail lateral (evita el tell de "card con barra de acento") */
+.prose blockquote {
+  background: var(--color-surface);
+  border-radius: var(--radius-m);
+  padding: 1.25rem 1.5rem;
+  color: var(--color-ink);
+  font-size: 1.15rem;
+  font-style: italic;
+}
+.prose blockquote p {
+  margin: 0;
+}
+.prose ul {
+  list-style: none;
+  padding-left: 0;
+}
+.prose li {
+  position: relative;
+  padding-left: 1.25rem;
+}
+.prose li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--color-pixel);
+}
+.prose li + li {
+  margin-top: 0.5rem;
+}
+.prose pre {
+  /* Sitio claro, código oscuro: el tema Shiki (poimandres) tiene tinta clara, así que el
+     bloque conserva fondo oscuro para que el código siga legible (patrón Stripe/Linear). */
+  background: var(--color-code) !important;
+  border: 1px solid color-mix(in srgb, var(--color-pixel) 30%, var(--color-line));
+  border-radius: var(--radius-m);
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+}
+.prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--color-data);
+}
+
+/* Tarjeta de proyecto — al hover/foco: elevación + contorno violeta iluminado y un
+   reflejo que barre la preview. Aditivo (aprobado por Samuel): no cambia estructura
+   ni contenido. El bloque global de reduced-motion (abajo) neutraliza el movimiento. */
+.proj-card {
+  cursor: pointer;
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.35s,
+    border-color 0.35s;
+}
+/* El levantamiento va SOLO con puntero fino (mouse). En táctil, iOS trata el primer toque sobre
+   un elemento con :hover como "mostrar el hover" y exige un SEGUNDO toque para seguir el enlace
+   — por eso "solo el botón funcionaba, la imagen no". Sin reglas :hover en táctil, el toque sobre
+   la tarjeta (que es un enlace entero) navega al PRIMER toque. :focus-within se mantiene siempre
+   (foco de teclado; no dispara ese comportamiento de iOS). */
+@media (hover: hover) {
+  .proj-card:hover {
+    transform: translateY(-8px) scale(1.012);
+    border-color: color-mix(in srgb, var(--color-pixel) 80%, var(--color-line));
+    box-shadow:
+      0 30px 70px -26px color-mix(in srgb, var(--color-pixel) 85%, transparent),
+      0 0 0 1.5px color-mix(in srgb, var(--color-pixel) 55%, transparent) inset;
+  }
+}
+.proj-card:focus-within {
+  transform: translateY(-8px) scale(1.012);
+  border-color: color-mix(in srgb, var(--color-pixel) 80%, var(--color-line));
+  box-shadow:
+    0 30px 70px -26px color-mix(in srgb, var(--color-pixel) 85%, transparent),
+    0 0 0 1.5px color-mix(in srgb, var(--color-pixel) 55%, transparent) inset;
+}
+.proj-card:active {
+  transform: translateY(-4px) scale(1.004);
+}
+.proj-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s;
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    color-mix(in srgb, var(--color-pixel-soft) 24%, transparent) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+}
+@media (hover: hover) {
+  .proj-card:hover .proj-sheen {
+    opacity: 1;
+    animation: card-sheen 1.4s linear infinite;
+  }
+}
+.proj-card:focus-within .proj-sheen {
+  opacity: 1;
+  animation: card-sheen 1.4s linear infinite;
+}
+@keyframes card-sheen {
+  0% {
+    background-position: -150% 0;
+  }
+  100% {
+    background-position: 250% 0;
+  }
+}
+
+/* overlay "Ver demo en vivo" sobre la cuadrícula de un producto con demo (Samuel r20): aparece
+   al hover y sube; señala que la preview es OPRIMIBLE hacia el demo. La tarjeta entera navega. */
+.proj-demo-hint {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  background: color-mix(in srgb, var(--color-pixel) 26%, transparent);
+  transition: opacity 0.3s ease;
+}
+@media (hover: hover) {
+  .proj-card:hover .proj-demo-hint {
+    opacity: 1;
+  }
+}
+.proj-card:focus-within .proj-demo-hint {
+  opacity: 1;
+}
+.proj-demo-hint__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: var(--radius-s);
+  background: var(--color-pixel);
+  color: var(--color-void);
+  padding: 0.5rem 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 10px 26px -12px color-mix(in srgb, var(--color-pixel) 80%, transparent);
+  transform: translateY(8px);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@media (hover: hover) {
+  .proj-card:hover .proj-demo-hint__btn {
+    transform: translateY(0);
+  }
+}
+.proj-card:focus-within .proj-demo-hint__btn {
+  transform: translateY(0);
+}
+
+/* Atmósfera premium — dos halos de marca que respiran muy lento + viñeteado, detrás
+   del contenido. Aditivo y reutilizable (componente Atmosphere). pointer-events:none,
+   aria-hidden; el bloque global de reduced-motion (abajo) detiene el movimiento.
+   Usa transform/opacity (GPU) y closest-side para no repintar de más. */
+.atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.atmosphere::before,
+.atmosphere::after {
+  content: '';
+  position: absolute;
+  filter: blur(90px);
+  opacity: 0.5;
+  will-change: transform;
+}
+.atmosphere::before {
+  left: 3%;
+  top: 3%;
+  width: 52%;
+  height: 60%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--color-pixel) 62%, transparent), transparent);
+  animation: atmos-a 18s ease-in-out infinite;
+}
+.atmosphere::after {
+  right: 2%;
+  top: 26%;
+  width: 50%;
+  height: 60%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--color-pixel-soft) 52%, transparent), transparent);
+  animation: atmos-b 22s ease-in-out infinite;
+}
+.atmosphere > .vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 0%, transparent 55%, color-mix(in srgb, var(--color-void) 82%, var(--color-pixel)) 100%);
+}
+/* Variante estática para secciones (no el hero): sin respiración y más tenue, para dar
+   cohesión "cara" a lo largo del sitio sin recargar de movimiento. */
+.atmosphere--static::before,
+.atmosphere--static::after {
+  animation: none;
+  opacity: 0.3;
+}
+
+/* Marco "pantalla" de las demos embebidas + skeleton de carga (mientras Render despierta).
+   Píxeles cuadrados en la barra (eco de la marca, no los típicos círculos). */
+.demo-frame {
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+  box-shadow: 0 24px 60px -32px color-mix(in srgb, var(--color-pixel) 40%, transparent);
+}
+.demo-frame__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-surface-2);
+}
+.demo-frame__dots {
+  display: inline-flex;
+  gap: 5px;
+}
+.demo-frame__dots > i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--color-line);
+}
+.demo-frame__dots > i:first-child {
+  background: color-mix(in srgb, var(--color-pixel) 70%, var(--color-line));
+}
+.demo-frame__url {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-dim);
+}
+.demo-frame__screen {
+  position: relative;
+  background: var(--color-void);
+}
+.demo-skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  overflow: hidden;
+  background: var(--color-void);
+  transition: opacity 0.5s ease;
+}
+.demo-skeleton.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.demo-skeleton__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask: radial-gradient(80% 60% at 50% 50%, #000, transparent 80%);
+  mask: radial-gradient(80% 60% at 50% 50%, #000, transparent 80%);
+}
+.demo-skeleton__sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 40%,
+    color-mix(in srgb, var(--color-pixel-soft) 14%, transparent) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: card-sheen 1.9s linear infinite;
+}
+.demo-skeleton__pixels {
+  position: relative;
+  display: inline-flex;
+  gap: 6px;
+}
+.demo-skeleton__pixels > i {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--color-pixel);
+  animation: pixel-blink 1.1s ease-in-out infinite;
+}
+.demo-skeleton__pixels > i:nth-child(2) {
+  animation-delay: 0.18s;
+}
+.demo-skeleton__pixels > i:nth-child(3) {
+  animation-delay: 0.36s;
+}
+@keyframes pixel-blink {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+/* Botón-deslizable "Conócelo" de la firma, versión PIXIES: la pista está viva con una
+   retícula de celdas de píxel que se ENSAMBLAN al aparecer y luego titilan en violeta
+   con destellos claros — el mismo lenguaje del wordmark del hero. Se arrastra el nudo
+   hasta el final (o clic en la tarjeta) y arranca la transición al perfil. GSAP
+   Draggable es dueño del transform del nudo: el CSS no lo anima. El bloque global de
+   reduced-motion (abajo) congela celdas y flecha. */
+.sig-slider {
+  position: relative;
+  display: block;
+  height: 52px;
+  width: 200px;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-s);
+  border: 1px solid color-mix(in srgb, var(--color-pixel) 55%, var(--color-line));
+  background: color-mix(in srgb, var(--color-pixel) 8%, var(--color-void));
+  box-shadow: 0 10px 30px -14px color-mix(in srgb, var(--color-pixel) 70%, transparent);
+  cursor: grab;
+  touch-action: pan-y;
+}
+.sig-slider:active {
+  cursor: grabbing;
+}
+/* retícula viva (eco del wordmark): cada celda entra escalonada y titila con su ritmo */
+.sig-slider__cells {
+  position: absolute;
+  inset: 5px;
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2px;
+  pointer-events: none;
+}
+.sig-slider__cells i {
+  border-radius: 1.5px;
+  background: var(--color-pixel);
+  opacity: 0;
+  animation:
+    sig-cell-in 0.35s steps(2, jump-none) both var(--in),
+    sig-cell-live 3s ease-in-out infinite var(--sh);
+  /* solo transform/filter (los keyframes son dueños de la opacidad — sin conflicto) */
+  transition:
+    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.5s ease;
+}
+.sig-slider__cells i[data-hot='true'] {
+  background: var(--color-ink);
+}
+/* al pasar el cursor, el botón se DESBARATA: cada celda sale por su vector --sx/--sy
+   (siguen titilando mientras vuelan — mismo lenguaje que el wordmark del hero) y el
+   conjunto se rearma al salir. El bloque global de reduced-motion anula la transición. */
+.sig-slider:hover .sig-slider__cells i {
+  transform: translate(var(--sx), var(--sy)) scale(0.5) rotate(10deg);
+  filter: brightness(1.35);
+}
+@keyframes sig-cell-in {
+  to {
+    opacity: 0.22;
+  }
+}
+@keyframes sig-cell-live {
+  0%,
+  86%,
+  100% {
+    opacity: 0.22;
+  }
+  90% {
+    opacity: 0.95;
+  }
+}
+.sig-slider__fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-pixel) 35%, transparent),
+    color-mix(in srgb, var(--color-pixel) 60%, transparent)
+  );
+}
+.sig-slider__text {
+  position: absolute;
+  inset: 0 10px 0 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--color-ink);
+  text-shadow: 0 1px 10px color-mix(in srgb, var(--color-void) 90%, transparent);
+}
+.sig-slider__text > span {
+  display: inline-block;
+  color: var(--color-pixel-soft);
+  animation: sig-cta-arrow 1.5s ease-in-out infinite;
+}
+.sig-slider__knob {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 44px;
+  height: 44px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-pixel);
+  color: var(--color-void);
+  font-weight: 700;
+  box-shadow: 0 4px 16px -4px var(--color-pixel);
+  will-change: transform;
+}
+.sig-slider__knob > span {
+  display: inline-block;
+  animation: sig-cta-arrow 1.5s ease-in-out infinite;
+}
+@keyframes sig-cta-arrow {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+/* Panel de la transición hacia /samuel: barre la pantalla de izquierda a derecha al
+   pulsar la firma (GSAP lo desliza y navega al completar). Borde de avance violeta. */
+.sig-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  transform: translateX(-103%);
+  background:
+    linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px),
+    var(--color-void);
+  background-size:
+    32px 32px,
+    32px 32px,
+    100% 100%;
+}
+.sig-transition::after {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: 0;
+  width: 10px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--color-pixel), var(--color-pixel-soft));
+  box-shadow: 0 0 28px 6px color-mix(in srgb, var(--color-pixel) 70%, transparent);
+}
+
+/* ── Hero rediseñado (2026-07-18): CTA de conversión + portal del ingeniero ──────
+   Reemplaza la firma-bloque por dos accesos limpios. El portal lleva una retícula
+   viva de píxeles (eco del wordmark) que se DESBARATA al hover y dispara el barrido. */
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border-radius: var(--radius-s);
+  background: var(--color-signal);
+  color: var(--color-void);
+  padding: 0.85rem 1.6rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+  box-shadow: 0 12px 30px -14px color-mix(in srgb, var(--color-signal) 80%, transparent);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.3s ease,
+    filter 0.2s ease;
+}
+.hero-cta:hover {
+  filter: brightness(1.04);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px -14px color-mix(in srgb, var(--color-signal) 85%, transparent);
+}
+.hero-cta__arrow {
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.hero-cta:hover .hero-cta__arrow {
+  transform: translateX(4px);
+}
+
+/* flotador: mueve el botón solito para llamar la atención (Samuel r6: más tráfico al
+   ingeniero). El float va en el WRAPPER y el tilt 3D en el link → no chocan de transform. */
+.eng-portal-float {
+  display: inline-block;
+  /* nudge sutil del botón (Samuel r20): en desktop un poco arriba y hacia el centro (izquierda) */
+  --engx: 0px;
+  --engy: 0px;
+  animation: eng-float 4s ease-in-out infinite;
+}
+@media (min-width: 640px) {
+  .eng-portal-float {
+    --engx: -13%;
+    --engy: -11%;
+  }
+}
+@keyframes eng-float {
+  0%,
+  100% {
+    transform: translate(var(--engx), var(--engy));
+  }
+  50% {
+    transform: translate(var(--engx), calc(var(--engy) - 6px));
+  }
+}
+/* Overlap r21 (Samuel): en DESKTOP la tarjeta del ingeniero se ancla al vértice inferior-derecho
+   del wordmark y se sobrepone un poco a la "S" de PIXIES. En móvil no aplica (va en la fila CTA).
+   --dock-r = corrimiento horizontal (negativo = hacia afuera/derecha); --dock-y = cuánto sube
+   para solaparse con la S (más negativo = más solape). Se ajusta el par para las 3 opciones. */
+@media (min-width: 640px) {
+  .eng-dock {
+    position: absolute;
+    top: 100%;
+    right: var(--dock-r, -9rem);
+    z-index: 20;
+    transform: translateY(var(--dock-y, -5.5rem));
+  }
+  /* anclada: anulamos el nudge del float para no descolocarla (el bob vertical sutil sigue) */
+  .eng-dock .eng-portal-float {
+    --engx: 0px;
+    --engy: 0px;
+  }
+}
+/* desktop ANGOSTO (640–1023): con el wordmark más pequeño, el empuje completo (-9rem) sacaría la
+   tarjeta del viewport y la recortaría; aquí se empuja menos (sigue rozando la "S"). A partir de
+   1024 el ancho ya da para el empuje completo aprobado. */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .eng-dock {
+    right: -4rem;
+  }
+}
+/* panel CUADRADO vertical (Samuel r17): la foto arriba (malla que se dispersa), texto debajo,
+   flecha en la esquina. Crece hacia arriba desde el CTA (el hero lo alinea con items-end). */
+.eng-portal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
+  width: 268px;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  border: 1.5px solid color-mix(in srgb, var(--color-pixel) 45%, var(--color-line));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 88%, var(--color-pixel)) 0%, var(--color-surface) 62%);
+  padding: 1.4rem 1.4rem 2.4rem;
+  transform-style: preserve-3d;
+  /* "animado": pulso de glow continuo (box-shadow — no choca con el transform del hover) */
+  animation: eng-glow 3.2s ease-in-out infinite;
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 0.3s;
+}
+@keyframes eng-glow {
+  0%,
+  100% {
+    box-shadow: 0 18px 42px -28px color-mix(in srgb, var(--color-pixel) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 24px 56px -24px color-mix(in srgb, var(--color-pixel) 88%, transparent);
+  }
+}
+/* "3D": al hover se inclina en perspectiva y se eleva */
+.eng-portal:hover {
+  transform: translateY(-4px) perspective(760px) rotateX(6deg) rotateY(-3deg);
+  border-color: color-mix(in srgb, var(--color-pixel) 72%, var(--color-line));
+}
+/* en móvil el panel cuadrado se centra bajo el CTA (que ocupa todo el ancho) */
+@media (max-width: 639px) {
+  .eng-portal {
+    margin-inline: auto;
+  }
+}
+/* avatar (Samuel r17): en REPOSO la foto entera y limpia; al pasar/seleccionar la foto se apaga
+   y una malla 8×8 de teselas se DISPERSA en píxeles encima (eco de la retícula del wordmark). */
+.eng-portal__avatar {
+  position: relative;
+  box-sizing: content-box;
+  width: 144px;
+  height: 144px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 2px solid color-mix(in srgb, var(--color-pixel) 55%, var(--color-line));
+  box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--color-pixel) 70%, transparent);
+}
+.eng-portal__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.35s ease 0.08s;
+}
+.eng-portal__tiles {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
+.eng-portal__tiles i {
+  background-image: url('/samuel/samuel-avatar.webp');
+  background-size: 144px 144px;
+  background-repeat: no-repeat;
+  opacity: 0;
+}
+.eng-portal:hover .eng-portal__photo,
+.eng-portal:focus-visible .eng-portal__photo {
+  opacity: 0;
+}
+/* al seleccionar: las teselas aparecen notables, CAEN (--fall, gravedad) rotando, luego se desvanecen */
+.eng-portal:hover .eng-portal__tiles i,
+.eng-portal:focus-visible .eng-portal__tiles i {
+  animation: eng-fall 0.85s cubic-bezier(0.4, 0, 0.75, 0.9) var(--d) both;
+}
+@keyframes eng-fall {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0) scale(1);
+  }
+  14% {
+    opacity: 1;
+    transform: translate(0, -2px) rotate(calc(var(--rot) * 0.15)) scale(1.06);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--sx), var(--fall)) rotate(var(--rot)) scale(0.42);
+  }
+}
+.eng-portal__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08rem;
+  min-width: 0;
+}
+.eng-portal__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--color-dim);
+}
+.eng-portal__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.05;
+  color: var(--color-ink);
+}
+.eng-portal__role {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--color-pixel-soft);
+}
+/* flecha grande en la esquina inferior derecha: afordancia clara de botón */
+.eng-portal__go {
+  position: absolute;
+  right: 1.2rem;
+  bottom: 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--color-pixel);
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.eng-portal:hover .eng-portal__go {
+  transform: translateX(5px);
+}
+.eng-portal__role > span {
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.eng-portal:hover .eng-portal__role > span {
+  transform: translateX(4px);
+}
+
+/* ── Problema→Solución INTERACTIVO (Samuel r21): tarjeta que muestra el PROBLEMA (general y
+   concreto) y al pasar el cursor / enfocar / tocar se VOLTEA (flip 3D) revelando la SOLUCIÓN
+   que lo resuelve + CTA al demo. Reusable (ERP y POS). El grid-stack de las dos caras auto-
+   ajusta la altura a la cara más alta (sin saltos). Contraste de marca: problema = signal
+   (rojo); solución = pixel (violeta). */
+.ps {
+  perspective: 1600px;
+}
+.ps-inner {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.ps:hover .ps-inner,
+.ps:focus-within .ps-inner,
+.ps-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+/* ambas caras ocupan la MISMA celda → la altura del bloque = la cara más alta */
+.ps-face {
+  grid-area: 1 / 1;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  appearance: none;
+  font: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centra el contenido: la cara más corta (problema) no deja hueco */
+  gap: 0.5rem;
+  min-height: 0;
+  width: 100%;
+  border-radius: var(--radius-m);
+  border: 1.5px solid var(--color-line);
+  padding: clamp(1.2rem, 3vw, 1.9rem);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+.ps-face--problem {
+  border-color: color-mix(in srgb, var(--color-signal) 42%, var(--color-line));
+  background: linear-gradient(158deg, color-mix(in srgb, var(--color-signal) 11%, var(--color-surface)), var(--color-surface) 72%);
+}
+.ps-face--solution {
+  transform: rotateY(180deg);
+  border-color: color-mix(in srgb, var(--color-pixel) 50%, var(--color-line));
+  background: linear-gradient(158deg, color-mix(in srgb, var(--color-pixel) 13%, var(--color-surface)), var(--color-surface) 72%);
+  box-shadow: 0 26px 60px -30px color-mix(in srgb, var(--color-pixel) 82%, transparent);
+}
+.ps-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.ps-label--problem {
+  color: var(--color-signal);
+}
+.ps-label--solution {
+  color: var(--color-pixel-soft);
+}
+.ps-lead {
+  margin-top: 0.35rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.12;
+  color: var(--color-ink);
+}
+.ps-text {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--color-dim);
+}
+/* pista de interacción en la cara problema (afordancia: hay algo que revelar) */
+.ps-hint {
+  margin-top: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-pixel-soft);
+  animation: ps-hint 1.9s ease-in-out infinite;
+}
+@keyframes ps-hint {
+  0%,
+  100% {
+    opacity: 0.62;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(4px);
+  }
+}
+/* CTA al demo en la cara solución */
+.ps-cta {
+  margin-top: 0.9rem;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: var(--radius-s);
+  border: 1.5px solid var(--color-pixel);
+  background: color-mix(in srgb, var(--color-pixel) 10%, var(--color-surface));
+  padding: 0.5rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-pixel-soft);
+  transition:
+    background 0.3s,
+    color 0.3s,
+    transform 0.3s;
+}
+.ps-face--solution:hover .ps-cta,
+.ps-face--solution:focus-visible .ps-cta {
+  background: var(--color-pixel);
+  color: var(--color-void);
+  transform: translateY(-2px);
+}
+/* valor añadido en la solución (Samuel r21): callout violeta "software a la medida" */
+.ps-plus {
+  margin-top: 0.15rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  border-radius: var(--radius-s);
+  border: 1px solid color-mix(in srgb, var(--color-pixel) 34%, var(--color-line));
+  background: color-mix(in srgb, var(--color-pixel) 9%, transparent);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--color-ink);
+}
+.ps-plus b {
+  color: var(--color-pixel-soft);
+  font-weight: 700;
+}
+.ps-plus__mark {
+  color: var(--color-pixel);
+  font-weight: 700;
+  line-height: 1.45;
+}
+/* reduce-motion: sin flip animado ni pulso (el hover/tap sigue revelando al instante) */
+@media (prefers-reduced-motion: reduce) {
+  .ps-inner {
+    transition: none;
+  }
+  .ps-hint {
+    animation: none;
+  }
+}
+
+/* ── Desplegable de tarjeta (síntesis premium, 2026-07-18) ──────────────────────
+   El truco grid-rows 0fr→1fr anima altura en ambos sentidos sin medir en JS. */
+.collapse-toggle {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--color-pixel) 28%, var(--color-line));
+  border-radius: var(--radius-s);
+  padding: 0.3rem 0.6rem;
+  background: color-mix(in srgb, var(--color-pixel) 6%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-pixel-soft);
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background 0.2s;
+}
+.collapse-toggle:hover {
+  color: var(--color-pixel);
+  border-color: var(--color-pixel);
+  background: color-mix(in srgb, var(--color-pixel) 12%, transparent);
+}
+.collapse-chevron {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.collapse-chevron.is-open {
+  transform: rotate(180deg);
+}
+.collapse-region {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.collapse-region.is-open {
+  grid-template-rows: 1fr;
+}
+.collapse-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── Lanzador del portafolio (selección DIRECTA, Samuel r3 2026-07-18) ───────────
+   Grid de tiles: el visitante elige la categoría y ve solo esa — sin deslizar por
+   todas hasta encontrarla. Más práctico e intuitivo que la barra de scroll. */
+.portfolio-launcher {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+@media (min-width: 640px) {
+  .portfolio-launcher {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .portfolio-launcher {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.portfolio-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 120px;
+  text-align: left;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+  padding: 1rem 1.1rem;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.35s ease;
+}
+.portfolio-tile:hover {
+  transform: translateY(-4px);
+  z-index: 20;
+  border-color: var(--color-pixel);
+  box-shadow: 0 26px 52px -26px color-mix(in srgb, var(--color-pixel) 72%, transparent);
+}
+/* previa: MICRO-DESPLIEGUE (Samuel r6) — una miniatura LIMPIA en 16:10 (sin deformar) que
+   flota bajo el tile y aparece con scale+fade al hover. No es fondo espichado tras el texto. */
+.portfolio-tile__preview {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.6rem);
+  z-index: 20;
+  opacity: 0;
+  /* despliegue MÁS NOTABLE (Samuel r7): entra desde más arriba y más pequeño, con un
+     ease con leve rebote, para que se lea claramente como un micro-visualizador que se abre */
+  transform: translateY(-16px) scale(0.88);
+  transform-origin: top center;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  border: 1.5px solid var(--color-pixel);
+  box-shadow: 0 32px 64px -18px color-mix(in srgb, var(--color-pixel) 72%, transparent);
+  transition:
+    opacity 0.35s ease,
+    transform 0.45s cubic-bezier(0.25, 1.1, 0.4, 1);
+}
+.portfolio-tile__preview img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+}
+.portfolio-tile__preview-label {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.55rem;
+  border-radius: var(--radius-s);
+  background: color-mix(in srgb, var(--color-void) 76%, transparent);
+  backdrop-filter: blur(6px);
+  padding: 0.2rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+  color: var(--color-pixel-soft);
+}
+.portfolio-tile:hover .portfolio-tile__preview {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+/* Solo con puntero fino: en táctil el :hover se queda "pegado" tras tocar y una miniatura
+   invisible pero oprimible taparía la fila de abajo. Ahí el tile entero ya salta a la sección. */
+@media (hover: hover) and (pointer: fine) {
+  /* la miniatura desplegada TAMBIÉN es oprimible y salta a la sección (Samuel): vive dentro del
+     <a> del tile, así que basta con devolverle los eventos mientras está visible. En reposo
+     sigue en pointer-events:none para no robarle el cursor a la fila de tiles de abajo. */
+  .portfolio-tile:hover .portfolio-tile__preview {
+    pointer-events: auto;
+  }
+  /* puente invisible sobre el hueco tile↔miniatura (0.6rem): sin él, al bajar el cursor hacia la
+     previa se pierde el :hover y la miniatura se cierra antes de poder oprimirla. Solo existe
+     mientras hay hover, y cabe en el gap de 0.75rem del grid: no roba clics a la fila siguiente. */
+  .portfolio-tile:hover::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 0.7rem;
+  }
+}
+.portfolio-tile__glyph {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  width: 16px;
+  height: 16px;
+}
+.portfolio-tile__glyph i {
+  border-radius: 1px;
+  background: var(--color-pixel);
+  opacity: 0.5;
+}
+.portfolio-tile:hover .portfolio-tile__glyph i {
+  opacity: 1;
+}
+.portfolio-tile__title {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-ink);
+}
+.portfolio-tile__desc {
+  position: relative;
+  z-index: 1;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--color-dim);
+}
+
+/* Deslizador horizontal de Capacidades por dominio (Samuel r5 2026-07-18) */
+.skills-slider {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 0.25rem 0.25rem 0.5rem;
+  margin: 0 -0.25rem;
+}
+.skills-slider::-webkit-scrollbar {
+  display: none;
+}
+.skills-slide {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+  width: min(340px, 82vw);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+  padding: 1.25rem;
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+.skills-slide:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--color-pixel) 55%, var(--color-line));
+  box-shadow: 0 18px 40px -28px color-mix(in srgb, var(--color-pixel) 55%, transparent);
+}
+/* móvil (Samuel r18): las capacidades se APILAN (antes el slider dejaba una tarjeta cortada
+   a la derecha); todo visible, sin scroll lateral. En desktop sigue el slider horizontal. */
+@media (max-width: 639px) {
+  .skills-slider {
+    flex-direction: column;
+    overflow-x: visible;
+    scroll-snap-type: none;
+    margin: 0;
+  }
+  .skills-slide {
+    width: 100%;
+  }
+}
+.skills-wrap {
+  position: relative;
+}
+/* flechas translúcidas a los LADOS del slider (Samuel r6). En móvil se ocultan: se desliza
+   con el dedo (touch scroll nativo). */
+.skills-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-line) 70%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 60%, transparent);
+  backdrop-filter: blur(8px);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  opacity: 0.6;
+  transform: translateY(-50%);
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    opacity 0.2s;
+}
+@media (min-width: 640px) {
+  .skills-arrow {
+    display: inline-flex;
+  }
+}
+.skills-arrow--left {
+  left: 0.4rem;
+}
+.skills-arrow--right {
+  right: 0.4rem;
+}
+.skills-arrow:hover {
+  opacity: 1;
+  border-color: var(--color-pixel);
+  color: var(--color-pixel-soft);
+  background: color-mix(in srgb, var(--color-surface) 85%, transparent);
+}
+.skills-arrow:active {
+  transform: translateY(-50%) scale(0.93);
+}
+
+/* Glifo de píxeles 2×2 para los nodos del Mapa de conocimiento (disruptivo, eco del wordmark) */
+.km-glyph {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.km-glyph i {
+  border-radius: 1px;
+  background: var(--color-pixel);
+}
+.km-glyph i:nth-child(2),
+.km-glyph i:nth-child(3) {
+  opacity: 0.45;
+}
+
+/* Spotlight que sigue al cursor dentro del elemento (Samuel r6) */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--color-pixel) 16%, transparent),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Feed de casos tipo red social (Samuel r5 2026-07-18) */
+.foro-post {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+  padding: 1.25rem 1.4rem;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s,
+    transform 0.3s;
+}
+.foro-post:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-pixel) 45%, var(--color-line));
+  box-shadow: 0 18px 44px -30px color-mix(in srgb, var(--color-pixel) 55%, transparent);
+}
+.foro-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: var(--radius-s);
+  border: 1px solid color-mix(in srgb, var(--color-pixel) 35%, var(--color-line));
+  background: linear-gradient(150deg, color-mix(in srgb, var(--color-pixel) 28%, var(--color-surface)), var(--color-surface));
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--color-pixel);
+}
+
+/* Conclusión destacada de la sección de datos (la respuesta, no el proceso) */
+.data-case__conclusion {
+  border-left: 2px solid var(--color-pixel);
+  padding-left: 1rem;
+}
+
+/* ── Botones sociales "tecla 3D" (/samuel, 2026-07-18) ──────────────────────────
+   Canto violeta inferior que se HUNDE al pulsar (metáfora de tecla física): 3D,
+   llamativo e interactivo. El bloque global de reduced-motion neutraliza el press. */
+.social-key {
+  --key-edge: color-mix(in srgb, var(--color-pixel) 55%, var(--color-line));
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  padding: 0.6rem 1.05rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--color-ink);
+  box-shadow:
+    0 4px 0 0 var(--key-edge),
+    0 10px 22px -12px color-mix(in srgb, var(--color-pixel) 55%, transparent);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+.social-key:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-pixel) 60%, var(--color-line));
+  color: var(--color-pixel-soft);
+  box-shadow:
+    0 6px 0 0 var(--key-edge),
+    0 18px 32px -14px color-mix(in srgb, var(--color-pixel) 65%, transparent);
+}
+.social-key:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 1px 0 0 var(--key-edge),
+    0 6px 14px -12px color-mix(in srgb, var(--color-pixel) 50%, transparent);
+}
+.social-key--off {
+  pointer-events: none;
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+/* Barra de progreso de scroll (GSAP ScrollTrigger la desliza con xPercent: traslación,
+   no escala, para que el remate de píxel no se deforme). Decorativa: aria-hidden. */
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: 3px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.scroll-progress__bar {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  transform: translateX(-101%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-pixel) 45%, transparent),
+    var(--color-pixel) 60%,
+    var(--color-pixel-soft)
+  );
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-pixel) 75%, transparent);
+}
+/* remate: un "píxel" más brillante en la punta */
+.scroll-progress__bar::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: var(--color-ink);
+  opacity: 0.9;
+}
+
+/* Tarjeta con profundidad (gradiente sutil + highlight superior + sombra de marca).
+   Reutilizable: mapa de conocimiento, grupos de /samuel, etc. */
+.depth-card {
+  border: 1px solid color-mix(in srgb, var(--color-line) 82%, var(--color-pixel));
+  border-radius: var(--radius-m);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 95%, var(--color-pixel)) 0%, var(--color-surface) 55%);
+  box-shadow:
+    0 1px 0 0 color-mix(in srgb, white 7%, transparent) inset,
+    0 18px 44px -30px color-mix(in srgb, var(--color-pixel) 55%, transparent);
+}
+
+/* ── Micro-interacciones premium ─────────────────────────────────────────────
+   Foco visible on-brand y consistente en TODO el sitio (accesibilidad + cohesión).
+   :where() mantiene especificidad 0: cualquier componente puede sobreescribirlo. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-pixel);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+/* Press sutil al pulsar (botones/CTAs). reduced-motion lo neutraliza (bloque global). */
+.press {
+  transition:
+    transform 0.12s ease,
+    filter 0.2s ease;
+}
+.press:active {
+  transform: scale(0.97);
+}
+/* Subrayado que se "dibuja" de izquierda a derecha al hover/foco (enlaces de texto). */
+/* Área tocable cómoda en móvil: estos enlaces de una línea miden 16px de alto, muy poco para
+   el dedo (mín. accesible ~44px). Se crece con PADDING real —no un pseudo— así el área es de
+   verdad la del <a> y la captura cualquier motor táctil. .link-draw dibuja su subrayado en el
+   borde inferior de la caja de fondo; con background-origin:content-box ese borde vuelve al pie
+   del TEXTO, no del padding, y el subrayado no se despega. En la columna flex (gap) el espacio
+   se mide entre las cajas YA con padding, así que agrandarlas nunca solapa los toques. */
+.tap-pad {
+  display: inline-block;
+  padding-block: 0.7rem;
+  background-origin: content-box;
+}
+.link-draw {
+  background-image: linear-gradient(var(--color-pixel-soft), var(--color-pixel-soft));
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.link-draw:hover,
+.link-draw:focus-visible {
+  background-size: 100% 1px;
+}
+@keyframes atmos-a {
+  0%,
+  100% {
+    transform: translate3d(-6%, -4%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, 4%, 0) scale(1.15);
+  }
+}
+@keyframes atmos-b {
+  0%,
+  100% {
+    transform: translate3d(6%, 6%, 0) scale(1.1);
+  }
+  50% {
+    transform: translate3d(-4%, -4%, 0) scale(1);
+  }
+}
+
+/* Acento en gradiente morado para palabras clave de titulares. Decisión de diseño
+   APROBADA explícitamente por el usuario (elemento de marca recurrente), no un defecto.
+   Accesible: color sólido de fallback y solo se recorta a texto donde el navegador lo
+   soporta (si no, queda violeta legible, nunca invisible).
+   impeccable-disable gradient-text -- acento de marca aprobado por el usuario */
+.text-gradient {
+  color: var(--color-pixel-soft);
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  /* impeccable-disable gradient-text -- acento de marca aprobado por el usuario */
+  .text-gradient {
+    background-image: linear-gradient(100deg, var(--color-pixel-soft) 18%, var(--color-pixel) 92%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+}

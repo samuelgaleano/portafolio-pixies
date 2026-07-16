@@ -1,0 +1,39 @@
+---
+title: "Cómo este sitio cuesta cero al mes (y por qué eso fue una decisión de ingeniería)"
+description: "Un portafolio en Next.js que se paga solo: páginas pregeneradas, CDN global y ni una base de datos propia. La decisión detrás de Pixies."
+pubDate: 2026-07-11
+tags: ["ingeniería", "emprender", "web"]
+draft: false
+---
+
+{/* [COMPLETAR: Samuel reemplaza este post de ejemplo por el suyo real. La estructura y el estilo ya están listos.] */}
+
+> La mejor infraestructura es la que no pagas por tener encendida.
+
+Cuando alguien pide un portafolio, casi siempre termina pagando infraestructura que el 99% del tiempo está inactiva. Yo hice lo contrario: este sitio corre en Next.js, pero cada página se **pregenera** en el build y se sirve desde una CDN global. Costo mensual: cero.
+
+## La decisión
+
+El framework tiene toda la capacidad de servidor disponible — y la usaré cuando aporte valor. Pero ninguna página de este sitio necesita renderizarse por petición, así que ninguna lo hace. El resultado:
+
+- Carga rápido, incluso desde un dato móvil flojo.
+- Cuesta **cero** al mes en el plan gratuito.
+- Escala a cualquier cantidad de visitas sin que yo toque nada.
+
+## El truco de los formularios
+
+¿Y cómo recibo mensajes sin base de datos propia? Cada lead se guarda en una hoja de cálculo de Google antes de abrir WhatsApp. El lead queda registrado **aunque el visitante nunca envíe el mensaje**.
+
+```ts
+// el guardado ocurre antes de redirigir, no depende de ello
+await guardarLead(datos);
+window.location.href = construirEnlaceWhatsApp(datos);
+```
+
+## Lo que me llevo
+
+La mejor infraestructura es la que no pagas por tener encendida. Usar un framework con servidor no obliga a usar el servidor: la ingeniería está en saber cuándo no hace falta.
+
+Si estás pensando un proyecto y no sabes cuánta infraestructura necesita de verdad, [escríbeme](/#contacto): esa conversación es gratis.
+
+{/* [COMPLETAR: Samuel puede reescribir el cierre con su voz] */}
