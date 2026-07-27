@@ -618,6 +618,77 @@ footer:hover .footer-wordmark {
   font-size: 0.72rem;
   color: var(--color-dim);
 }
+/* Credenciales de acceso de las demos (DemoCredentials). Franja compacta sobre el marco:
+   lo primero que necesita quien llega es poder entrar. Los valores usan la capa técnica
+   (--color-data) igual que la línea "/demo · sandbox", y son botones que copian. */
+.demo-cred {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+}
+.demo-cred__intro {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+}
+.demo-cred__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.demo-cred__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-s);
+  background: var(--color-surface-2);
+  cursor: pointer;
+  transition:
+    border-color 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.demo-cred__item:hover {
+  border-color: var(--color-pixel);
+  background: var(--color-surface);
+}
+.demo-cred__k {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-dim);
+}
+.demo-cred__v {
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-data);
+  /* Es una credencial para teclear: que se pueda seleccionar entera de un doble clic. */
+  user-select: all;
+}
+.demo-cred__copy {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--color-pixel-soft);
+}
+.demo-cred__nota {
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+}
+@media (prefers-reduced-motion: reduce) {
+  .demo-cred__item {
+    transition: none;
+  }
+}
+
 .demo-frame__screen {
   position: relative;
   background: var(--color-void);

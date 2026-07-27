@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import DemoFrame from '@/components/demos/DemoFrame';
+import DemoCredentials from '@/components/demos/DemoCredentials';
 
 // Demo embebida del sistema POS (dockerizado). El POS se sirve same-origin bajo
 // /pos-demo (rewrite en next.config → contenedor), así el login por sesión funciona
@@ -25,10 +26,8 @@ export default function PosDemoPage() {
             Sistema POS — demo en vivo
           </h1>
           <p className="mt-3 max-w-2xl text-dim">
-            Entorno de prueba con datos ficticios. Ingresa con usuario{' '}
-            <b className="text-ink">admin</b> y contraseña <b className="text-ink">password</b> (también{' '}
-            <span className="font-mono text-sm">cajero1</span> o{' '}
-            <span className="font-mono text-sm">mesero1</span>). Los datos son de demostración.
+            Sistema de punto de venta para restaurantes: mesas, comandas, inventario y cierre de
+            caja. Entorno de prueba con datos ficticios.
           </p>
         </div>
         <a
@@ -41,7 +40,19 @@ export default function PosDemoPage() {
         </a>
       </div>
 
-      <div className="mt-6">
+      {POS_ENABLED ? (
+        <div className="mt-6">
+          <DemoCredentials
+            credenciales={[
+              { etiqueta: 'usuario', valor: 'admin' },
+              { etiqueta: 'contraseña', valor: 'password' },
+            ]}
+            nota="La pantalla de acceso también trae botones para entrar como cajero1 o mesero1, con la misma contraseña."
+          />
+        </div>
+      ) : null}
+
+      <div className="mt-4">
         {POS_ENABLED ? (
           // same-origin (proxeado): allow-same-origin es seguro aquí, es nuestra propia demo
           <DemoFrame

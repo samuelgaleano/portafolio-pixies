@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import DemoFrame from '@/components/demos/DemoFrame';
+import DemoCredentials from '@/components/demos/DemoCredentials';
 
 // Demo embebida del ERP (Sistema Integrado, dockerizado). Se sirve same-origin bajo
 // /erp-demo (rewrite en next.config → contenedor), así el login por sesión funciona
@@ -26,14 +27,24 @@ export default function ErpDemoPage() {
           <p className="mt-3 max-w-2xl text-dim">
             ERP empresarial a medida (240 tablas, 39 vistas, integridad referencial fuerte y
             endurecimiento orientado a <b className="text-ink">ISO 27001</b>). Entorno de prueba con
-            datos ficticios: ingresa con{' '}
-            <b className="text-ink">demo@pixies.dev</b> y contraseña{' '}
-            <b className="text-ink">demo1234</b> (rol administrador).
+            datos ficticios.
           </p>
         </div>
       </div>
 
-      <div className="mt-6">
+      {ERP_ENABLED ? (
+        <div className="mt-6">
+          <DemoCredentials
+            credenciales={[
+              { etiqueta: 'usuario', valor: 'demo@pixies.dev' },
+              { etiqueta: 'contraseña', valor: 'demo1234' },
+            ]}
+            nota="Entras como administrador: puedes ver y tocar todos los módulos."
+          />
+        </div>
+      ) : null}
+
+      <div className="mt-4">
         {ERP_ENABLED ? (
           // same-origin (proxeado): allow-same-origin es seguro aquí, es nuestra propia demo
           <DemoFrame
