@@ -37,6 +37,11 @@ const nextConfig: NextConfig = {
         source: '/((?!pos-demo|erp-demo).*)',
         headers: [
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          // Equivalente moderno de X-Frame-Options (que está deprecado): impide que el
+          // portafolio sea embebido por terceros. Solo frame-ancestors, NO una CSP
+          // completa —eso rompería GSAP/estilos inline/iframes de demo, por eso se limita
+          // a esta directiva de alto valor que no tiene efectos colaterales.
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           {
