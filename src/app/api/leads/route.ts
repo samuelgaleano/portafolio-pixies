@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { validateLead, type LeadPayload } from '@/lib/leads';
+import { validateLead, sanitizeForSheet, type LeadPayload } from '@/lib/leads';
 
 // POST /api/leads (plan F5 §2.1): valida en el servidor, oculta la URL del Apps Script
 // y CONFIRMA el guardado real antes de que el cliente redirija a WhatsApp.
@@ -61,14 +61,17 @@ export async function POST(req: Request): Promise<NextResponse> {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       secret,
-      nombre: body.nombre,
-      contacto: body.contacto,
-      empresa: body.empresa ?? '',
+      // Todos los campos de texto se neutralizan contra inyección de fórmulas antes de
+      // llegar a la hoja de cálculo (un "=..." en el nombre o el mensaje, si no, se
+      // ejecuta como fórmula al abrir el Sheet). La validación ya garantiza que son string.
+      nombre: sanitizeForSheet(String(body.nombre ?? '')),
+      contacto: sanitizeForSheet(String(body.contacto ?? '')),
+      empresa: sanitizeForSheet(String(body.empresa ?? '')),
       tipoProyecto: body.tipoProyecto,
-      mensaje: body.mensaje ?? '',
+      mensaje: sanitizeForSheet(String(body.mensaje ?? '')),
       // desde viene del cliente (sessionStorage/curl): truncar, no confiar (I3)
-      desde: String(body.desde ?? 'directo').slice(0, 40),
-      userAgent: req.headers.get('user-agent') ?? '',
+      desde: sanitizeForSheet(String(body.desde ?? 'directo').slice(0, 40)),
+      userAgent: sanitizeForSheet(req.headers.get('user-agent') ?? ''),
     }),
     // Apps Script responde rápido; si se cuelga, mejor fallar y mostrar alternativas.
     signal: AbortSignal.timeout(8000),

