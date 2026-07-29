@@ -11,6 +11,7 @@ import { t } from '@/i18n';
 // (clic/tap) lo maneja este componente para que también funcione en móvil sin depender del hover.
 interface ProblemSolutionProps {
   problemLead: string;
+  problemPoints?: string[]; // dolores concretos y escaneables (más visual que un párrafo)
   problem: string;
   solutionLead: string;
   solution: string;
@@ -20,6 +21,7 @@ interface ProblemSolutionProps {
 
 export default function ProblemSolution({
   problemLead,
+  problemPoints,
   problem,
   solutionLead,
   solution,
@@ -42,7 +44,20 @@ export default function ProblemSolution({
             <span aria-hidden="true">⚠</span> {t.exhibit.erpProblem}
           </span>
           <p className="ps-lead">{problemLead}</p>
-          <p className="ps-text">{problem}</p>
+          {problemPoints && problemPoints.length > 0 ? (
+            <ul className="ps-points">
+              {problemPoints.map((point) => (
+                <li key={point} className="ps-point">
+                  <span className="ps-point__mark" aria-hidden="true">
+                    ✕
+                  </span>
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="ps-text">{problem}</p>
+          )}
           <span className="ps-hint" aria-hidden="true">
             {t.exhibit.psHint}
           </span>

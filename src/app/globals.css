@@ -1232,6 +1232,37 @@ footer:hover .footer-wordmark {
   line-height: 1.55;
   color: var(--color-dim);
 }
+/* dolores concretos y escaneables: más visual que un párrafo (Samuel: "más intuitivo") */
+.ps-points {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+  list-style: none;
+  padding: 0;
+}
+.ps-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  line-height: 1.38;
+  color: var(--color-ink);
+}
+.ps-point__mark {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-signal) 15%, transparent);
+  color: var(--color-signal);
+  font-size: 0.6rem;
+  font-weight: 700;
+}
 /* pista de interacción en la cara problema (afordancia: hay algo que revelar) */
 .ps-hint {
   margin-top: 0.9rem;

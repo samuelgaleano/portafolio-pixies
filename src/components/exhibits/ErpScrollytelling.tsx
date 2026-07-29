@@ -19,6 +19,7 @@ export default function ErpScrollytelling() {
       {erpTour.demoUrl && (
         <ProblemSolution
           problemLead={erpTour.problemLead}
+          problemPoints={erpTour.problemPoints}
           problem={erpTour.problem}
           solutionLead={erpTour.solutionLead}
           solution={erpTour.solution}
