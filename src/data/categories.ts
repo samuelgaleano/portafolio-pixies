@@ -23,7 +23,7 @@ export const categories: Category[] = [
     title: 'Landing Pages',
     description: 'Páginas de aterrizaje que convierten: rápidas, medibles, hechas para una acción.',
     projectType: 'Landing page',
-    preview: '/proyectos/xiaomi-cartech.jpg',
+    preview: '/proyectos/xiaomi-cartech.webp',
   },
   {
     id: 'erp',
@@ -40,7 +40,7 @@ export const categories: Category[] = [
     title: 'Catálogo / E-commerce',
     description: 'Tiendas, catálogos y plataformas con base de datos y administración propia: inventario real, no maquetas.',
     projectType: 'Catálogo / E-commerce',
-    preview: '/proyectos/fly-and-chill.jpg',
+    preview: '/proyectos/fly-and-chill.webp',
   },
   {
     id: 'empresarial',
@@ -48,7 +48,7 @@ export const categories: Category[] = [
     title: 'Soluciones integrales empresariales',
     description: 'Integraciones que conectan lo que la empresa ya usa, en su propia red.',
     projectType: 'Integraciones empresariales',
-    preview: '/proyectos/tv-panel.png',
+    preview: '/proyectos/tv-panel.webp',
   },
   {
     id: 'datos',

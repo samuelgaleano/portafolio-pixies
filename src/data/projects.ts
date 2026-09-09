@@ -49,7 +49,7 @@ export const projects: Project[] = [
     status: 'produccion',
     liveUrl: 'https://xiaomicartech.com.co/',
     repoUrl: 'https://github.com/samuelgaleano/XIAOMI_FINAL',
-    preview: { src: '/proyectos/xiaomi-cartech.jpg', alt: 'Landing de Xiaomi CarTech: cargador inalámbrico Mi 20W con precio y checkout' },
+    preview: { src: '/proyectos/xiaomi-cartech.webp', alt: 'Landing de Xiaomi CarTech: cargador inalámbrico Mi 20W con precio y checkout' },
     featured: true,
   },
   {
@@ -67,7 +67,26 @@ export const projects: Project[] = [
     stack: ['react', 'typescript', 'vite', 'tailwind', 'sheets'],
     status: 'produccion',
     liveUrl: 'https://specifinance.com/',
-    preview: { src: '/proyectos/specifinance.jpg', alt: 'Sitio de Specifinance: dirección financiera y crecimiento corporativo basado en datos' },
+    preview: { src: '/proyectos/specifinance.webp', alt: 'Sitio de Specifinance: dirección financiera y crecimiento corporativo basado en datos' },
+  },
+  {
+    id: 'manhattan-consulting-group',
+    category: 'landing',
+    name: 'Manhattan Consulting Group',
+    tagline:
+      'Landing bilingüe para una consultora de gestión en Tampa: presenta su metodología propia y sus programas para estudiantes, y cada solicitud de información llega marcada con el idioma y el origen de quien escribió.',
+    bullets: [
+      'Un solo archivo HTML, sin framework ni proceso de build: la filosofía del sitio de un archivo aplicada a un cliente real, no a un ejercicio.',
+      'Bilingüe español/inglés conmutado en el cliente y reflejado en la URL (?lang=en) — el enlace que se comparte abre siempre en el idioma correcto.',
+      'Tipografías propias autoalojadas en woff2: cero peticiones a terceros en la carga inicial.',
+      'vercel.json redirige www al dominio raíz con 301, fija caché inmutable de un año para imágenes y fuentes, y bloquea la indexación del subdominio .vercel.app para que solo el dominio real aparezca en Google.',
+      'El formulario de contacto entrega por correo transaccional sin backend propio, y cada solicitud llega marcada con el idioma y de dónde vino (campaña, referencia o directo).',
+    ],
+    stack: ['html', 'css', 'javascript', 'vercel'],
+    status: 'produccion',
+    liveUrl: 'https://manhattanconsultinggroup7.com/',
+    repoUrl: 'https://github.com/samuelgaleano/manhattan-consulting-group-web',
+    preview: { src: '/proyectos/manhattan-consulting-group.webp', alt: 'Landing de Manhattan Consulting Group (MCG7): The Balcony View methodology y acceso a sus programas' },
   },
 
   // B — Catálogo / E-commerce
@@ -88,7 +107,7 @@ export const projects: Project[] = [
     status: 'produccion',
     liveUrl: 'https://flyandchill.store/shop',
     repoUrl: 'https://github.com/samuelgaleano/pagina-web-fly-and-chill-repo-',
-    preview: { src: '/proyectos/fly-and-chill.jpg', alt: 'Tienda Fly & Chill: catálogo de productos con filtros de categoría y precio' },
+    preview: { src: '/proyectos/fly-and-chill.webp', alt: 'Tienda Fly & Chill: catálogo de productos con filtros de categoría y precio' },
     featured: true,
   },
 
@@ -111,7 +130,7 @@ export const projects: Project[] = [
     status: 'produccion',
     liveUrl: 'https://www.cicinmuebles.com/',
     repoUrl: 'https://github.com/samuelgaleano/cic_inmuebles_web',
-    preview: { src: '/proyectos/cic-inmuebles.jpg', alt: 'Plataforma CIC Inmuebles: apartamentos y casas en venta en Colombia' },
+    preview: { src: '/proyectos/cic-inmuebles.webp', alt: 'Plataforma CIC Inmuebles: apartamentos y casas en venta en Colombia' },
     featured: true,
   },
 
@@ -133,7 +152,7 @@ export const projects: Project[] = [
     repoUrl: 'https://github.com/samuelgaleano/sincronizacion-tv-red-local', // publicado sanitizado (sin datos del cliente)
     // demo embebida (TV en Render): define NEXT_PUBLIC_TV_DEMO_URL y aparece "Ver demo en vivo" → /demos/tv
     demoUrl: '/demos/tv', // enlace SIEMPRE (Samuel r20); la página gatea el iframe con NEXT_PUBLIC_TV_DEMO_URL
-    preview: { src: '/proyectos/tv-panel.png', alt: 'Panel de control del sistema de señalización: tres pantallas con controles de TV y carga de imágenes' },
+    preview: { src: '/proyectos/tv-panel.webp', alt: 'Panel de control del sistema de señalización: tres pantallas con controles de TV y carga de imágenes' },
     featured: true,
   },
   {

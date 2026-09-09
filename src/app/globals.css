@@ -1094,7 +1094,7 @@ footer:hover .footer-wordmark {
   grid-template-rows: repeat(8, 1fr);
 }
 .eng-portal__tiles i {
-  background-image: url('/samuel/samuel-avatar.svg');
+  background-image: url('/samuel/samuel-avatar.webp');
   background-size: 144px 144px;
   background-repeat: no-repeat;
   opacity: 0;
