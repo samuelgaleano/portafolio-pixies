@@ -51,6 +51,7 @@ export const es = {
     openDemo: 'Ver demo en vivo →',
     pendingLink: 'enlace en publicación',
     pendingShot: 'vista previa en producción',
+    pickOne: 'Elige una para ver la demo →',
     emptyTitle: 'Casos en curado',
     emptyBody: 'Los proyectos de esta categoría se están documentando para publicarse. Si quieres verlos ya, pídelos directo:',
     emptyCta: 'Ver casos por WhatsApp →',

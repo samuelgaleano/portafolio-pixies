@@ -36,8 +36,8 @@ export default function ErpDemoPage() {
         <div className="mt-6">
           <DemoCredentials
             credenciales={[
-              { etiqueta: 'usuario', valor: 'demo@pixies.dev' },
-              { etiqueta: 'contraseña', valor: 'demo1234' },
+              { etiqueta: 'usuario', valor: 'demo@pixies.dev', campo: 'email' },
+              { etiqueta: 'contraseña', valor: 'demo1234', campo: 'password' },
             ]}
             nota="Entras como administrador: puedes ver y tocar todos los módulos."
           />

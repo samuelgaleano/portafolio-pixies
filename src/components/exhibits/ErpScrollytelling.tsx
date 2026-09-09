@@ -13,30 +13,41 @@ export default function ErpScrollytelling() {
 
   return (
     <div className="mt-6">
+      {/* vista inicial de VENTA (Samuel r22): antes del problema/solución narrativo, lo
+          primero que se ve es "esto es lo que hace" (beneficios de un vistazo) + un botón
+          grande al demo. Que ver la demo tome UN clic desde arriba, no un scroll largo. */}
+      <div className="erp-intro">
+        <div className="erp-intro__stats">
+          {erpTour.benefits.map((b) => (
+            <div key={b.k} className="depth-card rounded-(--radius-m) p-3">
+              <p className="font-display text-base font-bold text-ink">{b.k}</p>
+              <p className="mt-0.5 font-mono text-[0.66rem] leading-tight text-dim">{b.v}</p>
+            </div>
+          ))}
+        </div>
+        {erpTour.demoUrl && (
+          <a href={erpTour.demoUrl} className="erp-intro__cta press">
+            <span aria-hidden="true">▶</span> Probar el ERP en vivo
+          </a>
+        )}
+      </div>
+
       {/* gancho problema→solución INTERACTIVO (Samuel r21): muestra el problema (general y concreto)
           y al pasar el cursor / enfocar / tocar se VOLTEA y revela la solución que lo resuelve, con
           CTA oprimible al demo. Contraste: problema en signal (rojo), solución en pixel (violeta). */}
       {erpTour.demoUrl && (
-        <ProblemSolution
-          problemLead={erpTour.problemLead}
-          problemPoints={erpTour.problemPoints}
-          problem={erpTour.problem}
-          solutionLead={erpTour.solutionLead}
-          solution={erpTour.solution}
-          demoUrl={erpTour.demoUrl}
-          ariaLabel={t.exhibit.ariaErpDemo}
-        />
+        <div className="mt-6">
+          <ProblemSolution
+            problemLead={erpTour.problemLead}
+            problemPoints={erpTour.problemPoints}
+            problem={erpTour.problem}
+            solutionLead={erpTour.solutionLead}
+            solution={erpTour.solution}
+            demoUrl={erpTour.demoUrl}
+            ariaLabel={t.exhibit.ariaErpDemo}
+          />
+        </div>
       )}
-
-      {/* beneficios clave: lo que el ERP le da a una empresa, de un vistazo */}
-      <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-        {erpTour.benefits.map((b) => (
-          <div key={b.k} className="depth-card rounded-(--radius-m) p-3">
-            <p className="font-display text-base font-bold text-ink">{b.k}</p>
-            <p className="mt-0.5 font-mono text-[0.66rem] leading-tight text-dim">{b.v}</p>
-          </div>
-        ))}
-      </div>
 
       <StepTour
         steps={erpTour.steps}

@@ -618,18 +618,103 @@ footer:hover .footer-wordmark {
   font-size: 0.72rem;
   color: var(--color-dim);
 }
+/* Vista inicial de venta del ERP (Samuel r22): beneficios + botón grande al demo, antes
+   del problema/solución narrativo — ver la demo no debería costar un scroll largo. */
+.erp-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.85rem;
+}
+.erp-intro__stats {
+  display: grid;
+  flex: 1 1 320px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+@media (min-width: 480px) {
+  .erp-intro__stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.erp-intro__cta {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  align-self: stretch;
+  min-width: 12rem;
+  border-radius: var(--radius-m);
+  background: linear-gradient(135deg, var(--color-pixel), var(--color-pixel-soft));
+  padding: 0.85rem 1.4rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-void);
+  box-shadow: 0 16px 32px -18px color-mix(in srgb, var(--color-pixel) 70%, transparent);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.erp-intro__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 38px -16px color-mix(in srgb, var(--color-pixel) 80%, transparent);
+}
+
 /* Credenciales de acceso de las demos (DemoCredentials). Franja compacta sobre el marco:
    lo primero que necesita quien llega es poder entrar. Los valores usan la capa técnica
    (--color-data) igual que la línea "/demo · sandbox", y son botones que copian. */
 .demo-cred {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 1rem;
+  flex-direction: column;
+  gap: 0.65rem;
   padding: 0.75rem 1rem;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-m);
   background: var(--color-surface);
+}
+/* botón principal (Samuel r22): un solo clic rellena el formulario real dentro del
+   iframe (mismo origen) y lo envía. El detalle usuario/contraseña queda debajo como
+   respaldo, no como el camino principal — llegar y ya estar adentro convierte más que
+   copiar y pegar dos veces. */
+.demo-cred__auto {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-s);
+  border: 1.5px solid var(--color-pixel);
+  background: var(--color-pixel);
+  padding: 0.55rem 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-void);
+  transition:
+    transform 0.2s,
+    filter 0.2s,
+    opacity 0.2s;
+}
+.demo-cred__auto:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.demo-cred__auto:disabled {
+  opacity: 0.75;
+  cursor: progress;
+}
+.demo-cred__error {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--color-signal);
+}
+.demo-cred__manual {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
 }
 .demo-cred__intro {
   font-family: var(--font-mono);

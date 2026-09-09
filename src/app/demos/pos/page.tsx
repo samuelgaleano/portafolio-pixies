@@ -44,8 +44,8 @@ export default function PosDemoPage() {
         <div className="mt-6">
           <DemoCredentials
             credenciales={[
-              { etiqueta: 'usuario', valor: 'admin' },
-              { etiqueta: 'contraseña', valor: 'password' },
+              { etiqueta: 'usuario', valor: 'admin', campo: 'usuario' },
+              { etiqueta: 'contraseña', valor: 'password', campo: 'password' },
             ]}
             nota="La pantalla de acceso también trae botones para entrar como cajero1 o mesero1, con la misma contraseña."
           />
