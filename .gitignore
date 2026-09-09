@@ -14,15 +14,6 @@ next-env.d.ts
 test-results/
 playwright-report/
 
-# herramientas y configuración locales (no forman parte de la app)
-.claude/
-.mcp.json
-.claude-flow/
-.swarm/
-.hive-mind/
-ruvector.db
-CLAUDE.md
-
 # material de entrada local (ZIPs de proyectos; no es código del producto)
 cambios portafolio/
 

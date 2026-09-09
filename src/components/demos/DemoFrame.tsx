@@ -120,7 +120,6 @@ export default function DemoFrame({
           ref={frameRef}
           title={title}
           src={mountSrc ? src : undefined}
-          onLoad={() => setLoaded(true)}
           className="relative z-[1] h-[82vh] w-full border-0"
           sandbox={sandbox}
         />

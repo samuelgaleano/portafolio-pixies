@@ -1306,15 +1306,11 @@ footer:hover .footer-wordmark {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* centra el contenido: la cara más corta (problema) no deja hueco */
-  gap: 0.45rem;
   min-height: 0;
   width: 100%;
   border-radius: var(--radius-m);
   border: 1px solid var(--color-line);
-  border-left: 3px solid transparent;
   background: var(--color-surface);
-  padding: clamp(1rem, 2.4vw, 1.5rem) clamp(1.1rem, 2.6vw, 1.6rem);
   text-align: left;
   text-decoration: none;
   cursor: pointer;
@@ -1324,16 +1320,12 @@ footer:hover .footer-wordmark {
     box-shadow 0.3s,
     transform 0.3s;
 }
-/* discreto en reposo: sin lavado de color de fondo. El acento vive en el borde
-   izquierdo y en la medalla del ícono — llamativo por foco, no por área cubierta. */
 .ps-face--problem {
   border-color: var(--color-line);
-  border-left-color: var(--color-signal);
 }
 .ps-face--solution {
   transform: rotateY(180deg);
   border-color: var(--color-line);
-  border-left-color: var(--color-pixel);
   box-shadow: 0 20px 44px -28px color-mix(in srgb, var(--color-pixel) 65%, transparent);
 }
 .ps-face--problem:hover,
@@ -1344,49 +1336,101 @@ footer:hover .footer-wordmark {
 .ps-face--solution:focus-visible {
   border-color: color-mix(in srgb, var(--color-pixel) 42%, var(--color-line));
 }
-.ps-head {
+/* barra tipo ventana/terminal — mismo lenguaje visual que .demo-frame__bar (puntos +
+   etiqueta mono). Es lo que hace que "llamativo" y "discreto" dejen de ser contradictorios:
+   el acento vive en este chrome de interfaz, no en un lavado de color sobre toda la tarjeta.
+   Y es la señal estructural de que esto NO es un título: ningún h2 trae una barra con puntos. */
+.ps-bar {
   display: flex;
-  align-items: center;
-  gap: 0.55rem;
-}
-/* medalla del ícono: el punto focal llamativo, contenido en un círculo (no en toda
-   la tarjeta) — así "llamativo" y "discreto" dejan de ser contradictorios */
-.ps-icon {
-  display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  justify-content: center;
-  width: 1.9rem;
-  height: 1.9rem;
-  border-radius: 999px;
-  font-size: 0.95rem;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-surface-2);
+  padding: 0.5rem 0.85rem;
 }
-.ps-icon--problem {
-  background: color-mix(in srgb, var(--color-signal) 16%, transparent);
-  color: var(--color-signal);
+.ps-bar__dots {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 4px;
 }
-.ps-icon--solution {
-  background: color-mix(in srgb, var(--color-pixel) 16%, transparent);
-  color: var(--color-pixel-soft);
+.ps-bar__dots > i {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--color-line);
 }
-.ps-label {
+.ps-bar__dots--problem > i:first-child {
+  background: var(--color-signal);
+}
+.ps-bar__dots--solution > i:first-child {
+  background: var(--color-pixel);
+}
+/* medallón pixel de marca (mismo motivo 2×2 que el logo del header): reemplaza el ⚠/✦
+   genérico por la identidad visual de Pixies, en las tintas de cada cara */
+.ps-bar__glyph {
+  display: grid;
+  flex-shrink: 0;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  width: 12px;
+  height: 12px;
+  margin-left: 0.15rem;
+}
+.ps-bar__glyph > i {
+  border-radius: 1px;
+}
+.ps-bar__glyph--problem > i:nth-child(1) {
+  background: var(--color-signal);
+}
+.ps-bar__glyph--problem > i:nth-child(2) {
+  background: color-mix(in srgb, var(--color-signal) 45%, transparent);
+}
+.ps-bar__glyph--problem > i:nth-child(3) {
+  background: color-mix(in srgb, var(--color-signal) 45%, transparent);
+}
+.ps-bar__glyph--problem > i:nth-child(4) {
+  background: var(--color-ink);
+  opacity: 0.18;
+}
+.ps-bar__glyph--solution > i:nth-child(1) {
+  background: var(--color-pixel);
+}
+.ps-bar__glyph--solution > i:nth-child(2) {
+  background: color-mix(in srgb, var(--color-pixel) 45%, transparent);
+}
+.ps-bar__glyph--solution > i:nth-child(3) {
+  background: color-mix(in srgb, var(--color-pixel) 45%, transparent);
+}
+.ps-bar__glyph--solution > i:nth-child(4) {
+  background: var(--color-signal);
+}
+.ps-bar__label {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
-.ps-label--problem {
+.ps-bar__label--problem {
   color: var(--color-signal);
 }
-.ps-label--solution {
+.ps-bar__label--solution {
   color: var(--color-pixel-soft);
 }
-/* a propósito MÁS chico y MENOS pesado que un h2/h3 real de sección: es contenido
-   dentro de una tarjeta, no un título de página — así no se confunden al escanear */
+.ps-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center; /* centra el contenido: la cara más corta (problema) no deja hueco */
+  gap: 0.45rem;
+  padding: clamp(1rem, 2.4vw, 1.5rem) clamp(1.1rem, 2.6vw, 1.6rem);
+}
+/* SIN font-display a propósito: los títulos reales de sección usan esa tipografía, esta
+   NO — es contenido dentro de una tarjeta, no un h2/h3, y ahora tampoco comparte la letra
+   con uno. El tamaño (más chico que un h2) y la barra de arriba son las otras dos señales. */
 .ps-lead {
   margin-top: 0.2rem;
-  font-family: var(--font-display);
   font-size: clamp(1.05rem, 1.7vw, 1.28rem);
   font-weight: 600;
   line-height: 1.25;

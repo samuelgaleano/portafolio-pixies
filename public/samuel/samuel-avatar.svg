@@ -1,38 +1,57 @@
 <svg viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+  <title>Avatar pixel-art de Samuel: silueta con pelo crespo y gafas</title>
+  <style>
+    .px-eye { animation: px-blink 5s ease-in-out infinite; }
+    @keyframes px-blink {
+      0%, 92%, 100% { opacity: 1; }
+      95%, 97% { opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .px-eye { animation: none; }
+    }
+  </style>
+
   <rect width="144" height="144" fill="#ece4fb" />
-  <circle cx="72" cy="58" r="66" fill="#6d4aff" opacity="0.1" />
+  <circle cx="72" cy="60" r="64" fill="#6d4aff" opacity="0.1" />
 
-  <!-- pelo crespo: cúmulo de círculos superpuestos -->
+  <!-- silueta en bloques de 8px: pelo crespo (perfil escalonado) + bustos, un mismo tono -->
   <g fill="#1c1533">
-    <circle cx="38" cy="42" r="15" />
-    <circle cx="52" cy="25" r="16" />
-    <circle cx="70" cy="17" r="17" />
-    <circle cx="89" cy="23" r="16" />
-    <circle cx="104" cy="40" r="15" />
-    <circle cx="109" cy="58" r="12" />
-    <circle cx="34" cy="59" r="12" />
-    <circle cx="46" cy="30" r="10" />
-    <circle cx="96" cy="31" r="10" />
+    <rect x="48" y="16" width="16" height="8" />
+    <rect x="72" y="16" width="16" height="8" />
+    <rect x="40" y="24" width="64" height="8" />
+    <rect x="32" y="32" width="80" height="8" />
+    <rect x="24" y="40" width="88" height="8" />
+    <rect x="24" y="48" width="88" height="8" />
+    <rect x="24" y="56" width="88" height="8" />
+    <rect x="32" y="64" width="80" height="8" />
+    <rect x="32" y="72" width="80" height="8" />
+    <rect x="32" y="80" width="80" height="8" />
+    <rect x="40" y="88" width="64" height="8" />
+    <rect x="48" y="96" width="48" height="8" />
+    <rect x="48" y="104" width="48" height="8" />
+    <rect x="16" y="112" width="112" height="8" />
+    <rect x="8" y="120" width="128" height="8" />
+    <rect x="0" y="128" width="144" height="8" />
+    <rect x="0" y="136" width="144" height="8" />
   </g>
 
-  <!-- silueta: cabeza + bustos -->
-  <path
-    d="M72 33c19.5 0 33 15.5 33 35 0 14.5-6.2 24.8-13.4 31.9-4 3.9-6.1 9.2-6.1 14.7v5.4H58.5v-5.4c0-5.5-2.1-10.8-6.1-14.7C45.2 92.8 39 82.5 39 68c0-19.5 13.5-35 33-35z"
-    fill="#1c1533"
-  />
-  <path
-    d="M18 144v-8.5C18 119.9 32.3 108 49 108h46c16.7 0 31 11.9 31 27.5v8.5H18z"
-    fill="#1c1533"
-  />
-
-  <!-- gafas -->
-  <g fill="none" stroke="#ece4fb" strokeWidth="4">
-    <rect x="41" y="63" width="27" height="21" rx="7" />
-    <rect x="76" y="63" width="27" height="21" rx="7" />
-    <line x1="68" y1="71" x2="76" y2="71" />
-    <line x1="41" y1="70" x2="33" y2="66" strokeLinecap="round" />
-    <line x1="103" y1="70" x2="111" y2="66" strokeLinecap="round" />
+  <!-- gafas en bloques: dos lentes + puente, mismo lenguaje de píxeles que el logo -->
+  <g fill="#6d4aff">
+    <rect x="40" y="64" width="24" height="16" />
+    <rect x="80" y="64" width="24" height="16" />
+    <rect x="64" y="64" width="16" height="8" />
   </g>
-  <circle cx="54.5" cy="73.5" r="4" fill="#6d4aff" />
-  <circle cx="89.5" cy="73.5" r="4" fill="#6d4aff" />
+  <!-- brillo de lente: un solo píxel claro por cara -->
+  <g fill="#ece4fb" opacity="0.5">
+    <rect x="40" y="64" width="8" height="8" />
+    <rect x="80" y="64" width="8" height="8" />
+  </g>
+  <!-- ojos: parpadean cada tanto (se funden con la lente violeta al "cerrarse") -->
+  <g fill="#ece4fb">
+    <rect class="px-eye" x="48" y="72" width="8" height="8" />
+    <rect class="px-eye" x="88" y="72" width="8" height="8" />
+  </g>
+
+  <!-- acento de marca: un píxel rojo, eco del logo -->
+  <rect x="64" y="112" width="8" height="8" fill="#e8395c" />
 </svg>
