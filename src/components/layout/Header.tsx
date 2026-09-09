@@ -18,7 +18,23 @@ export default function Header() {
             <rect x="0" y="18" width="14" height="14" fill="var(--color-pixel)" opacity="0.45" />
             <rect x="18" y="18" width="14" height="14" fill="var(--color-signal)" />
           </svg>
-          pixies
+          <span>
+            p
+            {/* firma de marca: la "i" se desarma en píxeles cada tanto y vuelve —
+                eco minúsculo del wordmark del hero, en el sitio donde el logo vive siempre */}
+            <span className="logo-i">
+              <span className="logo-i__glyph">i</span>
+              <span className="logo-i__bits" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+                <i />
+                <i />
+                <i />
+              </span>
+            </span>
+            xies
+          </span>
         </Link>
         {/* sin menú hamburguesa; 3 enlaces caben a 360px con el CTA corto en móvil.
             min-h-11 (44px): área táctil cómoda en móvil sin engordar la barra (h-14 la contiene) */}

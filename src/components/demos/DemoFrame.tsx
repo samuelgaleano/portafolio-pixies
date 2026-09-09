@@ -1,12 +1,19 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useOriginAwake } from './useOriginAwake';
 
 // Marco tipo "pantalla" para las demos embebidas + estado de carga branded.
-// Las demos corren en Render (plan free) y "duermen": la primera visita tarda ~30 s en
-// despertar. Hasta que el iframe dispara onLoad se muestra un skeleton con shimmer para
-// que nunca se vea un iframe en blanco. El marco (barra + píxeles + "url") da contexto y
-// hace que la demo luzca como una app dentro de una pantalla.
+// Las demos corren en Render (plan free) y "duermen": la primera visita puede tardar
+// bastante en despertar. Hasta confirmar que cargó de verdad se muestra un skeleton con
+// shimmer para que nunca se vea un iframe en blanco.
+//
+// Dos caminos según el origen del iframe (root cause de "las demos no funcionan",
+// 2026-09-09): POS y ERP van proxeados SAME-ORIGIN (rewrite en next.config), así que
+// contentDocument.readyState es una señal fiable. La TV es un iframe DIRECTO
+// cross-origin — ahí 'load' dispara igual aunque la conexión falle (páginas de error
+// también "cargan"), así que antes de montar su src de verdad se sonda el origen
+// (useOriginAwake) hasta confirmar que responde.
 //
 // sandbox: se mantiene el mismo que ya usaban las páginas (allow-same-origin es seguro
 // porque son NUESTRAS demos, proxeadas same-origin salvo el TV).
@@ -24,41 +31,66 @@ export default function DemoFrame({
   const [loaded, setLoaded] = useState(false);
   const frameRef = useRef<HTMLIFrameElement>(null);
 
-  // El iframe viaja en el HTML del servidor y empieza a cargar ANTES de que React hidrate.
-  // Si termina antes, el onLoad de React no llega nunca y el skeleton (opaco, z-index 3) se
-  // queda tapando una demo que YA funciona. Y pasa justo cuando la demo está despierta, o
-  // sea en la visita más común. Al montar hay que mirar el estado real del iframe, no
-  // esperar un evento que quizá ya ocurrió.
+  // src relativo (empieza con "/") = proxeado same-origin (POS, ERP). src ABSOLUTO
+  // ("http://…") = cross-origin directo (la TV) — la única distinción que importa, y
+  // se puede resolver solo con el string, sin `window`. Ojo: mirar
+  // `window.location.origin` aquí rompía el fix — en el render de SERVIDOR `window` no
+  // existe, así que ese chequeo daba SIEMPRE "same-origin" y el HTML llegaba al
+  // navegador con el src cross-origin ya puesto, la misma carrera que se quería evitar.
+  const crossOriginRoot = useMemo(() => {
+    if (!/^https?:\/\//.test(src)) return null;
+    try {
+      return new URL(src).origin;
+    } catch {
+      return null;
+    }
+  }, [src]);
+
+  const originAwake = useOriginAwake(crossOriginRoot);
+  const mountSrc = crossOriginRoot ? originAwake : true;
+
+  // Camino same-origin: el iframe viaja en el HTML del servidor y puede terminar de
+  // cargar ANTES de que React hidrate. Por eso, al montar, se mira el estado REAL del
+  // iframe (readyState) en vez de esperar solo un evento 'load' que quizá ya ocurrió.
   useEffect(() => {
+    if (crossOriginRoot) return;
     const el = frameRef.current;
     if (!el) return;
 
     const done = () => setLoaded(true);
     el.addEventListener('load', done);
-
-    // ¿Ya había cargado? Same-origin (POS y ERP van proxeados) se puede leer directo.
     try {
       if (el.contentDocument?.readyState === 'complete') done();
     } catch {
-      // cross-origin (el TV): contentDocument es inaccesible, se resuelve abajo
+      // no debería pasar en same-origin, pero por si acaso
     }
-    // Cross-origin: el navegador igual registra la carga del iframe en resource timing.
-    if (
-      performance
-        .getEntriesByType('resource')
-        .some((e) => (e as PerformanceResourceTiming).initiatorType === 'iframe' && e.name === el.src)
-    ) {
-      done();
-    }
-    // Red de seguridad por si ninguna de las dos pistas sirve: se espera más que el
-    // arranque en frío de Render (~30-50 s) antes de destapar a ciegas.
     const safety = window.setTimeout(done, 60000);
 
     return () => {
       el.removeEventListener('load', done);
       window.clearTimeout(safety);
     };
-  }, []);
+  }, [crossOriginRoot]);
+
+  // Camino cross-origin: una vez useOriginAwake confirma que el origen responde, se
+  // monta el src real. A esa altura el servidor YA contestó, así que 'load' aquí sí es
+  // una señal razonable (y hay un margen corto de respaldo por si no llega).
+  useEffect(() => {
+    if (!crossOriginRoot || !originAwake) return;
+    const el = frameRef.current;
+    if (!el) return;
+
+    const done = () => setLoaded(true);
+    el.addEventListener('load', done);
+    const safety = window.setTimeout(done, 15000);
+
+    return () => {
+      el.removeEventListener('load', done);
+      window.clearTimeout(safety);
+    };
+  }, [crossOriginRoot, originAwake]);
+
+  const waking = crossOriginRoot ? !originAwake : false;
 
   return (
     <div className="demo-frame">
@@ -71,7 +103,7 @@ export default function DemoFrame({
         <span className="demo-frame__url">{label}</span>
       </div>
       <div className="demo-frame__screen">
-        <div className={loaded ? 'demo-skeleton is-hidden' : 'demo-skeleton'} aria-hidden={loaded}>
+        <div className={loaded && !waking ? 'demo-skeleton is-hidden' : 'demo-skeleton'} aria-hidden={loaded && !waking}>
           <span className="demo-skeleton__grid" />
           <span className="demo-skeleton__sheen" />
           <span className="demo-skeleton__pixels" aria-hidden="true">
@@ -87,7 +119,7 @@ export default function DemoFrame({
         <iframe
           ref={frameRef}
           title={title}
-          src={src}
+          src={mountSrc ? src : undefined}
           onLoad={() => setLoaded(true)}
           className="relative z-[1] h-[82vh] w-full border-0"
           sandbox={sandbox}

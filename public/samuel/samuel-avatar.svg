@@ -1,0 +1,38 @@
+<svg viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+  <rect width="144" height="144" fill="#ece4fb" />
+  <circle cx="72" cy="58" r="66" fill="#6d4aff" opacity="0.1" />
+
+  <!-- pelo crespo: cúmulo de círculos superpuestos -->
+  <g fill="#1c1533">
+    <circle cx="38" cy="42" r="15" />
+    <circle cx="52" cy="25" r="16" />
+    <circle cx="70" cy="17" r="17" />
+    <circle cx="89" cy="23" r="16" />
+    <circle cx="104" cy="40" r="15" />
+    <circle cx="109" cy="58" r="12" />
+    <circle cx="34" cy="59" r="12" />
+    <circle cx="46" cy="30" r="10" />
+    <circle cx="96" cy="31" r="10" />
+  </g>
+
+  <!-- silueta: cabeza + bustos -->
+  <path
+    d="M72 33c19.5 0 33 15.5 33 35 0 14.5-6.2 24.8-13.4 31.9-4 3.9-6.1 9.2-6.1 14.7v5.4H58.5v-5.4c0-5.5-2.1-10.8-6.1-14.7C45.2 92.8 39 82.5 39 68c0-19.5 13.5-35 33-35z"
+    fill="#1c1533"
+  />
+  <path
+    d="M18 144v-8.5C18 119.9 32.3 108 49 108h46c16.7 0 31 11.9 31 27.5v8.5H18z"
+    fill="#1c1533"
+  />
+
+  <!-- gafas -->
+  <g fill="none" stroke="#ece4fb" strokeWidth="4">
+    <rect x="41" y="63" width="27" height="21" rx="7" />
+    <rect x="76" y="63" width="27" height="21" rx="7" />
+    <line x1="68" y1="71" x2="76" y2="71" />
+    <line x1="41" y1="70" x2="33" y2="66" strokeLinecap="round" />
+    <line x1="103" y1="70" x2="111" y2="66" strokeLinecap="round" />
+  </g>
+  <circle cx="54.5" cy="73.5" r="4" fill="#6d4aff" />
+  <circle cx="89.5" cy="73.5" r="4" fill="#6d4aff" />
+</svg>

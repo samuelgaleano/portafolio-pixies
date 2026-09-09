@@ -40,8 +40,11 @@ export default function ProblemSolution({
           aria-label={`${t.exhibit.erpProblem}: ${problemLead}. ${t.exhibit.psHint}`}
           onClick={() => setFlipped(true)}
         >
-          <span className="ps-label ps-label--problem">
-            <span aria-hidden="true">⚠</span> {t.exhibit.erpProblem}
+          <span className="ps-head">
+            <span className="ps-icon ps-icon--problem" aria-hidden="true">
+              ⚠
+            </span>
+            <span className="ps-label ps-label--problem">{t.exhibit.erpProblem}</span>
           </span>
           <p className="ps-lead">{problemLead}</p>
           {problemPoints && problemPoints.length > 0 ? (
@@ -65,8 +68,11 @@ export default function ProblemSolution({
 
         {/* CARA SOLUCIÓN — enlace al demo (oprimible hacia el demo, Samuel r20) */}
         <Link href={demoUrl} className="ps-face ps-face--solution" aria-label={ariaLabel}>
-          <span className="ps-label ps-label--solution">
-            <span aria-hidden="true">✦</span> {t.exhibit.erpSolution}
+          <span className="ps-head">
+            <span className="ps-icon ps-icon--solution" aria-hidden="true">
+              ✦
+            </span>
+            <span className="ps-label ps-label--solution">{t.exhibit.erpSolution}</span>
           </span>
           <p className="ps-lead">{solutionLead}</p>
           <p className="ps-text">{solution}</p>

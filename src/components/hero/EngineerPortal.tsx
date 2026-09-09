@@ -41,7 +41,7 @@ export default function EngineerPortal() {
             y la malla de teselas se DISPERSA en píxeles encima. */}
         <span className="eng-portal__avatar" aria-hidden="true">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="eng-portal__photo" src="/samuel/samuel-avatar.webp" alt="" width={320} height={320} decoding="async" />
+          <img className="eng-portal__photo" src="/samuel/samuel-avatar.svg" alt="" width={320} height={320} decoding="async" />
           <span className="eng-portal__tiles">
             {TILES.map((tile, i) => (
               <i
