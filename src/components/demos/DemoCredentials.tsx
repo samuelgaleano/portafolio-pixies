@@ -78,7 +78,13 @@ export default function DemoCredentials({
     // intencional, no un salto instantáneo sin explicación.
     window.setTimeout(() => {
       setEstado('entrando');
-      form?.requestSubmit();
+      // Clic real sobre el botón, no form.requestSubmit(): algunas demos validan el
+      // origen de la petición del lado del servidor y un submit programático desde
+      // fuera del iframe (aunque mismo origen) no siempre pasa esa validación — un
+      // clic sobre el botón real de la demo sí es indistinguible de uno humano.
+      const boton = form?.querySelector<HTMLButtonElement>('button[type="submit"], input[type="submit"]');
+      if (boton) boton.click();
+      else form?.requestSubmit();
     }, 450);
   }
 
