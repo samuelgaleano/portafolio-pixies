@@ -136,6 +136,19 @@
 .js-reveal [data-reveal] {
   opacity: 0;
   transform: translateY(30px);
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.js-reveal [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+/* el "ensamblaje" (barrido de máscara + de-blur) repinta caro — se reserva para bloques
+   CHICOS marcados data-reveal="wipe" (encabezados). El resto usa solo opacity+transform de
+   arriba (compositor, sin repintar): en secciones grandes (grillas, exhibits) el blur+mask
+   sobre tanta área competía por el hilo principal justo al bajar rápido (Samuel r25). */
+.js-reveal [data-reveal='wipe'] {
   /* blur reducido (Samuel r19): 11px→4px — animar blur es caro; 4px conserva el "de-blur"
      del ensamblaje pero repinta mucho más barato → scroll sin trabas */
   filter: blur(4px);
@@ -148,15 +161,13 @@
     filter 0.7s ease,
     --reveal-wipe 1s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.js-reveal [data-reveal].is-revealed {
-  opacity: 1;
-  transform: none;
+.js-reveal [data-reveal='wipe'].is-revealed {
   filter: none;
   --reveal-wipe: 115%;
 }
 /* Con movimiento reducido no recortamos ni desenfocamos: el contenido solo aparece. */
 @media (prefers-reduced-motion: reduce) {
-  .js-reveal [data-reveal] {
+  .js-reveal [data-reveal='wipe'] {
     filter: none;
     -webkit-mask: none;
     mask: none;
@@ -468,7 +479,6 @@ footer:hover .footer-wordmark {
     color-mix(in srgb, var(--color-pixel-soft) 24%, transparent) 50%,
     transparent 70%
   );
-  background-size: 200% 100%;
 }
 @media (hover: hover) {
   .proj-card:hover .proj-sheen {
@@ -480,12 +490,15 @@ footer:hover .footer-wordmark {
   opacity: 1;
   animation: card-sheen 1.4s linear infinite;
 }
+/* barre con transform, no background-position (Samuel r25): background-position fuerza
+   repintado en cada frame — con el cursor quieto sobre una tarjeta mientras se scrollea,
+   competía por el hilo principal justo durante el scroll. transform se compone en GPU. */
 @keyframes card-sheen {
   0% {
-    background-position: -150% 0;
+    transform: translateX(-120%);
   }
   100% {
-    background-position: 250% 0;
+    transform: translateX(120%);
   }
 }
 
@@ -795,6 +808,12 @@ footer:hover .footer-wordmark {
   opacity: 0;
   pointer-events: none;
 }
+/* opacity:0 no pausa animaciones — sin esto, el sheen y los píxeles seguían animando para
+   siempre en segundo plano después de que la demo cargó (Samuel r25) */
+.demo-skeleton.is-hidden .demo-skeleton__sheen,
+.demo-skeleton.is-hidden .demo-skeleton__pixels > i {
+  animation: none;
+}
 .demo-skeleton__grid {
   position: absolute;
   inset: 0;
@@ -815,7 +834,6 @@ footer:hover .footer-wordmark {
     color-mix(in srgb, var(--color-pixel-soft) 14%, transparent) 50%,
     transparent 60%
   );
-  background-size: 200% 100%;
   animation: card-sheen 1.9s linear infinite;
 }
 .demo-skeleton__pixels {

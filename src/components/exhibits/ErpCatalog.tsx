@@ -76,6 +76,7 @@ export default function ErpCatalog({
                 src={step.screenshot}
                 alt={step.alt}
                 loading="lazy"
+                decoding="async"
                 className="h-full w-full object-cover object-top transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-105"
               />
             ) : (
@@ -137,7 +138,7 @@ export default function ErpCatalog({
                 setActive(i);
               }}
               aria-current={active === i ? 'step' : undefined}
-              className={`group flex w-full items-center gap-3 rounded-(--radius-m) border p-3 text-left transition-all duration-300 ${
+              className={`group flex w-full items-center gap-3 rounded-(--radius-m) border p-3 text-left transition-[background-color,border-color,transform] duration-300 ${
                 active === i
                   ? 'border-pixel/60 bg-surface shadow-[0_14px_34px_-22px_var(--color-pixel)]'
                   : 'border-line bg-surface/40 hover:-translate-y-0.5 hover:border-pixel/40 hover:bg-surface/70'
@@ -146,7 +147,7 @@ export default function ErpCatalog({
               <span className="relative aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-(--radius-s) border border-line bg-surface-2">
                 {s.screenshot ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={s.screenshot} alt="" loading="lazy" className="h-full w-full object-cover object-top" />
+                  <img src={s.screenshot} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover object-top" />
                 ) : (
                   <span className="pixel-mask absolute inset-0" aria-hidden="true" />
                 )}

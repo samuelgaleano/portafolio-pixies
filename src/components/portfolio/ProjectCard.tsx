@@ -42,6 +42,7 @@ export default function ProjectCard({ project, variant = 'default' }: { project:
           src={project.preview.src}
           alt={project.preview.alt}
           loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover object-top transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-105"
         />
       ) : (

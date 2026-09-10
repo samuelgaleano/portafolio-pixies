@@ -15,7 +15,7 @@ export default function SectionHead({
   glyph?: 'cluster' | 'spark' | 'cursor';
 }) {
   return (
-    <div data-reveal className="flex items-start justify-between gap-6">
+    <div data-reveal="wipe" className="flex items-start justify-between gap-6">
       <div className="min-w-0">
         <p className="font-mono text-xs text-pixel-soft">{index}</p>
         <h2 className="mt-1 font-display text-h2 font-semibold">{title}</h2>

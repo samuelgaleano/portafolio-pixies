@@ -10,7 +10,7 @@ import GradientText from '@/components/ui/GradientText';
 export default function PortfolioSection() {
   return (
     <section id="portafolio" className="mx-auto w-full max-w-[1200px] scroll-mt-16 px-4 pb-24 pt-6 sm:px-6">
-      <header data-reveal className="mb-8">
+      <header data-reveal="wipe" className="mb-8">
         <p className="font-mono text-sm text-data">{t.portfolio.eyebrow}</p>
         <h2 className="mt-2 font-display text-h2 font-semibold">
           <GradientText text={t.portfolio.title} em="ya corren" />
