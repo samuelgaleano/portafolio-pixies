@@ -89,21 +89,24 @@ export default function ProjectCard({ project, variant = 'default' }: { project:
     </div>
   );
 
+  // Rediseño minimalista (Samuel r23): la cara visible es solo nombre + tecnologías —
+  // llamativo por lo que NO satura, no por texto. La descripción (tagline) se movió
+  // dentro del desplegable de detalles técnicos, como primera línea antes de los bullets.
+  // Sin "Abrir sitio →"/"Ver demo en vivo →" al pie: el badge de estado (arriba, sobre la
+  // vista previa) ya dice qué es, y la tarjeta entera es un solo link — el texto era ruido.
   const body = (
     <div className="relative flex flex-1 flex-col gap-3 p-4 md:p-5">
-      <div>
-        <h4 className={`font-display font-semibold text-ink ${wide ? 'text-lg md:text-xl' : 'text-base'}`}>
-          {project.name}
-        </h4>
-        <p className="mt-1 text-[0.82rem] leading-relaxed text-dim">{project.tagline}</p>
-      </div>
+      <h4 className={`font-display font-semibold text-ink ${wide ? 'text-lg md:text-xl' : 'text-lg'}`}>
+        {project.name}
+      </h4>
 
       {stackIcons}
 
-      {/* detalle técnico bajo demanda (síntesis premium): bullets + stack con nombres */}
+      {/* detalle técnico bajo demanda: la descripción de negocio + bullets + stack con nombres */}
       {bullets.length > 0 && (
         <Collapsible label={t.portfolio.detailsShow} labelOpen={t.portfolio.detailsHide}>
-          <ul className="flex flex-col gap-1.5 pt-3 font-mono text-xs text-dim">
+          <p className="pt-3 text-[0.82rem] leading-relaxed text-dim">{project.tagline}</p>
+          <ul className="mt-3 flex flex-col gap-1.5 font-mono text-xs text-dim">
             {bullets.map((b, i) => (
               <li key={i} className="flex gap-2">
                 <span className="text-pixel" aria-hidden="true">
@@ -132,12 +135,7 @@ export default function ProjectCard({ project, variant = 'default' }: { project:
         </Collapsible>
       )}
 
-      {/* CTA minimalista (la tarjeta entera ya navega vía stretched link): solo una pista */}
-      {hasLink ? (
-        <span className="pointer-events-none relative z-[1] mt-auto inline-flex w-fit items-center gap-1 font-mono text-xs font-medium text-pixel-soft transition-transform [@media(hover:hover)]:group-hover:translate-x-0.5">
-          {linkLabel}
-        </span>
-      ) : (
+      {!hasLink && (
         <span className="relative z-[1] mt-auto">
           <Pending>{t.portfolio.pendingLink}</Pending>
         </span>
@@ -145,7 +143,7 @@ export default function ProjectCard({ project, variant = 'default' }: { project:
     </div>
   );
 
-  const cls = `proj-card group relative overflow-hidden rounded-(--radius-m) border border-line bg-surface focus-within:border-pixel ${
+  const cls = `proj-card group relative h-full overflow-hidden rounded-(--radius-m) border border-line bg-surface focus-within:border-pixel ${
     wide ? 'grid md:grid-cols-[1.1fr_1fr]' : 'flex flex-col'
   }`;
 

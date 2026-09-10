@@ -1,16 +1,14 @@
 import { erpTour } from '@/data/erp-tour';
 import { t } from '@/i18n';
-import Pending from '@/components/ui/Pending';
-import StepTour from './StepTour';
+import ErpCatalog from './ErpCatalog';
 import ProblemSolution from './ProblemSolution';
 
-// Recorrido guiado del ERP (§12.A): contenido en erp-tour.ts, interacción en StepTour.
-// Rediseño (Samuel 2026-07-18): antes del recorrido técnico, un gancho problema→solución
-// que VENDE el ERP (qué duele operar sin sistema y cómo lo resuelve) + beneficios clave.
-// El detalle técnico de cada paso vive ahora en un desplegable dentro de StepTour.
+// Recorrido guiado del ERP (§12.A): contenido en erp-tour.ts.
+// Rediseño (Samuel r23): la lista larga de 5 pasos idénticos (mismo bloque de texto, uno
+// tras otro) se sentía monótona justo después del gancho problema→solución — la gente
+// dejaba de bajar. Ahora es un catálogo: cada módulo es su propia tarjeta con su captura
+// real, la primera destacada. Ver ERP: ErpCatalog.tsx.
 export default function ErpScrollytelling() {
-  const hasRepo = Boolean(erpTour.repoUrl);
-
   return (
     <div className="mt-6">
       {/* vista inicial de VENTA (Samuel r22): antes del problema/solución narrativo, lo
@@ -49,36 +47,11 @@ export default function ErpScrollytelling() {
         </div>
       )}
 
-      <StepTour
+      <ErpCatalog
         steps={erpTour.steps}
         modules={erpTour.modules}
-        panelHref={erpTour.demoUrl}
-        panelChip={t.exhibit.chipDemo}
-        panelAria={t.exhibit.ariaErpDemo}
-        footer={
-          <>
-            {erpTour.demoUrl && (
-              <a
-                href={erpTour.demoUrl}
-                className="press inline-block rounded-(--radius-s) bg-signal px-4 py-2 font-mono text-xs font-medium text-void transition hover:brightness-110"
-              >
-                {t.exhibit.viewDemo}
-              </a>
-            )}
-            {hasRepo ? (
-              <a
-                href={erpTour.repoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block rounded-(--radius-s) border border-line px-4 py-2 font-mono text-xs text-ink transition-colors hover:border-pixel hover:text-pixel-soft"
-              >
-                {t.exhibit.viewCode}
-              </a>
-            ) : (
-              !erpTour.demoUrl && <Pending>{t.exhibit.pendingRepo}</Pending>
-            )}
-          </>
-        }
+        demoUrl={erpTour.demoUrl}
+        demoAria={t.exhibit.ariaErpDemo}
       />
     </div>
   );

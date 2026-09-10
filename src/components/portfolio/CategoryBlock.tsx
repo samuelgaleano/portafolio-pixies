@@ -52,12 +52,7 @@ export default function CategoryBlock({ category }: { category: Category }) {
               que se ve es "esto es lo que hay, elige uno", no una historia sobre uno solo.
               El gancho problema→solución (más narrativo, vende un caso concreto) queda
               después, como profundidad para quien ya decidió seguir leyendo. */}
-          {items.length >= 2 && (
-            <p className="mt-6 font-mono text-xs font-medium uppercase tracking-wide text-dim">
-              {t.portfolio.pickOne}
-            </p>
-          )}
-          <div className={`mt-3 grid gap-6 md:grid-cols-2 ${items.length >= 3 ? 'xl:grid-cols-3' : ''}`}>
+          <div className={`mt-6 grid gap-6 md:grid-cols-2 ${items.length >= 3 ? 'xl:grid-cols-3' : ''}`}>
             {items.map((project, i) => {
               // última tarjeta impar: ocupa las 2 columnas en md–lg (evita el hueco vacío),
               // vuelve a 1 columna en xl:grid-cols-3
