@@ -48,12 +48,14 @@ test('catálogo oprimible: toda la tarjeta y la miniatura del launcher llevan a 
   await page.goto('/');
 
   // 1) el cuadrado ENTERO de la tarjeta navega al sitio del producto: quien recibe el clic en la
-  //    previa, el título y el tagline debe ser el enlace estirado, no la imagen ni el texto.
+  //    previa, el título y las tecnologías debe ser el enlace estirado, no la imagen ni el texto.
+  //    (Samuel r23: la tarjeta se simplificó a preview + nombre + tecnologías; la descripción se
+  //    movió al desplegable de detalles, ya no es un <p> visible junto al <h4>.)
   const card = page.locator('.proj-card').filter({ hasText: 'Xiaomi CarTech' }).first();
   const href = await card.locator('a[aria-label]').getAttribute('href');
   expect(href).toBeTruthy();
   await card.hover();
-  for (const zona of [card.locator('> div').first(), card.locator('h4'), card.locator('h4 + p')]) {
+  for (const zona of [card.locator('> div').first(), card.locator('h4'), card.locator('h4 + div')]) {
     const box = await zona.boundingBox();
     expect(box).not.toBeNull();
     const recibe = await page.evaluate(
