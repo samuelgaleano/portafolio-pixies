@@ -1145,9 +1145,10 @@ footer:hover .footer-wordmark {
   border-radius: 14px;
   border: 2px solid color-mix(in srgb, var(--color-pixel) 55%, var(--color-line));
   box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--color-pixel) 70%, transparent);
-  /* el marco se desvanece junto con las teselas (retraso: que no se note hasta que ya
-     casi terminaron de caer, ~1s en total) — si no, queda un recuadro vacío al final */
-  transition: border-color 0.5s ease 0.45s, box-shadow 0.5s ease 0.45s;
+  /* el marco se apaga EN EL MISMO INSTANTE que la foto (mismo timing que .eng-portal__photo
+     de abajo): con un retraso mayor quedaba un recuadro vacío y sólido mientras las teselas
+     ya habían caído — visualmente peor que dejarlo notarse desde el principio */
+  transition: border-color 0.35s ease 0.08s, box-shadow 0.35s ease 0.08s;
 }
 .eng-portal__photo {
   position: absolute;
