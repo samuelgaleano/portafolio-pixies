@@ -1,13 +1,13 @@
 import { erpTour } from '@/data/erp-tour';
 import { t } from '@/i18n';
 import ErpCatalog from './ErpCatalog';
-import ProblemSolution from './ProblemSolution';
 
 // Recorrido guiado del ERP (§12.A): contenido en erp-tour.ts.
-// Rediseño (Samuel r23): la lista larga de 5 pasos idénticos (mismo bloque de texto, uno
-// tras otro) se sentía monótona justo después del gancho problema→solución — la gente
-// dejaba de bajar. Ahora es un catálogo: cada módulo es su propia tarjeta con su captura
-// real, la primera destacada. Ver ERP: ErpCatalog.tsx.
+// Rediseño (Samuel r24): el banner problema→solución quedaba justo antes del catálogo y
+// sumaba un tramo narrativo más antes de llegar a lo interesante — se quita, el gancho de
+// venta ya lo hace el bloque de beneficios + CTA de arriba. El catálogo pasó de grilla de
+// 5 tarjetas sueltas a destacado + laterales seleccionables (ver ErpCatalog.tsx): se siente
+// un tablero real, no una lista.
 export default function ErpScrollytelling() {
   return (
     <div className="mt-6">
@@ -30,29 +30,7 @@ export default function ErpScrollytelling() {
         )}
       </div>
 
-      {/* gancho problema→solución INTERACTIVO (Samuel r21): muestra el problema (general y concreto)
-          y al pasar el cursor / enfocar / tocar se VOLTEA y revela la solución que lo resuelve, con
-          CTA oprimible al demo. Contraste: problema en signal (rojo), solución en pixel (violeta). */}
-      {erpTour.demoUrl && (
-        <div className="mt-6">
-          <ProblemSolution
-            problemLead={erpTour.problemLead}
-            problemPoints={erpTour.problemPoints}
-            problem={erpTour.problem}
-            solutionLead={erpTour.solutionLead}
-            solution={erpTour.solution}
-            demoUrl={erpTour.demoUrl}
-            ariaLabel={t.exhibit.ariaErpDemo}
-          />
-        </div>
-      )}
-
-      <ErpCatalog
-        steps={erpTour.steps}
-        modules={erpTour.modules}
-        demoUrl={erpTour.demoUrl}
-        demoAria={t.exhibit.ariaErpDemo}
-      />
+      <ErpCatalog steps={erpTour.steps} modules={erpTour.modules} demoUrl={erpTour.demoUrl} demoAria={t.exhibit.ariaErpDemo} />
     </div>
   );
 }

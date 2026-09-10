@@ -1145,6 +1145,9 @@ footer:hover .footer-wordmark {
   border-radius: 14px;
   border: 2px solid color-mix(in srgb, var(--color-pixel) 55%, var(--color-line));
   box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--color-pixel) 70%, transparent);
+  /* el marco se desvanece junto con las teselas (retraso: que no se note hasta que ya
+     casi terminaron de caer, ~1s en total) — si no, queda un recuadro vacío al final */
+  transition: border-color 0.5s ease 0.45s, box-shadow 0.5s ease 0.45s;
 }
 .eng-portal__photo {
   position: absolute;
@@ -1187,6 +1190,14 @@ footer:hover .footer-wordmark {
 .eng-portal:hover .eng-portal__photo,
 .eng-portal:focus-visible .eng-portal__photo {
   opacity: 0;
+}
+/* el marco (borde + sombra) se apaga con la foto, y se deja de recortar para que las
+   teselas puedan caer y desvanecerse más allá del cuadro sin cortarse en seco */
+.eng-portal:hover .eng-portal__avatar,
+.eng-portal:focus-visible .eng-portal__avatar {
+  overflow: visible;
+  border-color: transparent;
+  box-shadow: none;
 }
 /* al seleccionar: las teselas aparecen notables, CAEN (--fall, gravedad) rotando, luego se desvanecen */
 .eng-portal:hover .eng-portal__tiles i,

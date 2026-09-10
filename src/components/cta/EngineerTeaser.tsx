@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { t } from '@/i18n';
 import GradientText from '@/components/ui/GradientText';
 
-// Banda-puente hacia /samuel (plan §5). Reutiliza el mosaico pixelado de la foto placeholder
-// como firma; refuerza el posicionamiento "el cerebro detrás de Pixies".
+// Banda-puente hacia /samuel (plan §5): la misma foto del hero acompaña también este último
+// tramo antes del formulario de contacto — es el mismo ingeniero, no un mosaico placeholder.
 export default function EngineerTeaser() {
   return (
     <section className="border-t border-line">
@@ -17,17 +17,19 @@ export default function EngineerTeaser() {
           data-reveal
           className="mx-auto flex w-full max-w-[1200px] flex-col items-start gap-8 px-4 py-24 sm:px-6 md:flex-row md:items-center"
         >
-          {/* mosaico pixelado — mismo lenguaje que la foto del hero */}
           <span
-            className="block size-28 shrink-0 rounded-(--radius-m) border border-line transition-transform [@media(hover:hover)]:group-hover:scale-105 sm:size-36"
-            style={{
-              // solo violeta: signal se reserva a conversión (regla propia del DESIGN)
-              backgroundImage:
-                'conic-gradient(var(--color-surface-2) 25%, var(--color-line) 0 50%, var(--color-surface-2) 0 75%, var(--color-line) 0), linear-gradient(color-mix(in srgb, var(--color-pixel) 26%, transparent), color-mix(in srgb, var(--color-pixel) 10%, transparent))',
-              backgroundSize: '18px 18px, 100% 100%',
-            }}
+            className="relative block size-28 shrink-0 overflow-hidden rounded-(--radius-m) border border-line transition-transform [@media(hover:hover)]:group-hover:scale-105 sm:size-36"
             aria-hidden="true"
-          />
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/samuel/samuel-avatar.webp"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover object-top"
+            />
+          </span>
           <div>
             <p className="font-mono text-sm text-data">{t.engineerTeaser.eyebrow}</p>
             <h2 className="mt-3 max-w-2xl font-display text-h2 font-semibold text-ink">
