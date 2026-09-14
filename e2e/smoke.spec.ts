@@ -30,7 +30,7 @@ test('/samuel y un post renderizan (highlight de código incluido)', async ({ pa
   await expect(page.getByRole('heading', { level: 1 })).toContainText('cerebro detrás de Pixies');
 
   await page.goto('/samuel/posts/hola-mundo-pixies');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('cero al mes');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('no me cuesta nada al mes');
   // Shiki marca el bloque con data-language (restaurado en la auditoría)
   await expect(page.locator('[data-language="ts"]').first()).toBeVisible();
 });
