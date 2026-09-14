@@ -24,11 +24,10 @@ export const metadata: Metadata = {
     siteName: site.name,
   },
   twitter: { card: 'summary_large_image' },
-  // Código de verificación HTML-tag de Search Console (propiedad → Verificación → etiqueta
-  // HTML). No hay dominio verificado todavía: queda sin efecto hasta definir la variable.
-  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-    ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
-    : {}),
+  // Código de verificación HTML-tag de Search Console para https://www.pixiesdesigngroup.com
+  // (propiedad dada de alta el 2026-09-14). No es un secreto: el propio método de verificación
+  // consiste en publicarlo en el HTML, así que va literal en vez de por variable de entorno.
+  verification: { google: 'xTvZUDZFXFWwIk0f3zFl0wWyvjdLNWEHMBYreGf5X8U' },
 };
 
 export const viewport: Viewport = {
