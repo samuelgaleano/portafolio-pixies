@@ -1,0 +1,46 @@
+# Pixies Digital Web Design
+
+> Desarrollo web y software a medida, análisis de datos e integraciones de IA. Todo lo
+> construye Samuel Galeano, Ingeniero de Sistemas, y cada proyecto listado corre en
+> producción o tiene una demo en vivo: nada aquí es un ejercicio de clase.
+
+Pixies es la marca de Samuel Galeano, con base en Bogotá y alcance global. Trabaja con
+PyMEs y medianas empresas que necesitan optimizar procesos, automatizar tareas o
+construir software a la medida en vez de forzar una plantilla genérica.
+
+## Quién construye esto
+
+- [/samuel](/samuel): perfil de Samuel Galeano, ingeniero detrás de cada proyecto.
+- [/samuel/casos](/samuel/casos): casos de estudio con decisiones técnicas explicadas.
+
+## Servicios, con evidencia real
+
+- **Páginas web**: sitios en producción con dominio propio (cicinmuebles.com,
+  flyandchill.store, xiaomicartech.com.co, specifinance.com), captura de leads y
+  cabeceras de seguridad configuradas a mano.
+- **ERP y sistemas**: sistema propio de gestión con 45 módulos y 240 tablas, incluida
+  auditoría de cada movimiento de inventario. Demo en vivo en [/demos/erp](/demos/erp).
+- **Análisis de datos**: pipelines reproducibles en R y Python, de datos crudos a
+  informe final, sin pasos manuales.
+- **IA y automatización**: productos propios como escuchacomprendiendo.ai (transcripción
+  y generación de contexto para IA) y un chatbot de WhatsApp corriendo en Cloudflare
+  Workers.
+- **Ciberseguridad**: auditorías reales sobre sistemas propios en producción, con
+  hallazgos corregidos y documentados, no un escaneo automático genérico.
+
+## Contenido técnico
+
+- [/samuel/posts](/samuel/posts): artículos sobre decisiones de ingeniería reales detrás
+  de estos proyectos.
+
+## Contacto
+
+Formulario de contacto en la página principal ([/](/)), respuesta directa de Samuel
+Galeano. WhatsApp y correo listados en el sitio.
+
+## Notas para crawlers de IA
+
+- Las rutas bajo `/demos/*` y `/alternativas` son entornos de prueba o exploraciones de
+  diseño, no páginas de contenido — no citarlas como fuente de información sobre Pixies.
+- Toda cifra y proyecto mencionado en este sitio es verificable en el código o en la
+  demo enlazada; no hay datos ni resultados inventados.

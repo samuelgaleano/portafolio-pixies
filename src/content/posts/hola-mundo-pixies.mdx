@@ -1,28 +1,20 @@
 ---
-title: "Cómo este sitio cuesta cero al mes (y por qué eso fue una decisión de ingeniería)"
-description: "Un portafolio en Next.js que se paga solo: páginas pregeneradas, CDN global y ni una base de datos propia. La decisión detrás de Pixies."
+title: "Por qué este portafolio no me cuesta nada al mes"
+description: "Un sitio en Next.js que se paga solo: páginas pregeneradas, CDN global y ni una base de datos propia detrás. Así quedó armado el portafolio de Pixies."
 pubDate: 2026-07-11
 tags: ["ingeniería", "emprender", "web"]
 draft: false
 ---
 
-{/* [COMPLETAR: Samuel reemplaza este post de ejemplo por el suyo real. La estructura y el estilo ya están listos.] */}
-
-> La mejor infraestructura es la que no pagas por tener encendida.
-
-Cuando alguien pide un portafolio, casi siempre termina pagando infraestructura que el 99% del tiempo está inactiva. Yo hice lo contrario: este sitio corre en Next.js, pero cada página se **pregenera** en el build y se sirve desde una CDN global. Costo mensual: cero.
+Cuando alguien me pide un portafolio o una página institucional, casi siempre termina pagando un hosting que se usa una fracción mínima del tiempo real. A mí me tocó armar el mío distinto: este sitio corre en Next.js, pero cada página se pregenera en el momento del build y se sirve desde una CDN, así que no hay ningún servidor prendido esperando visitas. El costo mensual, en el plan gratuito de Vercel, es cero.
 
 ## La decisión
 
-El framework tiene toda la capacidad de servidor disponible — y la usaré cuando aporte valor. Pero ninguna página de este sitio necesita renderizarse por petición, así que ninguna lo hace. El resultado:
-
-- Carga rápido, incluso desde un dato móvil flojo.
-- Cuesta **cero** al mes en el plan gratuito.
-- Escala a cualquier cantidad de visitas sin que yo toque nada.
+El framework tiene toda la capacidad de servidor disponible por si algún día hace falta, pero ninguna página de este sitio necesita renderizarse por petición, así que ninguna lo hace. La ventaja de fondo no es solo el costo: es que el sitio carga rápido incluso con un dato móvil flojo y escala a cualquier cantidad de visitas sin que yo tenga que tocar nada. Usar un framework con servidor no obliga a usar el servidor.
 
 ## El truco de los formularios
 
-¿Y cómo recibo mensajes sin base de datos propia? Cada lead se guarda en una hoja de cálculo de Google antes de abrir WhatsApp. El lead queda registrado **aunque el visitante nunca envíe el mensaje**.
+¿Y cómo recibo mensajes sin tener una base de datos propia corriendo? Cada lead que llega por el formulario se guarda en una hoja de cálculo de Google antes de abrir WhatsApp. Eso significa que el lead queda registrado aunque el visitante nunca llegue a enviar el mensaje de WhatsApp.
 
 ```ts
 // el guardado ocurre antes de redirigir, no depende de ello
@@ -30,10 +22,6 @@ await guardarLead(datos);
 window.location.href = construirEnlaceWhatsApp(datos);
 ```
 
-## Lo que me llevo
+Si el redirect falla, o si la persona simplemente cierra la pestaña antes de mandar el mensaje, el dato ya quedó guardado del lado mío. No dependo de que la otra mitad del flujo se complete para saber que alguien estuvo interesado.
 
-La mejor infraestructura es la que no pagas por tener encendida. Usar un framework con servidor no obliga a usar el servidor: la ingeniería está en saber cuándo no hace falta.
-
-Si estás pensando un proyecto y no sabes cuánta infraestructura necesita de verdad, [escríbeme](/#contacto): esa conversación es gratis.
-
-{/* [COMPLETAR: Samuel puede reescribir el cierre con su voz] */}
+Si estás pensando un proyecto y no sabes cuánta infraestructura necesita de verdad, o si sospechas que estás pagando de más por algo que casi no usas, escríbeme por el formulario de esta misma página. Esa conversación es gratis.

@@ -1,0 +1,27 @@
+---
+title: "Las 25 tablas del ERP que no guardan nada del negocio, solo quién tocó qué"
+description: "Por qué el ERP que construí tiene una cuarta parte de sus tablas de inventario dedicadas solo a trazabilidad, y qué pasa el día que sí hace falta reconstruir un movimiento."
+pubDate: 2026-09-14
+tags: ["ERP", "ingeniería", "ciberseguridad"]
+draft: false
+---
+
+En el ERP que construí hay 25 tablas que no guardan nada del negocio. No tienen precios, ni clientes, ni pedidos. Existen solo para responder una pregunta: quién tocó esto, y cuándo.
+
+El sistema completo tiene 45 módulos y 240 tablas: tablero y KPIs, producción y Gantt, comercial y cotizaciones, almacén e inventario, auditoría y seguridad. De esas 240, una cuarta parte de las que tocan inventario son tablas `*_historial`. Cada movimiento de stock deja rastro, con usuario y fecha, y ese rastro no se puede editar desde la interfaz. Ni el administrador tiene un botón para borrarlo.
+
+## Por qué tantas tablas para algo que "no hace nada"
+
+Suena a exceso hasta el día que falta mercancía y toca reconstruir qué pasó. Ahí la conversación deja de ser "yo no fui" y pasa a ser un registro: quién movió esa unidad, a qué hora, desde qué módulo. Sin esas 25 tablas, la respuesta a "¿dónde quedó esto?" depende de la memoria de alguien. Con ellas, depende de una consulta.
+
+Es el mismo principio que aplico con la subida de archivos: se valida el tipo real leyendo los bytes, no la extensión del nombre, el archivo se renombra al azar y en esa carpeta la ejecución de PHP queda deshabilitada. Tres candados para lo mismo, porque el que sube un archivo a tu servidor no siempre es quien dice ser.
+
+## El tamaño real del sistema
+
+Este ERP es el sistema más grande que he construido y todavía le sigo encontrando cosas. En números: 551 archivos, cerca de 145.000 líneas de PHP propias, 331 claves foráneas entre tablas y 53 triggers corriendo en la base de datos. No es un sistema de un cliente que tenga que proteger: es propio, así que lo puedo mostrar entero. Hay una demo en vivo en [/demos/erp](/demos/erp) si quieres tocarlo en vez de solo leer sobre él.
+
+## Lo que esto significa para tu propio sistema
+
+No todo negocio necesita 25 tablas de historial. Pero sí vale la pena preguntarse: si hoy faltara mercancía, ¿tu sistema te puede decir quién tocó qué la última vez, o te toca reconstruirlo preguntando a mano por WhatsApp o revisando cámaras? Esa pregunta es de lo primero que reviso cuando entro a auditar un ERP ajeno, y casi siempre la respuesta honesta es que no hay forma de saberlo.
+
+Si tu sistema actual no tiene esa trazabilidad, se puede resolver sin rehacer todo lo que ya funciona: normalmente basta con agregar las tablas de auditoría a los módulos que más rotación tienen, no todo el sistema de una vez. Si quieres que revise cómo está el tuyo, escríbeme por el formulario de la página principal y lo miramos.

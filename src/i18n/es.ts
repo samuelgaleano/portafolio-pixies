@@ -159,11 +159,19 @@ export const es = {
       'Bitácora de decisiones de ingeniería detrás de cada proyecto de Pixies: el rol, el problema y la decisión que lo hizo funcionar.',
     casosEyebrow: '/el-ingeniero · casos',
     casosBack: '← Volver al ingeniero',
+    foroTitle: 'Foro',
+    foroIntro: 'Notas escritas sobre decisiones de ingeniería reales, no contenido genérico.',
+    foroCta: 'Entrar al foro →',
   },
   post: {
     backToForum: '← Volver al foro',
     readingTime: 'min de lectura',
     draft: 'Borrador',
+    indexMetaTitle: 'Foro — Samuel Galeano',
+    indexMetaDescription:
+      'Artículos sobre decisiones de ingeniería reales detrás de los proyectos de Pixies: ERP, análisis de datos, ciberseguridad y más.',
+    indexEyebrow: '/el-ingeniero · foro',
+    indexBack: '← Volver al ingeniero',
   },
   footer: {
     tagline: 'Construimos cosas digitales que funcionan.',

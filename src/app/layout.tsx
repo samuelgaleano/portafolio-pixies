@@ -24,6 +24,11 @@ export const metadata: Metadata = {
     siteName: site.name,
   },
   twitter: { card: 'summary_large_image' },
+  // Código de verificación HTML-tag de Search Console (propiedad → Verificación → etiqueta
+  // HTML). No hay dominio verificado todavía: queda sin efecto hasta definir la variable.
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
+    : {}),
 };
 
 export const viewport: Viewport = {

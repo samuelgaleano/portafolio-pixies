@@ -5,6 +5,7 @@ import SkillDomains from '@/components/samuel/SkillDomains';
 import Deployments from '@/components/samuel/Deployments';
 import KnowledgeMap from '@/components/samuel/KnowledgeMap';
 import ProjectStories from '@/components/samuel/ProjectStories';
+import Foro from '@/components/samuel/Foro';
 import { t } from '@/i18n';
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default function SamuelPage() {
       <KnowledgeMap />
       <Deployments />
       <ProjectStories />
+      <Foro />
     </>
   );
 }

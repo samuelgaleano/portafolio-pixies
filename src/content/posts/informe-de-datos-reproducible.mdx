@@ -1,0 +1,23 @@
+---
+title: "Si solo tú entiendes tu tablero de datos, no tienes un tablero: tienes una dependencia"
+description: "Por qué un informe de datos serio tiene que poder correrse otra vez y dar lo mismo, y cómo armé un pipeline reproducible en R y Python que no depende de que alguien mueva celdas a mano."
+pubDate: 2026-09-14
+tags: ["análisis de datos", "ingeniería"]
+draft: false
+---
+
+La mayoría de los "informes de datos" que me han mostrado son una foto de un Excel pegada en un PowerPoint. Nadie puede reproducirlos, ni siquiera la persona que los hizo. Si alguien pregunta "¿y si corremos esto con los datos de este mes?", la respuesta casi siempre es armar todo de nuevo a mano.
+
+Un análisis serio tiene que poder correrse otra vez y dar lo mismo. En un proyecto de analítica que armé, los datos crudos entran por un lado, pasan por scripts de preparación en R y en Python, y salen el informe, las tablas y las figuras generadas, todo desde la línea de comandos, sin que nadie mueva una celda a mano. El pipeline completo queda encadenado: preparación de datos, limpieza, ejecución del análisis y construcción del informe final, cada paso como un script separado que se puede volver a correr por su cuenta o como parte de la cadena completa.
+
+## Por qué R y Python al tiempo
+
+Usar las dos herramientas al mismo tiempo también es discutible, y lo sé. Lo hice porque la limpieza de datos quedaba más corta y más clara en R, mientras que el resto del pipeline me servía mejor en Python. Prefiero eso antes que forzar una sola herramienta por pureza técnica. El objetivo no es demostrar dominio de un lenguaje: es que el resultado final, desde el dato crudo hasta la figura que alguien va a mirar, sea exactamente el mismo cada vez que se ejecuta.
+
+## Lo que cambia con un pipeline así
+
+Si tu tablero solo lo entiende la persona que lo armó, no es un tablero. Es una dependencia: el día que esa persona se va, se enferma o simplemente se le olvida cómo lo hizo, el informe deja de existir aunque los datos sigan ahí. Un pipeline reproducible no depende de la memoria de nadie. Cada paso está escrito, versionado y se puede auditar.
+
+Hay un ejemplo público de este mismo principio en el portafolio: el [análisis de Saber 11 2015](/proyectos/analisis-saber11), hecho en R con tidyverse, donde la base pública del ICFES pasa por una limpieza reproducible antes de llegar a un modelo que explica el 87 % de la varianza del puntaje de matemáticas. Cada gráfica de ese informe sale de un script, no de una celda que alguien ajustó a mano hasta que se viera bien.
+
+Si tu proceso de datos depende hoy de que alguien recuerde los pasos, o de un Excel que solo una persona sabe editar sin romperlo, hablamos y vemos qué tan lejos está de ser reproducible.
