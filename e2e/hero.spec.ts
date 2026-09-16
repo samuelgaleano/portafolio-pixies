@@ -35,10 +35,10 @@ test('hero sin JS: el wordmark real queda visible', async ({ browser }) => {
   await ctx.close();
 });
 
-test('launcher del portafolio: 6 accesos que saltan a su sección', async ({ page }) => {
+test('launcher del portafolio: 7 accesos que saltan a su sección', async ({ page }) => {
   await page.goto('/');
   const links = page.getByRole('navigation', { name: 'Categorías del portafolio' }).getByRole('link');
-  await expect(links).toHaveCount(6);
+  await expect(links).toHaveCount(7);
   // clic en un acceso salta a su sección (todas están apiladas y visibles)
   await links.filter({ hasText: 'Sistema ERP' }).click();
   await expect(page.locator('#erp')).toBeInViewport();

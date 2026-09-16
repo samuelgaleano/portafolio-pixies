@@ -2,12 +2,12 @@ import { test, expect } from '@playwright/test';
 
 // 4 smoke tests (plan F5-F6 §4): lo que los unit tests no ven — el navegador real.
 
-test('home renderiza: hero, 6 categorías, proyectos reales y el tour de datos', async ({ page }) => {
+test('home renderiza: hero, 7 categorías, proyectos reales y el tour de datos', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#wordmark')).toHaveText('PIXIES');
   // el launcher tiene un acceso por categoría (saltan a su sección)
   const links = page.getByRole('navigation', { name: 'Categorías del portafolio' }).getByRole('link');
-  await expect(links).toHaveCount(6);
+  await expect(links).toHaveCount(7);
   // secciones apiladas: el contenido real vive en sus categorías (CIC en catálogo)
   await expect(page.locator('#landing').getByText('Xiaomi CarTech')).toBeVisible();
   await expect(page.locator('#catalogo').getByText('CIC Inmuebles')).toBeVisible();

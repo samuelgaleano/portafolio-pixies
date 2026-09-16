@@ -23,10 +23,18 @@ construir software a la medida en vez de forzar una plantilla genérica.
 - **Análisis de datos**: pipelines reproducibles en R y Python, de datos crudos a
   informe final, sin pasos manuales.
 - **IA y automatización**: productos propios como escuchacomprendiendo.ai (transcripción
-  y generación de contexto para IA) y un chatbot de WhatsApp corriendo en Cloudflare
-  Workers.
+  y generación de contexto citado para IA) y un chatbot de WhatsApp corriendo en
+  Cloudflare Workers.
 - **Ciberseguridad**: auditorías reales sobre sistemas propios en producción, con
   hallazgos corregidos y documentados, no un escaneo automático genérico.
+
+## Productos propios
+
+- **escuchacomprendiendo.ai**: convierte audio (notas de voz, reuniones) en contexto
+  estructurado y citado — conceptos, decisiones, tareas, riesgos y lo que no se sabe,
+  cada afirmación con el segundo exacto del audio de donde salió. La versión completa
+  corre en escritorio; hay un ejemplo real y una demo liviana funcional directo en el
+  navegador en [/#productos](/#productos).
 
 ## Contenido técnico
 

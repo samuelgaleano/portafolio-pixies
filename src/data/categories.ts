@@ -4,7 +4,7 @@
 // El ORDEN del array ES el orden de la home (y del selector del portafolio). Decisión de Samuel
 // (2026-07-18): el Sistema ERP sube a 2ª posición — es el proyecto insignia y debe verse pronto,
 // justo tras el gancho de las landings. Luego catálogo y lo empresarial, y de ahí analítica e IA.
-export type CategoryId = 'landing' | 'catalogo' | 'erp' | 'datos' | 'ia' | 'empresarial';
+export type CategoryId = 'landing' | 'catalogo' | 'erp' | 'datos' | 'ia' | 'empresarial' | 'productos';
 
 export interface Category {
   id: CategoryId;
@@ -12,7 +12,7 @@ export interface Category {
   heroLabel: string; // etiqueta corta mono para los chips del hero
   description: string;
   projectType: string; // valor para el select del lead form
-  exhibit?: 'erp-tour' | 'agent-replay' | 'data-tour'; // si existe, se renderiza la isla en vez de tarjetas
+  exhibit?: 'erp-tour' | 'agent-replay' | 'data-tour' | 'product-demo'; // si existe, se renderiza la isla en vez de tarjetas
   preview?: string; // imagen representativa que aparece al hover del tile del launcher
 }
 
@@ -67,5 +67,13 @@ export const categories: Category[] = [
     projectType: 'IA',
     exhibit: 'agent-replay',
     preview: '/proyectos/ia/agente.webp',
+  },
+  {
+    id: 'productos',
+    heroLabel: 'productos propios',
+    title: 'Productos propios',
+    description: 'Herramientas que construí para mi propio uso — y que ahora podés probar en vivo.',
+    projectType: 'Producto propio (escuchacomprendiendo.ai)',
+    exhibit: 'product-demo',
   },
 ];
