@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { validateAudioFile, clampSegmentsToWindow, type TranscriptSegment } from '@/lib/escucha';
+import { createRateLimiter } from '@/lib/rate-limit';
 
 // POST /api/escucha-demo/transcribe — primera etapa de la demo lite de escuchacomprendiendo.ai
 // (§ plan "productos propios"). Recibe un audio corto, lo transcribe con Groq (capa gratuita,
@@ -8,25 +9,11 @@ import { validateAudioFile, clampSegmentsToWindow, type TranscriptSegment } from
 export const runtime = 'nodejs';
 export const maxDuration = 45;
 
-// Rate limit en memoria por IP, calcado de api/leads/route.ts (Fluid Compute reutiliza
-// instancias). Bucket propio, no compartido con /structure — cada etapa tiene su propio costo.
-const WINDOW_MS = 10 * 60_000;
-const MAX_PER_WINDOW = 4;
-const hits = new Map<string, number[]>();
+// Bucket propio, no compartido con /structure — cada etapa tiene su propio costo.
+const limiter = createRateLimiter(10 * 60_000, 4);
 
 export function __resetRateLimit() {
-  hits.clear();
-}
-
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  if (hits.size > 1000) {
-    for (const [k, v] of hits) if (v.every((t) => now - t >= WINDOW_MS)) hits.delete(k);
-  }
-  const list = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  list.push(now);
-  hits.set(ip, list);
-  return list.length > MAX_PER_WINDOW;
+  limiter.reset();
 }
 
 // Tope diario blando: deja ~8x de margen bajo el RPD más bajo de Groq gratis (1.000/día en
@@ -59,7 +46,7 @@ interface GroqTranscription {
 
 export async function POST(req: Request): Promise<NextResponse> {
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local';
-  if (rateLimited(ip)) return NextResponse.json({ error: 'rate' }, { status: 429 });
+  if (limiter.isLimited(ip)) return NextResponse.json({ error: 'rate' }, { status: 429 });
   if (dailyCapExceeded()) return NextResponse.json({ error: 'cupo-diario' }, { status: 429 });
 
   const apiKey = process.env.GROQ_API_KEY;

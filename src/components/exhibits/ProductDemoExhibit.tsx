@@ -5,6 +5,7 @@ import { escuchaProduct } from '@/data/escucha-comprendiendo';
 import { t } from '@/i18n';
 import EscuchaCuratedTour from './EscuchaCuratedTour';
 import EscuchaLiveDemo from './EscuchaLiveDemo';
+import EscuchaAccessForm from './EscuchaAccessForm';
 
 // Exhibit de "Productos propios" (§ plan): dos pestañas — un ejemplo real ya procesado
 // (siempre funciona, sin red) y una demo en vivo real pero limitada. Si el ejemplo curado
@@ -53,6 +54,8 @@ export default function ProductDemoExhibit() {
           <EscuchaLiveDemo onFallbackToCurated={() => setTab('curada')} />
         )}
       </div>
+
+      <EscuchaAccessForm />
     </div>
   );
 }

@@ -1,29 +1,16 @@
 import { NextResponse } from 'next/server';
 import { validateLead, sanitizeForSheet, type LeadPayload } from '@/lib/leads';
+import { createRateLimiter } from '@/lib/rate-limit';
 
 // POST /api/leads (plan F5 §2.1): valida en el servidor, oculta la URL del Apps Script
 // y CONFIRMA el guardado real antes de que el cliente redirija a WhatsApp.
 
 // Rate limit en memoria por IP: 5/min. Suficiente para un formulario de contacto en
 // Fluid Compute (instancias reutilizadas); si algún día hace falta más, mover a KV.
-const WINDOW_MS = 60_000;
-const MAX_PER_WINDOW = 5;
-const hits = new Map<string, number[]>();
+const limiter = createRateLimiter(60_000, 5);
 
 export function __resetRateLimit() {
-  hits.clear();
-}
-
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  // higiene: sin sweep, el Map acumularía una entrada por IP para siempre (M2)
-  if (hits.size > 1000) {
-    for (const [k, v] of hits) if (v.every((t) => now - t >= WINDOW_MS)) hits.delete(k);
-  }
-  const list = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  list.push(now);
-  hits.set(ip, list);
-  return list.length > MAX_PER_WINDOW;
+  limiter.reset();
 }
 
 export async function POST(req: Request): Promise<NextResponse> {
@@ -37,7 +24,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   // En Vercel la plataforma sobrescribe x-forwarded-for con la IP real (no spoofeable);
   // si algún día se autohospeda tras otro proxy, revisar esta cabecera.
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local';
-  if (rateLimited(ip)) return NextResponse.json({ error: 'rate' }, { status: 429 });
+  if (limiter.isLimited(ip)) return NextResponse.json({ error: 'rate' }, { status: 429 });
 
   // Honeypot: a los bots se les responde "ok" sin guardar (no avisarles que fallaron).
   // Se deja rastro en logs por si el autofill de un humano cae aquí (M5).

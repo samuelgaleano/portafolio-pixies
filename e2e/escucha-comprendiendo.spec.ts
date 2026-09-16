@@ -82,3 +82,64 @@ test('si el proveedor falla, avisa y ofrece el ejemplo curado en vez de romperse
   await page.getByText('Mirá un ejemplo real ya procesado →').click();
   await expect(page.getByText('Ejemplo en preparación')).toBeVisible();
 });
+
+test('botón "probar con un audio de muestra" corre el mismo pipeline real (API mockeada)', async ({ page }) => {
+  await page.route('**/api/escucha-demo/transcribe', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ok: true,
+        durationSec: 69,
+        transcript: { text: 'discurso de muestra', segments: [{ start: 0, end: 69, text: 'discurso de muestra' }] },
+      }),
+    })
+  );
+  await page.route('**/api/escucha-demo/structure', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ok: true,
+        structured: {
+          resumen: 'Un discurso de muestra',
+          areas: [
+            { nombre: 'Área', conceptos: [{ texto: 'Concepto de muestra', citas: [10] }], decisiones: [], tareas: [], riesgos: [], noSeSabe: [] },
+          ],
+        },
+      }),
+    })
+  );
+
+  await page.goto('/#productos');
+  await page.getByText('O probá con un audio de muestra →').click();
+
+  await expect(page.getByText('Concepto de muestra')).toBeVisible();
+  await expect(page.getByText('Un discurso de muestra')).toBeVisible();
+});
+
+test('formulario de código de acceso: código incorrecto avisa, código correcto redirige a la URL', async ({ page }) => {
+  await page.route('**/api/escucha-demo/download', async (route) => {
+    const body = route.request().postDataJSON() as { code: string; variant: string };
+    if (body.code !== 'clave-correcta') {
+      await route.fulfill({ status: 401, contentType: 'application/json', body: JSON.stringify({ error: 'codigo' }) });
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ok: true, url: '/#productos?descargado=1' }),
+    });
+  });
+
+  await page.goto('/#productos');
+  const input = page.getByPlaceholder('Código de acceso');
+
+  await input.fill('codigo-malo');
+  await page.getByRole('button', { name: 'Descargar instalador (Windows)' }).click();
+  await expect(page.getByText('Código incorrecto.')).toBeVisible();
+
+  await input.fill('clave-correcta');
+  await page.getByRole('button', { name: 'Descargar instalador (Windows)' }).click();
+  await page.waitForURL(/descargado=1/);
+});

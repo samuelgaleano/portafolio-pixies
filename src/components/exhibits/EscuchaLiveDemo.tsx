@@ -125,6 +125,27 @@ export default function EscuchaLiveDemo({ onFallbackToCurated }: { onFallbackToC
     if (file) handleFile(file);
   };
 
+  // Muestra opcional para quien no tiene un audio a mano: un discurso de 1943 en dominio
+  // público (Wikimedia Commons, sin restricción de uso) — se procesa por el MISMO pipeline
+  // real que un audio propio, nada queda fabricado a mano.
+  const [loadingSample, setLoadingSample] = useState(false);
+  const handleSample = async () => {
+    setLoadingSample(true);
+    try {
+      const res = await fetch('/audio/muestra.ogg');
+      if (!res.ok) {
+        setStatus('saturado');
+        return;
+      }
+      const blob = await res.blob();
+      await handleFile(new File([blob], 'muestra.ogg', { type: 'audio/ogg' }));
+    } catch {
+      setStatus('saturado');
+    } finally {
+      setLoadingSample(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-5">
       {status === 'idle' && (
@@ -160,6 +181,15 @@ export default function EscuchaLiveDemo({ onFallbackToCurated }: { onFallbackToC
           </button>
           <p className="font-mono text-xs text-dim">{t.escucha.dropzoneLimits}</p>
           <p className="text-xs text-dim">{t.escucha.dropzonePrivacidad}</p>
+          <button
+            type="button"
+            onClick={handleSample}
+            disabled={loadingSample}
+            className="font-mono text-xs text-pixel-soft hover:underline disabled:opacity-60"
+          >
+            {loadingSample ? t.escucha.sampleLoading : t.escucha.sampleCta}
+          </button>
+          <p className="max-w-sm text-[0.7rem] text-dim">{t.escucha.sampleAttribution}</p>
         </div>
       )}
 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { validateTranscriptForStructuring, parseStructuredResponse, type TranscriptSegment } from '@/lib/escucha';
+import { createRateLimiter } from '@/lib/rate-limit';
 
 // POST /api/escucha-demo/structure — segunda etapa de la demo lite (§ plan "productos
 // propios"). Recibe el transcript que ya devolvió /transcribe y lo estructura en conceptos,
@@ -8,23 +9,10 @@ import { validateTranscriptForStructuring, parseStructuredResponse, type Transcr
 export const runtime = 'nodejs';
 export const maxDuration = 25;
 
-const WINDOW_MS = 10 * 60_000;
-const MAX_PER_WINDOW = 6;
-const hits = new Map<string, number[]>();
+const limiter = createRateLimiter(10 * 60_000, 6);
 
 export function __resetRateLimit() {
-  hits.clear();
-}
-
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  if (hits.size > 1000) {
-    for (const [k, v] of hits) if (v.every((t) => now - t >= WINDOW_MS)) hits.delete(k);
-  }
-  const list = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  list.push(now);
-  hits.set(ip, list);
-  return list.length > MAX_PER_WINDOW;
+  limiter.reset();
 }
 
 const SYSTEM_PROMPT = `Sos un analista que estructura transcripciones de audio en contexto citado.
@@ -53,7 +41,7 @@ interface GroqChatCompletion {
 
 export async function POST(req: Request): Promise<NextResponse> {
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local';
-  if (rateLimited(ip)) return NextResponse.json({ error: 'rate' }, { status: 429 });
+  if (limiter.isLimited(ip)) return NextResponse.json({ error: 'rate' }, { status: 429 });
 
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
