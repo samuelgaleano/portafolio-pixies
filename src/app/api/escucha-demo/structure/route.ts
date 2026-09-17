@@ -6,6 +6,11 @@ import { createRateLimiter } from '@/lib/rate-limit';
 // propios"). Recibe el transcript que ya devolvió /transcribe y lo estructura en conceptos,
 // decisiones, tareas, riesgos y "lo que no se sabe" citados, con Groq (capa gratuita, $0
 // costo, mismo proveedor que la transcripción — nunca toca la API de Anthropic de pago).
+//
+// Modelo: openai/gpt-oss-120b, NO llama-3.3-70b-versatile — Groq movió ese último a
+// precio Enterprise/Contact Sales el 2026-08-26 (verificado contra console.groq.com/docs
+// el 2026-09-17), sale por completo del free tier. gpt-oss-120b sigue gratis con los
+// mismos límites (30 RPM / 1.000 RPD / 8.000 TPM / 200.000 TPD).
 export const runtime = 'nodejs';
 export const maxDuration = 25;
 
@@ -66,7 +71,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     method: 'POST',
     headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
     body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
       temperature: 0.2,
       response_format: { type: 'json_object' },
       messages: [
