@@ -13,7 +13,7 @@ const SLUG = 'escuchacomprendiendo-ai'; // = nombre de esta carpeta y del slug e
 export const metadata: Metadata = {
   title: 'escuchacomprendiendo.ai — de audio a decisiones citadas',
   description:
-    'Grabás una nota de voz o una reunión. Te devuelve decisiones, tareas, riesgos y conceptos, cada uno con el segundo exacto del audio. Probalo en vivo en el navegador o descargá la app de escritorio.',
+    'Grabas una nota de voz o una reunión. Te devuelve decisiones, tareas, riesgos y conceptos, cada uno con el segundo exacto del audio. Pruébalo en vivo en el navegador o descarga la app de escritorio.',
   alternates: { canonical: appPath(SLUG) },
 };
 

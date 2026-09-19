@@ -18,10 +18,10 @@ export interface EscuchaProduct {
 
 export const escuchaProduct: EscuchaProduct = {
   tagline:
-    'Grabás una nota de voz. Te devuelve las decisiones y tareas que dijiste, cada una con el segundo exacto donde la dijiste.',
+    'Grabas una nota de voz. Te devuelve las decisiones y tareas que dijiste, cada una con el segundo exacto en que la dijiste.',
   // No promete "un ejemplo real" acá: eso lo anuncia la pestaña sola cuando example.ready sea true.
   descripcion:
-    'Convierte audio (notas de voz, reuniones) en contexto estructurado y citado — conceptos, decisiones, tareas, riesgos y lo que no se sabe — listo para cargar en un asistente de IA. La versión completa corre en tu computador; acá podés probar una versión liviana en el navegador, con tu propio audio o con uno de muestra.',
+    'Convierte audio (notas de voz, reuniones) en contexto estructurado y citado — conceptos, decisiones, tareas, riesgos y lo que no se sabe — listo para cargar en un asistente de IA. La versión completa corre en tu computador; aquí puedes probar una versión ligera en el navegador, con tu propio audio o con uno de muestra.',
   example: {
     ready: false,
     audioSrc: '',

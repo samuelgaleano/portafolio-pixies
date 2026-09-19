@@ -33,7 +33,7 @@ export default function EscuchaCuratedTour({ onTryLive }: { onTryLive: () => voi
   const waUrl = buildWhatsAppUrl(site.whatsapp, {
     nombre: 'Samuel',
     tipoProyecto: 'Producto propio (escuchacomprendiendo.ai)',
-    mensaje: 'Vi la demo de escuchacomprendiendo.ai en el portafolio — quiero la app de escritorio.',
+    mensaje: 'Vi la demo de escuchacomprendiendo.ai en el portafolio. Me interesa la app de escritorio.',
   });
 
   return (

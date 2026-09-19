@@ -72,7 +72,7 @@ export const categories: Category[] = [
     id: 'productos',
     heroLabel: 'apps by pixies',
     title: 'Aplicaciones by Pixies',
-    description: 'Herramientas que construí para mi propio uso — entrá, probalas en vivo o descargalas.',
+    description: 'Herramientas que construí para mi propio uso — entra, pruébalas en vivo o descárgalas.',
     projectType: 'Producto propio (escuchacomprendiendo.ai)',
     exhibit: 'product-demo',
   },

@@ -27,7 +27,7 @@ export const apps: PixiesApp[] = [
     icon: 'audio-a-lista',
     hook: escuchaProduct.tagline,
     descripcion:
-      'Producto propio. La app completa corre en tu computador (Windows); entrá para probar una versión liviana en el navegador con tu propio audio, o para descargarla con tu código de acceso.',
+      'Producto propio. La app completa corre en tu computador (Windows); entra para probar una versión ligera en el navegador con tu propio audio, o para descargarla con tu código de acceso.',
     // "Ejemplo real" solo se promete cuando el ejemplo curado existe de verdad (honestidad
     // sobre sensacionalismo: nada de anunciar contenido que hoy renderiza "en preparación").
     capacidades: [

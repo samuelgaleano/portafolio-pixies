@@ -20,8 +20,8 @@ export function __resetRateLimit() {
   limiter.reset();
 }
 
-const SYSTEM_PROMPT = `Sos un analista que estructura transcripciones de audio en contexto citado.
-A partir del transcript con segmentos con timestamp que te pasan, devolvé SOLO un objeto JSON
+const SYSTEM_PROMPT = `Eres un analista que estructura transcripciones de audio en contexto citado.
+A partir del transcript con segmentos con timestamp que recibes, devuelve SOLO un objeto JSON
 (sin texto alrededor, sin markdown, sin backticks) con esta forma exacta:
 {
   "resumen": "1-2 frases de qué trata el audio",
@@ -38,7 +38,7 @@ A partir del transcript con segmentos con timestamp que te pasan, devolvé SOLO 
 }
 Las "citas" son el valor "start" (en segundos) del segmento de donde sale cada afirmación —
 nunca inventes un número que no esté entre los segmentos recibidos. Si una lista queda vacía,
-devolvela como array vacío, nunca la omitas. Máximo 3 áreas, máximo 5 ítems por lista.`;
+devuélvela como array vacío, nunca la omitas. Máximo 3 áreas, máximo 5 ítems por lista.`;
 
 interface GroqChatCompletion {
   choices?: Array<{ message?: { content?: string } }>;

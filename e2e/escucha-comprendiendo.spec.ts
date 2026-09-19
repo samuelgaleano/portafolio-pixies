@@ -23,10 +23,10 @@ test('home: la tarjeta de la app es un teaser entero clicable que lleva a su pá
 test('arranca en la demo en vivo y se puede cambiar a la pestaña de ejemplo (en preparación)', async ({ page }) => {
   await page.goto('/aplicaciones/escuchacomprendiendo-ai');
 
-  const tabVivo = page.getByRole('tab', { name: 'Probá con tu audio' });
+  const tabVivo = page.getByRole('tab', { name: 'Prueba con tu audio' });
   const tabCurada = page.getByRole('tab', { name: 'Ejemplo real' });
   await expect(tabVivo).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByText('Soltá o elegí un audio corto')).toBeVisible();
+  await expect(page.getByText('Suelta o elige un audio corto')).toBeVisible();
 
   await tabCurada.click();
   await expect(tabCurada).toHaveAttribute('aria-selected', 'true');
@@ -94,8 +94,8 @@ test('si el proveedor falla, avisa y ofrece el ejemplo curado en vez de romperse
     buffer: Buffer.from('contenido de prueba'),
   });
 
-  await expect(page.getByText('El procesamiento en vivo está saturado ahora mismo.')).toBeVisible();
-  await page.getByText('Mirá un ejemplo real ya procesado →').click();
+  await expect(page.getByText('El procesamiento en vivo está saturado en este momento.')).toBeVisible();
+  await page.getByText('Ver un ejemplo real ya procesado →').click();
   await expect(page.getByText('Ejemplo en preparación')).toBeVisible();
 });
 
@@ -128,7 +128,7 @@ test('botón "probar con un audio de muestra" corre el mismo pipeline real (API 
   );
 
   await page.goto('/aplicaciones/escuchacomprendiendo-ai');
-  await page.getByText('O probá con un audio de muestra →').click();
+  await page.getByText('O prueba con un audio de muestra →').click();
 
   await expect(page.getByText('Concepto de muestra')).toBeVisible();
   await expect(page.getByText('Un discurso de muestra')).toBeVisible();
