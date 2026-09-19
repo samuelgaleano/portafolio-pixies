@@ -38,6 +38,12 @@ describe('POST /api/escucha-demo/download', () => {
     expect(res.status).toBe(200);
   });
 
+  test('ESCUCHA_ACCESS_CODE guardado con salto de línea de más (típico al pegar en Vercel) → igual pasa', async () => {
+    vi.stubEnv('ESCUCHA_ACCESS_CODE', 'clave-secreta-123\n');
+    const res = await POST(req({ code: 'clave-secreta-123', variant: 'nsis' }));
+    expect(res.status).toBe(200);
+  });
+
   test('código incorrecto → 401, sin filtrar la URL', async () => {
     const res = await POST(req({ code: 'lo-que-sea', variant: 'nsis' }));
     expect(res.status).toBe(401);

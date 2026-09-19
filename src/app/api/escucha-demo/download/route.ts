@@ -57,8 +57,10 @@ export async function POST(req: Request): Promise<NextResponse> {
     return NextResponse.json({ error: 'validacion' }, { status: 400 });
   }
 
+  // .trim() en ambos lados: es comun que un salto de linea o espacio se cuele al pegar
+  // el valor en el dashboard de Vercel, y eso no deberia contar como "codigo incorrecto".
   // Nunca loguear el código recibido — solo si la comparación coincidió o no.
-  if (!safeEqual(code.trim(), accessCode)) {
+  if (!safeEqual(code.trim(), accessCode.trim())) {
     return NextResponse.json({ error: 'codigo' }, { status: 401 });
   }
 
