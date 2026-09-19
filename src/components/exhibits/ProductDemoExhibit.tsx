@@ -7,22 +7,20 @@ import EscuchaCuratedTour from './EscuchaCuratedTour';
 import EscuchaLiveDemo from './EscuchaLiveDemo';
 import EscuchaAccessForm from './EscuchaAccessForm';
 
-// Exhibit de "Productos propios" (§ plan): dos pestañas — un ejemplo real ya procesado
-// (siempre funciona, sin red) y una demo en vivo real pero limitada. Si el ejemplo curado
-// todavía no está listo, arranca directo en la pestaña en vivo para no mostrar nunca un
-// placeholder como si fuera contenido real.
+// Experiencia completa de escuchacomprendiendo.ai — vive en su página propia
+// (/aplicaciones/escuchacomprendiendo-ai), NO en la home (§ pedido de Samuel: la home solo
+// muestra la tarjeta-teaser). Dos pestañas: un ejemplo real ya procesado (siempre funciona,
+// sin red) y una demo en vivo real pero limitada. Si el ejemplo curado todavía no está listo,
+// arranca directo en la pestaña en vivo para no mostrar nunca un placeholder como contenido real.
 export default function ProductDemoExhibit() {
   const [tab, setTab] = useState<'curada' | 'vivo'>(escuchaProduct.example.ready ? 'curada' : 'vivo');
 
   return (
-    <div className="mt-6">
-      <div className="rounded-(--radius-m) border border-line bg-surface/60 p-5 sm:p-6">
-        <p className="font-mono text-xs text-pixel-soft">{escuchaProduct.eyebrow}</p>
-        <h3 className="mt-2 font-display text-xl font-semibold text-ink">{escuchaProduct.tagline}</h3>
-        <p className="mt-2 max-w-2xl text-sm text-dim">{escuchaProduct.descripcion}</p>
-      </div>
-
-      <div role="tablist" className="mt-6 flex gap-2">
+    <div className="mt-8">
+      {/* Outline: h1 (nombre de la app) → h2 (este bloque) → h3 (áreas del resultado).
+          Visualmente las pestañas ya lo dicen; el h2 es para lectores de pantalla y crawlers. */}
+      <h2 className="sr-only">{t.escucha.demoHeading}</h2>
+      <div role="tablist" className="flex gap-2">
         <button
           type="button"
           role="tab"

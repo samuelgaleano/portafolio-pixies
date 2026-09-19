@@ -1,13 +1,22 @@
 import type { MetadataRoute } from 'next';
 import { getAllPosts } from '@/lib/posts';
 import { site } from '@/data/site';
+import { apps, appPath } from '@/data/apps';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
   // Señal estable para crawlers: la fecha del último post, no "cada build" (auditoría).
   const lastContentDate = posts[0]?.pubDate;
   // Rutas indexables (las /demos/* y /alternativas son noindex y quedan fuera a propósito).
-  const routes = ['', '/samuel', '/samuel/casos', '/samuel/posts', '/proyectos/analisis-saber11'].map((path) => ({
+  // Las apps salen de src/data/apps.ts, igual que los posts de getAllPosts(): una sola lista.
+  const routes = [
+    '',
+    '/samuel',
+    '/samuel/casos',
+    '/samuel/posts',
+    '/proyectos/analisis-saber11',
+    ...apps.map((a) => appPath(a.slug)),
+  ].map((path) => ({
     url: `${site.url}${path}`,
     lastModified: lastContentDate,
   }));

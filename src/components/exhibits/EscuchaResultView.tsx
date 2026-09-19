@@ -60,7 +60,7 @@ export default function EscuchaResultView({
 
       {structured.areas.map((area, i) => (
         <article key={i} className="rounded-(--radius-m) border border-line bg-surface p-4 md:p-5">
-          <h4 className="font-display text-base font-semibold text-ink">{area.nombre}</h4>
+          <h3 className="font-display text-base font-semibold text-ink">{area.nombre}</h3>
           <div className="mt-3 flex flex-col gap-4">
             {LISTS.map(({ key, labelKey, color }) =>
               area[key].length > 0 ? (

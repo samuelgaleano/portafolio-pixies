@@ -1,11 +1,27 @@
 import { test, expect } from '@playwright/test';
 
-// Demo lite de escuchacomprendiendo.ai (§ plan "productos propios"). El ejemplo curado
-// todavía no está listo (Samuel no lo completó aún) → arranca en la pestaña "en vivo",
-// nunca mostrando el placeholder como si fuera contenido real.
+// escuchacomprendiendo.ai: en la home ("Aplicaciones by Pixies") solo hay una tarjeta-teaser
+// clicable; TODO lo interactivo vive en /aplicaciones/escuchacomprendiendo-ai. El ejemplo
+// curado todavía no está listo (Samuel no lo completó aún) → esa página arranca en la
+// pestaña "en vivo", nunca mostrando el placeholder como si fuera contenido real.
+
+test('home: la tarjeta de la app es un teaser entero clicable que lleva a su página propia', async ({ page }) => {
+  await page.goto('/#productos');
+  const seccion = page.locator('#productos');
+  await expect(seccion.getByRole('heading', { name: 'Aplicaciones by Pixies' })).toBeVisible();
+  await expect(seccion.getByText('escuchacomprendiendo.ai')).toBeVisible();
+  // la home NO despliega el demo: ni pestañas ni dropzone acá
+  await expect(seccion.getByRole('tab')).toHaveCount(0);
+  await expect(seccion.locator('input[type="file"]')).toHaveCount(0);
+
+  // la tarjeta entera es un link estirado (mismo patrón que ProjectCard) → navega a la app
+  await seccion.getByRole('link', { name: /escuchacomprendiendo\.ai — probar en vivo o descargar/ }).click();
+  await expect(page).toHaveURL(/\/aplicaciones\/escuchacomprendiendo-ai$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('escuchacomprendiendo.ai');
+});
 
 test('arranca en la demo en vivo y se puede cambiar a la pestaña de ejemplo (en preparación)', async ({ page }) => {
-  await page.goto('/#productos');
+  await page.goto('/aplicaciones/escuchacomprendiendo-ai');
 
   const tabVivo = page.getByRole('tab', { name: 'Probá con tu audio' });
   const tabCurada = page.getByRole('tab', { name: 'Ejemplo real' });
@@ -55,7 +71,7 @@ test('subir un audio corto muestra el resultado estructurado (API mockeada)', as
     })
   );
 
-  await page.goto('/#productos');
+  await page.goto('/aplicaciones/escuchacomprendiendo-ai');
   await page.locator('input[type="file"]').setInputFiles({
     name: 'nota.mp3',
     mimeType: 'audio/mpeg',
@@ -71,7 +87,7 @@ test('si el proveedor falla, avisa y ofrece el ejemplo curado en vez de romperse
     route.fulfill({ status: 502, contentType: 'application/json', body: JSON.stringify({ error: 'proveedor' }) })
   );
 
-  await page.goto('/#productos');
+  await page.goto('/aplicaciones/escuchacomprendiendo-ai');
   await page.locator('input[type="file"]').setInputFiles({
     name: 'nota.mp3',
     mimeType: 'audio/mpeg',
@@ -111,7 +127,7 @@ test('botón "probar con un audio de muestra" corre el mismo pipeline real (API 
     })
   );
 
-  await page.goto('/#productos');
+  await page.goto('/aplicaciones/escuchacomprendiendo-ai');
   await page.getByText('O probá con un audio de muestra →').click();
 
   await expect(page.getByText('Concepto de muestra')).toBeVisible();
@@ -132,7 +148,7 @@ test('formulario de código de acceso: código incorrecto avisa, código correct
     });
   });
 
-  await page.goto('/#productos');
+  await page.goto('/aplicaciones/escuchacomprendiendo-ai');
   const input = page.getByPlaceholder('Código de acceso');
 
   await input.fill('codigo-malo');

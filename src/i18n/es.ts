@@ -135,6 +135,12 @@ export const es = {
     accessErrorRate: 'Demasiados intentos seguidos — esperá unos minutos.',
     accessErrorGenerico: 'Algo falló. Probá de nuevo.',
     accessSolicitar: '¿No tenés uno? Pedímelo por WhatsApp →',
+    demoHeading: 'Probala en el navegador',
+    appEnter: 'Entrar a la app →',
+    appEnterAria: 'probar en vivo o descargar',
+    appEyebrow: '/aplicaciones · by Pixies',
+    appBack: '← Volver a las aplicaciones',
+    appContact: '¿Querés algo así para tu empresa? Hablemos →',
   },
   contact: {
     title: 'Cuéntanos tu proyecto',

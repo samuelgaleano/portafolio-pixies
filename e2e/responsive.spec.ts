@@ -5,7 +5,8 @@ import { test, expect } from '@playwright/test';
 // se subió a 27vw y desbordó el body en móvil y en /samuel a casi todos los anchos.
 
 const WIDTHS = [320, 360, 390, 414, 768, 1024, 1280, 1440, 1920];
-const ROUTES = ['/', '/samuel', '/samuel/posts/hola-mundo-pixies'];
+// /aplicaciones/…: su h1 es una sola palabra de 23 caracteres — el caso más hostil al ancho.
+const ROUTES = ['/', '/samuel', '/samuel/posts/hola-mundo-pixies', '/aplicaciones/escuchacomprendiendo-ai'];
 
 for (const route of ROUTES) {
   test(`sin scroll horizontal en ${route} (9 anchos)`, async ({ page }) => {

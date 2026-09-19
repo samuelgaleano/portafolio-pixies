@@ -12,7 +12,19 @@ const PIXEL = '#7C5CFF';
 const SIGNAL = '#FF5D73';
 const LINE = '#262C3D';
 
-export function OgCard({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle: string }): ReactElement {
+// titleSize: 84px por defecto; un título de una sola palabra larga (escuchacomprendiendo.ai,
+// 23 caracteres sin quiebre) no cabe en los 1056px útiles a ese tamaño y Satori lo cortaría.
+export function OgCard({
+  eyebrow,
+  title,
+  subtitle,
+  titleSize = 84,
+}: {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  titleSize?: number;
+}): ReactElement {
   return (
     <div
       style={{
@@ -41,7 +53,7 @@ export function OgCard({ eyebrow, title, subtitle }: { eyebrow: string; title: s
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ fontSize: 24, color: PIXEL, fontFamily: 'monospace', marginBottom: 16 }}>{eyebrow}</div>
-        <div style={{ fontSize: 84, color: INK, fontWeight: 800, lineHeight: 1.05, letterSpacing: -2 }}>{title}</div>
+        <div style={{ fontSize: titleSize, color: INK, fontWeight: 800, lineHeight: 1.05, letterSpacing: -2 }}>{title}</div>
         <div style={{ fontSize: 30, color: DIM, marginTop: 20, maxWidth: 900 }}>{subtitle}</div>
       </div>
     </div>

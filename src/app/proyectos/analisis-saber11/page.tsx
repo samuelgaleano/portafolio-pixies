@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { dataTour, dataFacts as f } from '@/data/data-tour';
+import SubpageNav from '@/components/layout/SubpageNav';
 
 // Informe completo del análisis Saber 11 (ICFES 2015-1) hecho en R. TODAS las cifras
 // vienen de dataFacts (misma fuente que el tour de la home): un número, un lugar.
@@ -191,21 +191,12 @@ export default function InformeSaber11() {
         </p>
       </section>
 
-      <div className="mt-12 flex flex-wrap gap-3">
-        <Link
-          href="/#datos"
-          className="inline-block rounded-(--radius-s) border border-line px-4 py-2 font-mono text-xs text-ink transition-colors hover:border-pixel hover:text-pixel-soft"
-        >
-          ← Volver al portafolio
-        </Link>
-        <Link
-          href="/#contacto"
-          data-desde="datos"
-          className="press inline-block rounded-(--radius-s) bg-signal px-4 py-2 font-mono text-xs font-medium text-void transition hover:brightness-110"
-        >
-          ¿Tienes datos así de sucios? Hablemos →
-        </Link>
-      </div>
+      <SubpageNav
+        backHref="/#datos"
+        backLabel="← Volver al portafolio"
+        desde="datos"
+        ctaLabel="¿Tienes datos así de sucios? Hablemos →"
+      />
     </article>
   );
 }

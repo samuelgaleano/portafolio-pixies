@@ -11,18 +11,17 @@ export interface EscuchaExample {
 }
 
 export interface EscuchaProduct {
-  eyebrow: string;
   tagline: string;
   descripcion: string;
   example: EscuchaExample;
 }
 
 export const escuchaProduct: EscuchaProduct = {
-  eyebrow: '/productos · escuchacomprendiendo.ai',
   tagline:
     'Grabás una nota de voz. Te devuelve las decisiones y tareas que dijiste, cada una con el segundo exacto donde la dijiste.',
+  // No promete "un ejemplo real" acá: eso lo anuncia la pestaña sola cuando example.ready sea true.
   descripcion:
-    'Convierte audio (notas de voz, reuniones) en contexto estructurado y citado — conceptos, decisiones, tareas, riesgos y lo que no se sabe — listo para cargar en un asistente de IA. La versión completa corre en tu computador; acá abajo podés ver un ejemplo real ya procesado, o probar una versión liviana en el navegador con tu propio audio.',
+    'Convierte audio (notas de voz, reuniones) en contexto estructurado y citado — conceptos, decisiones, tareas, riesgos y lo que no se sabe — listo para cargar en un asistente de IA. La versión completa corre en tu computador; acá podés probar una versión liviana en el navegador, con tu propio audio o con uno de muestra.',
   example: {
     ready: false,
     audioSrc: '',

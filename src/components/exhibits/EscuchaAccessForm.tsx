@@ -55,7 +55,8 @@ export default function EscuchaAccessForm() {
 
   return (
     <div className="mt-6 rounded-(--radius-m) border border-line bg-surface/60 p-5 md:p-6">
-      <h4 className="font-display text-base font-semibold text-ink">{t.escucha.accessTitle}</h4>
+      {/* h2: es una sección hermana del bloque de prueba dentro de la página de la app (h1) */}
+      <h2 className="font-display text-base font-semibold text-ink">{t.escucha.accessTitle}</h2>
       <p className="mt-1 max-w-lg text-sm text-dim">{t.escucha.accessBody}</p>
 
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">

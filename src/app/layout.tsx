@@ -35,8 +35,12 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // data-scroll-behavior: desde Next 16 hay que declararlo para que Next desactive el
+  // `scroll-behavior: smooth` de globals.css durante la navegación entre páginas — sin
+  // esto, al ir de la home a /aplicaciones/... el scroll animado se quedaba a mitad y la
+  // página nueva aparecía por el footer en vez de por arriba.
   return (
-    <html lang="es">
+    <html lang="es" data-scroll-behavior="smooth">
       <head>
         <link
           rel="preload"

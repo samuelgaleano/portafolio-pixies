@@ -70,9 +70,9 @@ export const categories: Category[] = [
   },
   {
     id: 'productos',
-    heroLabel: 'productos propios',
-    title: 'Productos propios',
-    description: 'Herramientas que construí para mi propio uso — y que ahora podés probar en vivo.',
+    heroLabel: 'apps by pixies',
+    title: 'Aplicaciones by Pixies',
+    description: 'Herramientas que construí para mi propio uso — entrá, probalas en vivo o descargalas.',
     projectType: 'Producto propio (escuchacomprendiendo.ai)',
     exhibit: 'product-demo',
   },
