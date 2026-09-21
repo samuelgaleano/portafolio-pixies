@@ -35,8 +35,10 @@ test('hero sin JS: el wordmark real queda visible', async ({ browser }) => {
   await ctx.close();
 });
 
+// grupo-y-marketing (2026-09): el launcher del portafolio vive en /web, no en / (que
+// ahora es la landing del grupo).
 test('launcher del portafolio: 7 accesos que saltan a su sección', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/web');
   const links = page.getByRole('navigation', { name: 'Categorías del portafolio' }).getByRole('link');
   await expect(links).toHaveCount(7);
   // clic en un acceso salta a su sección (todas están apiladas y visibles)

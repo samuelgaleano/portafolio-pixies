@@ -6,7 +6,9 @@ import { test, expect } from '@playwright/test';
 // pestaña "en vivo", nunca mostrando el placeholder como si fuera contenido real.
 
 test('home: la tarjeta de la app es un teaser entero clicable que lleva a su página propia', async ({ page }) => {
-  await page.goto('/#productos');
+  // grupo-y-marketing (2026-09): "Aplicaciones by Pixies" vive dentro del portafolio, que
+  // se movió de / a /web.
+  await page.goto('/web#productos');
   const seccion = page.locator('#productos');
   await expect(seccion.getByRole('heading', { name: 'Aplicaciones by Pixies' })).toBeVisible();
   await expect(seccion.getByText('escuchacomprendiendo.ai')).toBeVisible();
@@ -144,7 +146,7 @@ test('formulario de código de acceso: código incorrecto avisa, código correct
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ ok: true, url: '/#productos?descargado=1' }),
+      body: JSON.stringify({ ok: true, url: '/web#productos?descargado=1' }),
     });
   });
 

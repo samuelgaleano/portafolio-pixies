@@ -2,8 +2,19 @@ import { test, expect } from '@playwright/test';
 
 // 4 smoke tests (plan F5-F6 §4): lo que los unit tests no ven — el navegador real.
 
-test('home renderiza: hero, 7 categorías, proyectos reales y el tour de datos', async ({ page }) => {
+// grupo-y-marketing (2026-09): el portafolio se movió de `/` a `/web` — este test antes
+// vivía en `/` y verificaba las 7 categorías ahí; ahora `/` es la landing del grupo
+// (hero + bifurcación) y `/web` es quien tiene el portafolio completo.
+test('home renderiza: hero + bifurcación del grupo', async ({ page }) => {
   await page.goto('/');
+  await expect(page.locator('#wordmark')).toHaveText('PIXIES');
+  // los dos "capítulos" de la bifurcación llevan a su división real
+  await expect(page.getByRole('link', { name: 'Ver Pixies Marketing' })).toHaveAttribute('href', '/marketing');
+  await expect(page.getByRole('link', { name: 'Ver Pixies Design Web' })).toHaveAttribute('href', '/web');
+});
+
+test('/web renderiza: hero, 7 categorías, proyectos reales y el tour de datos', async ({ page }) => {
+  await page.goto('/web');
   await expect(page.locator('#wordmark')).toHaveText('PIXIES');
   // el launcher tiene un acceso por categoría (saltan a su sección)
   const links = page.getByRole('navigation', { name: 'Categorías del portafolio' }).getByRole('link');
@@ -36,7 +47,7 @@ test('/samuel y un post renderizan (highlight de código incluido)', async ({ pa
 });
 
 test('launcher: un acceso salta a su sección', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/web');
   const nav = page.getByRole('navigation', { name: 'Categorías del portafolio' });
   await nav.getByRole('link', { name: /Sistema ERP/ }).click();
   await expect(page.locator('#erp')).toBeInViewport();
@@ -45,7 +56,7 @@ test('launcher: un acceso salta a su sección', async ({ page }) => {
 // Red de seguridad de las zonas oprimibles (Samuel): son fáciles de romper en silencio con un
 // z-index o un pointer-events, y no se ven rotas — solo "no pasa nada" al oprimir.
 test('catálogo oprimible: toda la tarjeta y la miniatura del launcher llevan a su destino', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/web');
 
   // 1) el cuadrado ENTERO de la tarjeta navega al sitio del producto: quien recibe el clic en la
   //    previa, el título y las tecnologías debe ser el enlace estirado, no la imagen ni el texto.
@@ -92,4 +103,47 @@ test('LeadForm: validación en cliente y envío feliz contra /api/leads', async 
   await page.locator('#lead-tipo').selectOption('Landing page');
   await page.getByRole('button', { name: /Enviar/ }).click();
   await expect(page.getByText(/Recibido/)).toBeVisible();
+});
+
+// grupo-y-marketing (2026-09): /marketing es la división nueva — verifica que las 7
+// secciones reales estén, que los casos honestos se lean (con y sin cifra) y que su
+// propio LeadForm funcione igual que el de /web.
+test('/marketing renderiza: hero, servicios, método, equipo, comparativa y casos', async ({ page }) => {
+  await page.goto('/marketing');
+  await expect(page.getByRole('heading', { level: 1, name: 'Pixies Marketing' })).toBeVisible();
+  await expect(page.locator('#servicios').getByText('Redes sociales y comunidad')).toBeVisible();
+  await expect(page.locator('#metodo').getByText('Estrategia')).toBeVisible();
+  await expect(page.locator('#equipo').getByText('Samuel Galeano')).toBeVisible();
+  await expect(page.locator('#equipo').getByText('Edison Galeano')).toBeVisible();
+  await expect(page.locator('#comparativa').getByText('Costo por lead calificado')).toBeVisible();
+  // caso con cifra real (LinkedIn) y caso sin cifra (Xiaomi CarTech, marcado "por confirmar").
+  // "162.936" aparece dos veces dentro del propio caso (la cifra grande Y la descripción) —
+  // se apunta a la cifra grande (font-display text-3xl) para no chocar con modo estricto.
+  const casoLinkedin = page.locator('#casos article').filter({ hasText: 'LinkedIn de Samuel' });
+  await expect(casoLinkedin.locator('p.font-display.text-3xl')).toContainText('162.936');
+  await expect(page.locator('#casos').getByText('cifras por confirmar')).toBeVisible();
+});
+
+test('/marketing: LeadForm propio funciona igual que el de /web', async ({ page }) => {
+  await page.route('**/api/leads', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) })
+  );
+  await page.goto('/marketing#contacto');
+  await page.locator('#lead-nombre').fill('Ana Pérez');
+  await page.locator('#lead-contacto').fill('ana@ejemplo.com');
+  await page.locator('#lead-tipo').selectOption('Landing page');
+  await page.getByRole('button', { name: /Enviar/ }).click();
+  await expect(page.getByText(/Recibido/)).toBeVisible();
+});
+
+// La bifurcación de la home es el único camino de navegación entre las 3 rutas del
+// grupo: si se rompe, cada división queda aislada de las otras dos.
+test('bifurcación del grupo: los paneles llevan a /marketing y /web de verdad', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Ver Pixies Marketing' }).click();
+  await expect(page).toHaveURL(/\/marketing$/);
+
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Ver Pixies Design Web' }).click();
+  await expect(page).toHaveURL(/\/web$/);
 });

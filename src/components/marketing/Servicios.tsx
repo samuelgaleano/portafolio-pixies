@@ -12,7 +12,10 @@ export default function Servicios() {
         <p className="mt-3 max-w-xl text-dim">{servicios.intro}</p>
       </header>
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {/* overflow-x-hidden: contiene el translateX de los data-reveal="left|right" mientras el
+          grid sigue fuera de viewport (sin esto crea scroll horizontal real, no solo durante la
+          transición -- ver la misma nota en GrupoSplit.tsx). */}
+      <div className="grid gap-5 overflow-x-hidden sm:grid-cols-2 lg:grid-cols-3">
         {servicios.items.map((s, i) => (
           <article
             key={s.title}

@@ -60,7 +60,7 @@ export default function ErpDemoPage() {
               directo — escríbeme y la vemos.
             </p>
             <Link
-              href="/#contacto"
+              href="/web#contacto"
               className="press mt-5 inline-block rounded-(--radius-s) bg-signal px-5 py-2.5 font-mono text-xs font-medium text-void transition hover:brightness-110"
             >
               Hablemos →

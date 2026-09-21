@@ -192,7 +192,7 @@ export default function InformeSaber11() {
       </section>
 
       <SubpageNav
-        backHref="/#datos"
+        backHref="/web#datos"
         backLabel="← Volver al portafolio"
         desde="datos"
         ctaLabel="¿Tienes datos así de sucios? Hablemos →"

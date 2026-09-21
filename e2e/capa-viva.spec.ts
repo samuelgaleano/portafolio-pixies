@@ -9,7 +9,8 @@ test('reloj BOG: tickea con formato hh:mm:ss en el footer', async ({ page }) => 
 });
 
 test('statement y footer takeover renderizan', async ({ page }) => {
-  await page.goto('/');
+  // grupo-y-marketing (2026-09): Statement se movió de / a /web; el footer sigue siendo global.
+  await page.goto('/web');
   await expect(page.getByText('es la demo')).toBeAttached();
   await expect(page.locator('.footer-wordmark')).toHaveText('PIXIES');
   // los glifos decorativos no contaminan el árbol de accesibilidad

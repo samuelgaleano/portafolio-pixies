@@ -30,12 +30,19 @@ export default function GrupoSplit() {
           {split.bridgePost}
         </p>
 
-        <div className="grupo-split">
+        {/* overflow-x-hidden: mientras un panel data-reveal="left|right" no se revela (fuera de
+            viewport, antes de que el IntersectionObserver lo marque .is-revealed) queda
+            trasladado ±36px con translateX -- sin este contenedor eso empuja el ancho real del
+            documento y crea scroll horizontal aunque el panel todavía no sea visible en pantalla
+            (detectado por e2e/responsive.spec.ts a 360px). El translateX sigue viéndose igual al
+            revelar: solo se recorta lo que sobra del propio contenedor, no el efecto. */}
+        <div className="grupo-split overflow-x-hidden">
           <a
             href={split.marketing.href}
             data-desde="grupo-split-marketing"
             data-reveal="left"
             className="grupo-cap grupo-cap--marketing"
+            aria-label="Ver Pixies Marketing"
           >
             <span className="grupo-cap__num">{split.marketing.capNum}</span>
             <DivisionGlyph letra="M" variant="marketing" className="grupo-cap__glyph" />
@@ -60,6 +67,7 @@ export default function GrupoSplit() {
             data-desde="grupo-split-web"
             data-reveal="right"
             className="grupo-cap grupo-cap--web"
+            aria-label="Ver Pixies Design Web"
           >
             <span className="grupo-cap__num">{split.web.capNum}</span>
             <DivisionGlyph letra="W" variant="web" className="grupo-cap__glyph" />
