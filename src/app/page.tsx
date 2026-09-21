@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import SchemaOrg from '@/components/seo/SchemaOrg';
 import Hero from '@/components/hero/Hero';
+import GrupoSplit from '@/components/hero/GrupoSplit';
 import PortfolioSection from '@/components/portfolio/PortfolioSection';
 import Statement from '@/components/cta/Statement';
 import MidCta from '@/components/cta/MidCta';
@@ -19,6 +20,8 @@ export default function HomePage() {
     <>
       <SchemaOrg type="organization" />
       <Hero />
+
+      <GrupoSplit />
 
       <PortfolioSection />
 

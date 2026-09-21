@@ -247,6 +247,42 @@ export const es = {
       { plain: 'demo', pre: 'El diseño que ves ', em: 'es la demo', post: '.' },
     ],
   },
+  // Bifurcación Pixies Design Group (grupo-y-marketing, 2026-09): frase-puente del hero
+  // + los dos "capítulos" (Marketing / Web). Cifras: las mismas que ya usa `portfolio`/
+  // `statement` — nada inventado. Marketing enlaza a #contacto (todavía no existe /marketing);
+  // Web enlaza a #portafolio (el contenido actual del sitio es, hoy, la división Web).
+  split: {
+    bridgePre: 'Armé dos equipos: uno para que te ',
+    bridgeMk: 'encuentren',
+    bridgeMid: ' y otro para que te ',
+    bridgeWeb: 'compren',
+    bridgePost: '.',
+    marketing: {
+      capNum: 'Capítulo uno',
+      title: 'Pixies Marketing',
+      que: 'Campañas, contenido y marca que mido contra el margen real, no contra los likes.',
+      quien: 'Para empresas y marcas personales jóvenes.',
+      chip1n: '162.936',
+      chip1t: 'impresiones LinkedIn',
+      chip2n: '7',
+      chip2t: 'documentos de método',
+      cta: 'Hablemos de tu embudo',
+      href: '#contacto',
+    },
+    web: {
+      capNum: 'Capítulo dos',
+      title: 'Pixies Design Web',
+      que: 'Páginas, ERP, datos, IA y ciberseguridad que puedes abrir y usar, no solo ver en capturas.',
+      quien: 'Para PyMEs y medianas empresas.',
+      chip1n: '45/240',
+      chip1t: 'módulos y tablas del ERP',
+      chip2n: '1.0.1',
+      chip2t: 'escuchacomprendiendo.ai',
+      cta: 'Ver el portafolio',
+      href: '#portafolio',
+    },
+    union: 'Uso un mismo proceso ordenado para las dos: cambia el entregable, no el flujo.',
+  },
   common: {
     pending: 'en construcción',
     toConfirm: 'por confirmar',

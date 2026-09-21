@@ -17,6 +17,13 @@
   --color-err: #dc2626;
   --color-code: #171326;        /* fondo OSCURO para bloques de código (Shiki poimandres) */
 
+  /* Marketing (división Pixies Marketing, grupo-y-marketing 2026-09): amarillo proceso,
+     la Y del CMYK de Edison Galeano (Brand & Creative Director). Validado en el mockup
+     15-final-ajustado.html — mismos 3 tonos, misma relación con --color-ink/--color-void. */
+  --color-marketing: #f5b400;       /* superficie plana del capítulo Marketing */
+  --color-marketing-texto: #8a5a00; /* texto sobre --color-void o --color-marketing (5.2:1) */
+  --color-marketing-suave: #fff1bf; /* tinte para chips y fondos de apoyo */
+
   /* Tipografía */
   --font-display: 'Clash Display', system-ui, sans-serif;
   --font-sans: 'General Sans', system-ui, sans-serif;
