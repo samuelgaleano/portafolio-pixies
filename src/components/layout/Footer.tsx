@@ -33,7 +33,7 @@ export default function Footer() {
           <Link href="/#inicio" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
             {t.footer.navHome}
           </Link>
-          <Link href="/#portafolio" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
+          <Link href="/web#portafolio" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
             {t.nav.portfolio}
           </Link>
           <Link href="/samuel" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">

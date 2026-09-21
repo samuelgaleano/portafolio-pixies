@@ -11,6 +11,8 @@ export const es = {
     mainLabel: 'Principal',
     skip: 'Saltar al contenido',
     portfolio: 'Portafolio',
+    web: 'Web',
+    marketing: 'Marketing',
     engineer: 'Ingeniero',
     cta: 'Trabajemos juntos',
     ctaShort: 'Hablemos',
@@ -249,8 +251,8 @@ export const es = {
   },
   // Bifurcación Pixies Design Group (grupo-y-marketing, 2026-09): frase-puente del hero
   // + los dos "capítulos" (Marketing / Web). Cifras: las mismas que ya usa `portfolio`/
-  // `statement` — nada inventado. Marketing enlaza a #contacto (todavía no existe /marketing);
-  // Web enlaza a #portafolio (el contenido actual del sitio es, hoy, la división Web).
+  // `statement` — nada inventado. Marketing enlaza a /marketing, Web a /web (las dos
+  // rutas completas de cada división).
   split: {
     bridgePre: 'Armé dos equipos: uno para que te ',
     bridgeMk: 'encuentren',
@@ -267,7 +269,7 @@ export const es = {
       chip2n: '7',
       chip2t: 'documentos de método',
       cta: 'Hablemos de tu embudo',
-      href: '#contacto',
+      href: '/marketing',
     },
     web: {
       capNum: 'Capítulo dos',
@@ -279,9 +281,185 @@ export const es = {
       chip2n: '1.0.1',
       chip2t: 'escuchacomprendiendo.ai',
       cta: 'Ver el portafolio',
-      href: '#portafolio',
+      href: '/web',
     },
     union: 'Uso un mismo proceso ordenado para las dos: cambia el entregable, no el flujo.',
+  },
+  // Contenido de /marketing (grupo-y-marketing, 2026-09). Fuente:
+  // Pixies\marketing\empresa\portafolio\SECCION-MARKETING.md + servicios\*.md + casos\*.md
+  // + empresas\pixies\core\equipo\*. Primera persona del singular, tuteo neutral, sin
+  // cifras inventadas — lo que falta queda marcado con Pending, no con un número inventado.
+  marketing: {
+    metaTitle: 'Pixies Marketing · Campañas y contenido con margen comprobado',
+    metaDescription:
+      'Invierto en pauta solo cuando el margen de cada producto ya está comprobado. Redes, contenido, publicidad pagada y marca para empresas y marcas personales jóvenes.',
+    kicker: 'una empresa de Pixies Design Group',
+    title: 'Pixies Marketing',
+    tesis:
+      'Invierto en pauta solo cuando el margen de cada producto ya está comprobado. Pauta científica, posicionamiento B2B y una sola métrica: costo por lead calificado.',
+    cta: 'Hablemos de tu embudo',
+    servicios: {
+      eyebrow: '/servicios',
+      title: 'Cinco servicios, con lo que entrego escrito dentro',
+      intro: 'Cada cubo dice el canal y la pieza que recibes. Nada más.',
+      items: [
+        {
+          title: 'Redes sociales y comunidad',
+          paraQuien: 'Empresas y marcas personales jóvenes que necesitan presencia constante sin armar equipo propio.',
+          entrego:
+            'Estrategia de contenido (dos pilares: autoridad y alcance), parrilla mensual, piezas, reels y shorts, gestión de comunidad y reporte mensual.',
+          canales: ['Instagram', 'TikTok', 'LinkedIn', 'YouTube Shorts', 'Facebook'],
+          quien: 'Isabela (contenido y comunidad) con Samuel (estrategia y medición).',
+          limite: 'No garantizo seguidores ni alcance — dependen del algoritmo. Garantizo constancia, criterio y datos.',
+        },
+        {
+          title: 'Publicidad pagada por datos',
+          paraQuien: 'PyMEs que ya venden y quieren escalar sin quemar presupuesto.',
+          entrego:
+            'Plan de medios, configuración de campañas, creatividades de rendimiento, costo de adquisición (CAC) y ROMI contra el margen real de cada producto.',
+          canales: ['Meta', 'Google', 'LinkedIn', 'TikTok'],
+          quien: 'Samuel (Growth Director).',
+          limite: 'No prometo ROAS; propongo objetivos y muestro los datos cada semana.',
+        },
+        {
+          title: 'Contenido y video',
+          paraQuien: 'Marcas que necesitan contar lo que hacen en video corto, cada semana.',
+          entrego: 'Guion, producción, edición, motion y adaptaciones por formato; piezas gráficas alineadas con la identidad.',
+          canales: ['Reel', 'Short', 'Historia', 'Carrusel', 'Banner'],
+          quien: 'Edison (dirección de arte) e Isabela (producción), con Content Hub para programar.',
+          limite: 'Concepto aprobado → key visual aprobado → piezas. No se produce nada sin la aprobación anterior.',
+        },
+        {
+          title: 'SEO y contenidos',
+          paraQuien: 'Empresas que quieren que las encuentren por lo que venden, incluidos los asistentes de IA.',
+          entrego: 'Auditoría técnica y de contenido, arquitectura del sitio, datos estructurados (schema), llms.txt y visibilidad en respuestas de IA.',
+          canales: ['Google', 'ChatGPT', 'Perplexity', 'Claude'],
+          quien: 'Samuel, con el especialista de SEO del flujo de marketing.',
+          limite: 'El posicionamiento es acumulativo: resultados en meses, no en días.',
+        },
+        {
+          title: 'Marca e identidad',
+          paraQuien: 'Empresas nuevas o que quieren renovar cómo se ven, dentro y fuera de la pantalla.',
+          entrego:
+            'Naming, logotipo, sistema visual, manual de marca, identidad digital y su aplicación física: papelería, señalización, avisos, piezas especiales.',
+          canales: ['Impreso', 'Señalización', 'Digital'],
+          quien: 'Edison Galeano (Brand & Creative Director, +30 años de experiencia).',
+          limite: 'Diseño y producción: la pieza se fabrica e instala, no se entrega solo en PDF.',
+        },
+      ],
+    },
+    metodo: {
+      eyebrow: '/método',
+      title: 'Seis fases, cada una con dueño',
+      intro: 'El mismo flujo para pauta y para software. Nada se produce sin aprobar lo anterior.',
+      regla: 'No se produce nada sin aprobar lo anterior.',
+      fases: [
+        { n: '01', title: 'Estrategia', dueno: 'Samuel', desc: 'Qué se vende, a quién y con qué margen.' },
+        { n: '02', title: 'Concepto', dueno: 'Edison', desc: 'La idea que sostiene la campaña.' },
+        { n: '03', title: 'Key Visual', dueno: 'Edison', desc: 'La pieza madre de la que salen las demás.' },
+        { n: '04', title: 'Piezas', dueno: 'Edison · Isabela', desc: 'Adaptaciones por formato y canal.' },
+        { n: '05', title: 'Parrilla', dueno: 'Isabela', desc: 'Calendario, copys y publicación.' },
+        { n: '06', title: 'Medición', dueno: 'Samuel', desc: 'CAC, costo por lead calificado y ROMI.' },
+      ],
+    },
+    equipo: {
+      eyebrow: '/equipo',
+      title: 'Quién hace qué en Marketing',
+      intro: 'Fichas completas: cargo, qué hace y de dónde viene cada uno.',
+      personas: [
+        {
+          nombre: 'Samuel Galeano',
+          cargo: 'Growth Director',
+          rol: 'Samuel arma la arquitectura y te cotiza.',
+          bio: 'Planeación de crecimiento, optimización de inversión publicitaria, análisis de datos comerciales y medición de ROMI.',
+          foto: '/samuel/samuel-avatar.webp',
+          cita: '',
+          trayectoria: '',
+        },
+        {
+          nombre: 'Edison Galeano',
+          cargo: 'Brand & Creative Director',
+          rol: 'Edison dirige la marca y produce las piezas.',
+          bio: 'Más de 30 años en diseño y producción: imagen corporativa, impresos, señalización, avisos y piezas especiales.',
+          foto: '',
+          cita: '"Ideas que se convierten en piezas reales." · "Diseñamos para el mundo real."',
+          trayectoria: 'Trayectoria propia (no son casos de Pixies): Pixel Med · Camvucol · Garden Secrets · Granja El Abuelo · The Carpintería',
+        },
+        {
+          nombre: 'Isabela Torrenegra Jiménez',
+          cargo: 'Social Media Manager',
+          rol: 'Isabela crea el contenido y contesta la comunidad.',
+          bio: 'Comunicación social con énfasis en publicidad y producción audiovisual.',
+          foto: '',
+          cita:
+            'Desarrollo ideas creativas, copys, parrillas de contenido, historias, reels, posts y piezas gráficas alineadas con la identidad de cada marca. Analizo resultados y métricas e interactúo con la comunidad.',
+          trayectoria: '',
+        },
+      ],
+    },
+    comparativa: {
+      title: 'Marketing común',
+      titleEm: 'vs',
+      titleEnd: 'con Pixies',
+      filas: [
+        {
+          malo: 'Métricas de vanidad (likes, vistas) que no llegan al banco.',
+          bueno: 'Costo por lead calificado y EBITDA de ventas como métrica única.',
+        },
+        {
+          malo: 'Pauta a ciegas sin calcular el CAC.',
+          bueno: 'Pauta sobre lo que deja margen contable.',
+        },
+        {
+          malo: 'Poco valor percibido; bajar precios para competir.',
+          bueno: 'Posicionamiento B2B (LinkedIn y marca) para ganar estatus.',
+        },
+      ],
+    },
+    casos: {
+      eyebrow: '/casos',
+      title: 'Casos, sin inventar',
+      intro: 'Donde no hay métricas todavía, lo digo.',
+      items: [
+        {
+          tag: 'Marketing',
+          title: 'Mamba Records',
+          desc: 'Sello y ecosistema creativo. Kit de marketing de 7 documentos aprobados: propuesta, estrategia de marca, sistema de contenido, biblioteca de prompts, plantillas y SOP. Estrategia de dos pilares (autoridad 60 / alcance 40), 4 videos por semana.',
+          cifra: '',
+          cifraLabel: '',
+          pendiente: false,
+          nota: 'Fases 4–9 pendientes. Sin métricas de resultado todavía — aquí se cuenta el sistema, no un resultado que no existe.',
+        },
+        {
+          tag: 'Marketing · Web',
+          title: 'LinkedIn de Samuel',
+          desc: 'Campaña propia: que se conozca al ingeniero para que Pixies venda. Post del ERP: 162.936 impresiones; 7 de los 10 posts más vistos son del ERP y suman más de 340.000.',
+          cifra: '162.936',
+          cifraLabel: 'impresiones del post del ERP',
+          pendiente: false,
+          nota: 'A 2 posts/día el alcance cayó de 313 a 44–56: la frecuencia tumbó el alcance, no el contenido. Se volvió a 1 post/día.',
+        },
+        {
+          tag: 'Web · Marketing',
+          title: 'Xiaomi CarTech',
+          desc: 'Landing de venta directa con captura de leads + campaña en Meta. Tracking servidor a servidor con la Conversions API (email y teléfono hasheados) para medir el costo real por lead sin depender del píxel.',
+          cifra: '',
+          cifraLabel: '',
+          pendiente: true,
+          nota: 'Presupuesto, periodo, costo por lead y ventas: por confirmar con Samuel. Sin número se cuenta el sistema: qué se midió y cómo.',
+        },
+      ],
+    },
+    producto: {
+      title: 'Content Hub',
+      lead: 'Consola que programa YouTube Shorts e Instagram Reels por las APIs oficiales, para varias marcas a la vez.',
+      specs: ['Programa YouTube Shorts', 'Programa Instagram Reels', 'APIs oficiales de YouTube e Instagram', 'Multi-marca desde una consola'],
+      estado: 'estado actual y acceso para clientes: por confirmar',
+    },
+    contacto: {
+      title: 'Hablemos de tu embudo',
+      intro: 'Cuéntame qué vendes y a quién, y te respondo yo — no un formulario automático.',
+    },
   },
   common: {
     pending: 'en construcción',

@@ -36,25 +36,32 @@ export default function Header() {
             xies
           </span>
         </Link>
-        {/* sin menú hamburguesa; 3 enlaces caben a 360px con el CTA corto en móvil.
+        {/* sin menú hamburguesa. Grupo-y-marketing (2026-09) sumó "Marketing" a los enlaces
+            de división que ya había ("Portafolio" → "Web", más corto, mismo destino) —
             min-h-11 (44px): área táctil cómoda en móvil sin engordar la barra (h-14 la contiene) */}
         <div className="flex items-center gap-1 text-sm sm:gap-2">
           <Link
-            href="/#portafolio"
+            href="/web#portafolio"
             className="flex min-h-11 items-center whitespace-nowrap px-2 text-dim transition-colors hover:text-ink"
           >
-            {t.nav.portfolio}
+            {t.nav.web}
           </Link>
-          {/* por debajo de 375px los 3 enlaces + CTA no caben: el nav se sale 50px del
-              viewport. "El Ingeniero" cede (sigue accesible desde el hero y el footer) */}
+          {/* por debajo de 375px no caben los 4 enlaces + CTA: "Marketing" e "Ingeniero" ceden
+            (ambos siguen accesibles desde GrupoSplit/el hero y el footer) */}
+          <Link
+            href="/marketing"
+            className="hidden min-h-11 items-center whitespace-nowrap px-2 text-dim transition-colors hover:text-ink min-[375px]:flex"
+          >
+            {t.nav.marketing}
+          </Link>
           <Link
             href="/samuel"
-            className="hidden min-h-11 items-center whitespace-nowrap px-2 text-dim transition-colors hover:text-ink min-[375px]:flex"
+            className="hidden min-h-11 items-center whitespace-nowrap px-2 text-dim transition-colors hover:text-ink min-[430px]:flex"
           >
             {t.nav.engineer}
           </Link>
           <Link
-            href="/#contacto"
+            href="#contacto"
             data-desde="header"
             className="ml-1 flex min-h-11 items-center rounded-(--radius-s) press bg-signal px-3 font-medium text-void transition hover:brightness-110"
           >

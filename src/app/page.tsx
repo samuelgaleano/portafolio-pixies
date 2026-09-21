@@ -2,15 +2,16 @@ import type { Metadata } from 'next';
 import SchemaOrg from '@/components/seo/SchemaOrg';
 import Hero from '@/components/hero/Hero';
 import GrupoSplit from '@/components/hero/GrupoSplit';
-import PortfolioSection from '@/components/portfolio/PortfolioSection';
-import Statement from '@/components/cta/Statement';
-import MidCta from '@/components/cta/MidCta';
-import EngineerTeaser from '@/components/cta/EngineerTeaser';
 import LeadForm from '@/components/leads/LeadForm';
 import GradientText from '@/components/ui/GradientText';
 import Atmosphere from '@/components/fx/Atmosphere';
 import { t } from '@/i18n';
 
+// Home = landing del grupo (grupo-y-marketing, 2026-09): el contenido que vivía aquí
+// (portafolio, principios, CTA intermedio, teaser del ingeniero) se movió a `/web` —
+// es, hoy, la división Web. Esta página se queda con el hero compartido, la bifurcación
+// (GrupoSplit) y un contacto general; `/web` y `/marketing` tienen su propio contenido
+// completo y su propio contacto.
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
 };
@@ -22,14 +23,6 @@ export default function HomePage() {
       <Hero />
 
       <GrupoSplit />
-
-      <PortfolioSection />
-
-      <Statement />
-
-      <MidCta />
-
-      <EngineerTeaser />
 
       <section id="contacto" className="relative overflow-hidden border-t border-line">
         <Atmosphere animate={false} />
