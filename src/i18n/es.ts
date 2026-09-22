@@ -311,12 +311,12 @@ export const es = {
     },
     union: 'Las dos divisiones comparten el mismo flujo de trabajo: se contratan juntas o por separado.',
   },
-  // Un proyecto de punta a punta (home, justo debajo de la bifurcación). Samuel (2026-09-21):
-  // "que el cliente vea todo lo que hace Pixies Design Group sin tener que escoger Creative o
-  // Web": pasos cortos, segmentados por color de forma IMPLÍCITA (ámbar = Creative, violeta =
-  // Web, ambos = medición). Los ejemplos son casos reales y solo los pasos que recorrieron de
+  // La ruta de un proyecto (home, justo debajo de la bifurcación). Samuel (2026-09-21): "que el
+  // cliente vea todo lo que hace Pixies Design Group sin tener que escoger Creative o Web":
+  // pasos cortos, segmentados por color de forma IMPLÍCITA (ámbar = Creative, violeta = Web,
+  // degradado = los dos). `casos` son reales y citan SOLO los pasos que cada uno recorrió de
   // verdad — nada de atribuirle a Xiaomi CarTech una marca que no se le hizo.
-  // La ruta del proyecto (Samuel, 2026-09-22 · 2ª ronda): "títulos y subtítulos mucho más
+  // 2ª ronda (2026-09-22): "títulos y subtítulos mucho más
   // simples, muy directo al cliente"; de 8 pasos a 6 — arquitectura y construcción se
   // fusionan, entra un paso de soluciones empresariales — y **cada paso es un botón** que
   // lleva a la sección donde está ese trabajo de verdad. Con flechas entre pasos.
@@ -331,6 +331,11 @@ export const es = {
       { n: '04', lado: 'web', title: 'Web', desc: 'Arquitectura, diseño y construcción del sitio.', href: '/web#landing', destino: 'Ver sitios' },
       { n: '05', lado: 'web', title: 'Sistemas', desc: 'ERP, automatización e IA para operar.', href: '/web#erp', destino: 'Ver el ERP' },
       { n: '06', lado: 'ambas', title: 'Datos', desc: 'Medición, análisis y la siguiente decisión.', href: '/web#datos', destino: 'Ver el análisis' },
+    ],
+    casosLabel: 'Ya la recorrieron',
+    casos: [
+      { nombre: 'Mamba Records', tramo: 'pasos 01–03' },
+      { nombre: 'Xiaomi CarTech', tramo: 'pasos 03–06' },
     ],
     cierreTitle: 'Y lo que aprendemos vuelve a entrar',
     cierreBody:

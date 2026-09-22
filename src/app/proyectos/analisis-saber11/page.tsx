@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { dataTour, dataFacts as f } from '@/data/data-tour';
 import SubpageNav from '@/components/layout/SubpageNav';
 
@@ -59,8 +60,8 @@ const codeRegresion = `ggplot(Datos, aes(x = p_lect, y = p_mat)) +
 function Figure({ src, alt, caption }: { src: string; alt: string; caption: string }) {
   return (
     <figure className="mt-6 overflow-hidden rounded-(--radius-m) border border-line bg-surface-2">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt={alt} width={1500} height={938} loading="lazy" decoding="async" className="h-auto w-full" />
+      {/* next/image (2026-09-22): son gráficas de 1500px que se muestran a ~720px */}
+      <Image src={src} alt={alt} width={1500} height={938} sizes="(min-width: 1024px) 720px, 100vw" className="h-auto w-full" />
       <figcaption className="border-t border-line px-4 py-3 font-mono text-xs text-dim">{caption}</figcaption>
     </figure>
   );

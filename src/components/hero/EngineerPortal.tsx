@@ -7,8 +7,9 @@ import { t } from '@/i18n';
 // (constantes de Knuth) → SSR y cliente pintan idéntico. Link limpio (server component); el
 // barrido a /samuel lo dispara el interceptor global EngineerTransition.
 const GRID = 8; // 8×8 = 64 teselas de la foto
-const AV = 144; // lado del avatar en px (debe casar con .eng-portal__avatar)
-const TILE = AV / GRID; // 18px por tesela → posición exacta en px (sin costuras por %)
+// La posición de cada tesela se expresa como FRACCIÓN del lado del avatar (--av), no en px:
+// el avatar mide 144px suelto y 104px en la versión reducida de /web (.eng-dock), y con
+// píxeles fijos la malla quedaba descuadrada respecto a la foto (2026-09-22).
 // Al seleccionar, cada tesela CAE (gravedad, --fall siempre positiva y grande → sale del marco)
 // mientras VOLTEA en 3D (rotateX/Y + profundidad --sz). Deterministas (Knuth) → SSR-safe.
 const TILES = Array.from({ length: GRID * GRID }, (_, i) => {
@@ -19,8 +20,8 @@ const TILES = Array.from({ length: GRID * GRID }, (_, i) => {
   const h3 = (i * 2654435761) >>> 0;
   const h4 = (i * 40503) >>> 0;
   return {
-    bx: -(col * TILE),
-    by: -(row * TILE),
+    bx: -(col / GRID), // fracción de --av
+    by: -(row / GRID),
     sx: (h1 % 40) - 20, // deriva horizontal -20..19
     fall: 46 + (h2 % 92), // caída 46..137 px (se ven caer dentro del marco antes de desvanecer)
     sz: (h3 % 220) - 110, // profundidad 3D -110..109
@@ -48,7 +49,7 @@ export default function EngineerPortal() {
                 key={i}
                 style={
                   {
-                    backgroundPosition: `${tile.bx}px ${tile.by}px`,
+                    backgroundPosition: `calc(var(--av) * ${tile.bx}) calc(var(--av) * ${tile.by})`,
                     '--sx': `${tile.sx}px`,
                     '--fall': `${tile.fall}px`,
                     '--sz': `${tile.sz}px`,

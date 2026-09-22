@@ -49,6 +49,9 @@ test('home renderiza: wordmark animado del grupo, bifurcación y proyecto de pun
     '/web#erp',
     '/web#datos',
   ]);
+  // los casos reales que recorrieron la ruta siguen citados (sin inventar tramos)
+  await expect(page.locator('.ruta-casos')).toContainText('Xiaomi CarTech');
+  await expect(page.locator('.ruta-casos')).toContainText('Mamba Records');
   // y el cierre del bucle de conocimiento enlaza a la app propia
   await expect(page.locator('.ruta-cierre a[href="/aplicaciones/escuchacomprendiendo-ai"]')).toBeVisible();
 });

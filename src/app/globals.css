@@ -1168,8 +1168,7 @@ footer:hover .footer-wordmark {
     padding: 1rem 1rem 1.5rem;
   }
   .eng-dock .eng-portal__avatar {
-    width: 104px;
-    height: 104px;
+    --av: 104px;
   }
 }
 /* panel CUADRADO vertical (Samuel r17): la foto arriba (malla que se dispersa), texto debajo,
@@ -1234,10 +1233,11 @@ footer:hover .footer-wordmark {
 /* avatar (Samuel r17): en REPOSO la foto entera y limpia; al pasar/seleccionar la foto se apaga
    y una malla 8×8 de teselas se DISPERSA en píxeles encima (eco de la retícula del wordmark). */
 .eng-portal__avatar {
+  --av: 144px; /* única fuente del tamaño: lo usan la caja y la malla de teselas */
   position: relative;
   box-sizing: content-box;
-  width: 144px;
-  height: 144px;
+  width: var(--av);
+  height: var(--av);
   flex-shrink: 0;
   overflow: hidden;
   border-radius: 14px;
@@ -1282,7 +1282,8 @@ footer:hover .footer-wordmark {
 }
 .eng-portal__tiles i {
   background-image: url('/samuel/samuel-avatar.webp');
-  background-size: 144px 144px;
+  /* el sprite se escala con el avatar (--av), no con un px fijo */
+  background-size: var(--av) var(--av);
   background-repeat: no-repeat;
   opacity: 0;
 }
@@ -3600,4 +3601,30 @@ main {
     align-items: center;
     gap: 0.2rem;
   }
+}
+
+/* casos reales que recorrieron la ruta (una línea, bajo los pasos) */
+.ruta-casos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 1.1rem;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--color-dim);
+}
+.ruta-casos__label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ruta-casos__item b {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.ruta-casos__item span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
 }
