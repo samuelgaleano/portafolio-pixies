@@ -12,7 +12,7 @@ export const es = {
     skip: 'Saltar al contenido',
     portfolio: 'Portafolio',
     web: 'Web',
-    marketing: 'Marketing',
+    marketing: 'Creative',
     engineer: 'Ingeniero',
     cta: 'Trabajemos juntos',
     ctaShort: 'Hablemos',
@@ -249,31 +249,45 @@ export const es = {
       { plain: 'demo', pre: 'El diseño que ves ', em: 'es la demo', post: '.' },
     ],
   },
-  // Bifurcación Pixies Design Group (grupo-y-marketing, 2026-09): frase-puente del hero
-  // + los dos "capítulos" (Marketing / Web). Cifras: las mismas que ya usa `portfolio`/
-  // `statement` — nada inventado. Marketing enlaza a /marketing, Web a /web (las dos
-  // rutas completas de cada división).
+  // Hero de la landing del grupo (`/`), distinto del hero de /web: sin "/digital·web·design"
+  // ni portal del ingeniero — esos son de la división Web, no del grupo (Samuel, 2026-09-21).
+  // Voz EMPRESARIAL (Pixies Design Group es una empresa de varias personas, no la voz de un
+  // solo ingeniero): nada en primera persona del singular en esta capa.
+  grupoHero: {
+    title: 'PIXIES',
+    subtitle: 'Design Group',
+    tesis: 'Un mismo proceso ordenado para cualquier requerimiento: cambia el entregable, no el flujo.',
+    cta: 'Conoce las dos divisiones',
+    ctaContacto: 'Hablemos de tu proyecto',
+  },
+  // Bifurcación Pixies Design Group (grupo-y-marketing, 2026-09): frase-puente + los dos
+  // "capítulos". Nombres y taglines textuales de Samuel (2026-09-21): la división Web se
+  // presenta como "Pixies Digital Web Design" (ya era el título global del sitio) y Marketing
+  // pasa a llamarse "Pixies Creative". Cifras: las mismas que ya usa `portfolio`/`statement`.
+  // Voz empresarial: sin "armé", sin "mido", sin "uso" — el grupo habla como empresa.
   split: {
-    bridgePre: 'Armé dos equipos: uno para que te ',
+    bridgePre: 'Dos equipos bajo un mismo grupo: uno para que te ',
     bridgeMk: 'encuentren',
     bridgeMid: ' y otro para que te ',
     bridgeWeb: 'compren',
     bridgePost: '.',
     marketing: {
       capNum: 'Capítulo uno',
-      title: 'Pixies Marketing',
-      que: 'Campañas, contenido y marca que mido contra el margen real, no contra los likes.',
+      title: 'Pixies Creative',
+      tagline: 'Advertising · Branding · Campaigns · Content · Social Media · Creative Strategy',
+      que: 'Campañas, contenido y marca medidos contra el margen real, no contra los likes.',
       quien: 'Para empresas y marcas personales jóvenes.',
       chip1n: '162.936',
       chip1t: 'impresiones LinkedIn',
       chip2n: '7',
       chip2t: 'documentos de método',
-      cta: 'Hablemos de tu embudo',
+      cta: 'Hablemos de tu marca',
       href: '/marketing',
     },
     web: {
       capNum: 'Capítulo dos',
-      title: 'Pixies Design Web',
+      title: 'Pixies Digital Web Design',
+      tagline: 'Web design · Data · AI · Digital solutions',
       que: 'Páginas, ERP, datos, IA y ciberseguridad que puedes abrir y usar, no solo ver en capturas.',
       quien: 'Para PyMEs y medianas empresas.',
       chip1n: '45/240',
@@ -283,24 +297,28 @@ export const es = {
       cta: 'Ver el portafolio',
       href: '/web',
     },
-    union: 'Uso un mismo proceso ordenado para las dos: cambia el entregable, no el flujo.',
+    union: 'Las dos divisiones comparten el mismo flujo de trabajo: se contratan juntas o por separado.',
   },
   // Contenido de /marketing (grupo-y-marketing, 2026-09). Fuente:
   // Pixies\marketing\empresa\portafolio\SECCION-MARKETING.md + servicios\*.md + casos\*.md
-  // + empresas\pixies\core\equipo\*. Primera persona del singular, tuteo neutral, sin
-  // cifras inventadas — lo que falta queda marcado con Pending, no con un número inventado.
+  // + empresas\pixies\core\equipo\*. Sin cifras inventadas — lo que falta queda marcado con
+  // Pending, no con un número inventado.
+  // La división se llama "Pixies Creative" (Samuel, 2026-09-21; la ruta sigue siendo
+  // /marketing). La CABECERA va en voz empresarial (es una división de varias personas);
+  // las secciones internas (servicios, método, casos) conservan el copy del brief aprobado.
   marketing: {
-    metaTitle: 'Pixies Marketing · Campañas y contenido con margen comprobado',
+    metaTitle: 'Pixies Creative · Advertising, branding y contenido con margen comprobado',
     metaDescription:
-      'Invierto en pauta solo cuando el margen de cada producto ya está comprobado. Redes, contenido, publicidad pagada y marca para empresas y marcas personales jóvenes.',
+      'Publicidad, marca y contenido medidos contra el margen real de cada producto, no contra los likes. Estrategia creativa, campañas, social media y pauta por datos para empresas y marcas personales jóvenes.',
     kicker: 'una empresa de Pixies Design Group',
-    title: 'Pixies Marketing',
+    title: 'Pixies Creative',
+    tagline: 'Advertising · Branding · Campaigns · Content · Social Media · Creative Strategy',
     tesis:
-      'Invierto en pauta solo cuando el margen de cada producto ya está comprobado. Pauta científica, posicionamiento B2B y una sola métrica: costo por lead calificado.',
-    cta: 'Hablemos de tu embudo',
+      'Publicidad, marca y contenido que se miden contra el margen real de cada producto, no contra los likes. Estrategia creativa y pauta por datos, bajo un mismo flujo de trabajo.',
+    cta: 'Hablemos de tu marca',
     servicios: {
       eyebrow: '/servicios',
-      title: 'Cinco servicios, con lo que entrego escrito dentro',
+      title: 'Cinco servicios, con lo que entregamos escrito dentro',
       intro: 'Cada cubo dice el canal y la pieza que recibes. Nada más.',
       items: [
         {
@@ -310,7 +328,7 @@ export const es = {
             'Estrategia de contenido (dos pilares: autoridad y alcance), parrilla mensual, piezas, reels y shorts, gestión de comunidad y reporte mensual.',
           canales: ['Instagram', 'TikTok', 'LinkedIn', 'YouTube Shorts', 'Facebook'],
           quien: 'Isabela (contenido y comunidad) con Samuel (estrategia y medición).',
-          limite: 'No garantizo seguidores ni alcance — dependen del algoritmo. Garantizo constancia, criterio y datos.',
+          limite: 'No garantizamos seguidores ni alcance — dependen del algoritmo. Garantizamos constancia, criterio y datos.',
         },
         {
           title: 'Publicidad pagada por datos',
@@ -319,7 +337,7 @@ export const es = {
             'Plan de medios, configuración de campañas, creatividades de rendimiento, costo de adquisición (CAC) y ROMI contra el margen real de cada producto.',
           canales: ['Meta', 'Google', 'LinkedIn', 'TikTok'],
           quien: 'Samuel (Growth Director).',
-          limite: 'No prometo ROAS; propongo objetivos y muestro los datos cada semana.',
+          limite: 'No prometemos ROAS; proponemos objetivos y mostramos los datos cada semana.',
         },
         {
           title: 'Contenido y video',
@@ -419,7 +437,7 @@ export const es = {
     casos: {
       eyebrow: '/casos',
       title: 'Casos, sin inventar',
-      intro: 'Donde no hay métricas todavía, lo digo.',
+      intro: 'Donde no hay métricas todavía, lo decimos.',
       items: [
         {
           tag: 'Marketing',
@@ -457,8 +475,8 @@ export const es = {
       estado: 'estado actual y acceso para clientes: por confirmar',
     },
     contacto: {
-      title: 'Hablemos de tu embudo',
-      intro: 'Cuéntame qué vendes y a quién, y te respondo yo — no un formulario automático.',
+      title: 'Hablemos de tu marca',
+      intro: 'Cuéntanos qué vendes y a quién; respondemos con un plan, no con un formulario automático.',
     },
   },
   common: {

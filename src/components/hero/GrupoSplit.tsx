@@ -42,11 +42,12 @@ export default function GrupoSplit() {
             data-desde="grupo-split-marketing"
             data-reveal="left"
             className="grupo-cap grupo-cap--marketing"
-            aria-label="Ver Pixies Marketing"
+            aria-label="Ver Pixies Creative"
           >
             <span className="grupo-cap__num">{split.marketing.capNum}</span>
             <DivisionGlyph letra="M" variant="marketing" className="grupo-cap__glyph" />
             <h3 className="font-display text-[clamp(1.6rem,2.6vw,2.2rem)] font-bold text-balance">{split.marketing.title}</h3>
+            <p className="grupo-cap__tagline">{split.marketing.tagline}</p>
             <p className="max-w-[34ch] text-[1.1rem]">{split.marketing.que}</p>
             <p className="grupo-cap__quien">{split.marketing.quien}</p>
             <div className="grupo-cap__chips" aria-hidden="true">
@@ -67,11 +68,12 @@ export default function GrupoSplit() {
             data-desde="grupo-split-web"
             data-reveal="right"
             className="grupo-cap grupo-cap--web"
-            aria-label="Ver Pixies Design Web"
+            aria-label="Ver Pixies Digital Web Design"
           >
             <span className="grupo-cap__num">{split.web.capNum}</span>
             <DivisionGlyph letra="W" variant="web" className="grupo-cap__glyph" />
             <h3 className="font-display text-[clamp(1.6rem,2.6vw,2.2rem)] font-bold text-balance">{split.web.title}</h3>
+            <p className="grupo-cap__tagline">{split.web.tagline}</p>
             <p className="max-w-[34ch] text-[1.1rem]">{split.web.que}</p>
             <p className="grupo-cap__quien">{split.web.quien}</p>
             <div className="grupo-cap__chips" aria-hidden="true">

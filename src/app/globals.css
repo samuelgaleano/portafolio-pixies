@@ -2329,6 +2329,15 @@ footer:hover .footer-wordmark {
   text-transform: uppercase;
   opacity: 0.85;
 }
+/* Tagline de cada división (texto literal de Samuel, 2026-09-21): mono, pegado al título,
+   con los puntos medios como separadores — mismo registro que "/digital·web·design". */
+.grupo-cap__tagline {
+  margin-top: -0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
+}
 .grupo-cap__glyph {
   width: clamp(72px, 9vw, 96px);
   height: clamp(72px, 9vw, 96px);

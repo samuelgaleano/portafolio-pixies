@@ -28,7 +28,7 @@ export default function Servicios() {
               {s.paraQuien}
             </p>
             <p className="text-sm text-dim">
-              <span className="font-medium text-ink">Qué entrego: </span>
+              <span className="font-medium text-ink">Qué entregamos: </span>
               {s.entrego}
             </p>
             <ul className="flex flex-wrap gap-1.5" aria-label="Canales">

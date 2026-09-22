@@ -13,6 +13,8 @@ export default function MarketingHero() {
       <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pt-20 pb-16 sm:px-6 sm:pb-20">
         <p className="font-mono text-sm text-[color:var(--color-marketing-texto)]">{t.marketing.kicker}</p>
         <h1 className="mt-3 font-display text-hero font-bold text-ink">{t.marketing.title}</h1>
+        {/* tagline literal de Samuel (2026-09-21), mismo registro mono que "/digital·web·design" en /web */}
+        <p className="mt-3 font-mono text-sm text-dim sm:text-base">{t.marketing.tagline}</p>
         <p data-reveal className="mt-6 max-w-[46ch] text-[1.15rem] leading-snug text-dim sm:text-xl">
           {t.marketing.tesis}
         </p>

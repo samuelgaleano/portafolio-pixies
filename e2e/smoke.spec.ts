@@ -9,8 +9,8 @@ test('home renderiza: hero + bifurcación del grupo', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#wordmark')).toHaveText('PIXIES');
   // los dos "capítulos" de la bifurcación llevan a su división real
-  await expect(page.getByRole('link', { name: 'Ver Pixies Marketing' })).toHaveAttribute('href', '/marketing');
-  await expect(page.getByRole('link', { name: 'Ver Pixies Design Web' })).toHaveAttribute('href', '/web');
+  await expect(page.getByRole('link', { name: 'Ver Pixies Creative' })).toHaveAttribute('href', '/marketing');
+  await expect(page.getByRole('link', { name: 'Ver Pixies Digital Web Design' })).toHaveAttribute('href', '/web');
 });
 
 test('/web renderiza: hero, 7 categorías, proyectos reales y el tour de datos', async ({ page }) => {
@@ -28,7 +28,9 @@ test('/web renderiza: hero, 7 categorías, proyectos reales y el tour de datos',
 });
 
 test('portal del hero: el acceso al ingeniero enlaza a /samuel', async ({ page }) => {
-  await page.goto('/');
+  // grupo-y-marketing (2026-09-21): el portal del ingeniero es identidad de la división Web
+  // (vive en el Hero de /web); la landing del grupo (/) tiene su propio GrupoHero sin portal.
+  await page.goto('/web');
   // responsive: hay dos instancias del portal (una anclada en desktop, otra en la fila CTA para
   // móvil); ambas enlazan a /samuel. Verificamos la primera del DOM (la de desktop).
   const portal = page.locator('.eng-portal').first();
@@ -110,7 +112,7 @@ test('LeadForm: validación en cliente y envío feliz contra /api/leads', async 
 // propio LeadForm funcione igual que el de /web.
 test('/marketing renderiza: hero, servicios, método, equipo, comparativa y casos', async ({ page }) => {
   await page.goto('/marketing');
-  await expect(page.getByRole('heading', { level: 1, name: 'Pixies Marketing' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Pixies Creative' })).toBeVisible();
   await expect(page.locator('#servicios').getByText('Redes sociales y comunidad')).toBeVisible();
   await expect(page.locator('#metodo').getByText('Estrategia')).toBeVisible();
   await expect(page.locator('#equipo').getByText('Samuel Galeano')).toBeVisible();
@@ -140,10 +142,10 @@ test('/marketing: LeadForm propio funciona igual que el de /web', async ({ page 
 // grupo: si se rompe, cada división queda aislada de las otras dos.
 test('bifurcación del grupo: los paneles llevan a /marketing y /web de verdad', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: 'Ver Pixies Marketing' }).click();
+  await page.getByRole('link', { name: 'Ver Pixies Creative' }).click();
   await expect(page).toHaveURL(/\/marketing$/);
 
   await page.goto('/');
-  await page.getByRole('link', { name: 'Ver Pixies Design Web' }).click();
+  await page.getByRole('link', { name: 'Ver Pixies Digital Web Design' }).click();
   await expect(page).toHaveURL(/\/web$/);
 });

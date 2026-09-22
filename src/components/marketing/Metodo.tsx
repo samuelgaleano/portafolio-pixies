@@ -1,6 +1,6 @@
 import { t } from '@/i18n';
 
-// Método con dueño (marketing/CLAUDE.md, fases 3-9 del flujo real de Pixies Marketing,
+// Método con dueño (marketing/CLAUDE.md, fases 3-9 del flujo real de Pixies Creative,
 // resumidas a 6 con responsable por fase — mismo patrón que la sección "Como se unen"
 // del mockup 15-final-ajustado.html).
 export default function Metodo() {

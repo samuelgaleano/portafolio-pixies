@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import SchemaOrg from '@/components/seo/SchemaOrg';
-import Hero from '@/components/hero/Hero';
+import GrupoHero from '@/components/hero/GrupoHero';
 import GrupoSplit from '@/components/hero/GrupoSplit';
 import LeadForm from '@/components/leads/LeadForm';
 import GradientText from '@/components/ui/GradientText';
@@ -9,9 +9,10 @@ import { t } from '@/i18n';
 
 // Home = landing del grupo (grupo-y-marketing, 2026-09): el contenido que vivía aquí
 // (portafolio, principios, CTA intermedio, teaser del ingeniero) se movió a `/web` —
-// es, hoy, la división Web. Esta página se queda con el hero compartido, la bifurcación
-// (GrupoSplit) y un contacto general; `/web` y `/marketing` tienen su propio contenido
-// completo y su propio contacto.
+// es, hoy, la división Web. Esta página tiene su PROPIO hero (GrupoHero: sin
+// "/digital·web·design" ni portal del ingeniero, que son identidad de Web), la
+// bifurcación (GrupoSplit) y un contacto general; `/web` y `/marketing` tienen su propio
+// contenido completo y su propio contacto.
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
 };
@@ -20,7 +21,7 @@ export default function HomePage() {
   return (
     <>
       <SchemaOrg type="organization" />
-      <Hero />
+      <GrupoHero />
 
       <GrupoSplit />
 
