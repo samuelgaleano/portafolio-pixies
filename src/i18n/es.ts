@@ -30,7 +30,6 @@ export const es = {
     portalKicker: 'el ingenio detrás de los proyectos',
     portalName: 'Samuel Galeano',
     portalRole: 'Ingeniero de Sistemas',
-    portalAria: 'Conoce a Samuel Galeano, el ingeniero detrás de los proyectos',
   },
   signature: {
     // firma interactiva del hero → /samuel: la cita que revela al ingeniero
@@ -345,18 +344,28 @@ export const es = {
     tesis:
       'Publicidad, marca y contenido que se miden contra el margen real de cada producto, no contra los likes. Estrategia creativa y pauta por datos, bajo un mismo flujo de trabajo.',
     cta: 'Hablemos de tu marca',
+    ctaAreas: 'Ver dónde se aplica →',
+    // Tres frentes con dueño, visibles desde el hero (Samuel, 2026-09-22: "darle mucha
+    // prioridad de creación de campaña y redes a Isabela y dejarlo claro"). Orden = prioridad.
+    frentes: [
+      { area: 'Campañas y redes', quien: 'Isabela Torrenegra', lado: 'creative' },
+      { area: 'Marca y dirección de arte', quien: 'Edison Galeano', lado: 'creative' },
+      { area: 'Crecimiento, pauta y datos', quien: 'Samuel Galeano', lado: 'web' },
+    ],
     servicios: {
       eyebrow: '/servicios',
-      title: 'Cinco servicios, con lo que entregamos escrito dentro',
-      intro: 'Cada cubo dice el canal y la pieza que recibes. Nada más.',
+      title: 'Cinco servicios, con lo que entregamos y quién lo lidera escrito dentro',
+      intro: 'Cada cubo dice el canal, la pieza que recibes y la persona que responde por ella. Nada más.',
+      liderLabel: 'Lo lidera',
       items: [
         {
-          title: 'Redes sociales y comunidad',
+          title: 'Campañas en redes y comunidad',
           paraQuien: 'Empresas y marcas personales jóvenes que necesitan presencia constante sin armar equipo propio.',
           entrego:
-            'Estrategia de contenido (dos pilares: autoridad y alcance), parrilla mensual, piezas, reels y shorts, gestión de comunidad y reporte mensual.',
+            'Concepto de campaña, estrategia de contenido (dos pilares: autoridad y alcance), parrilla mensual, copys, historias, reels y shorts, gestión de comunidad y reporte mensual de métricas.',
           canales: ['Instagram', 'TikTok', 'LinkedIn', 'YouTube Shorts', 'Facebook'],
-          quien: 'Isabela (contenido y comunidad) con Samuel (estrategia y medición).',
+          lider: 'Isabela Torrenegra',
+          quien: 'Isabela crea la campaña, el contenido y la parrilla, y contesta la comunidad; Samuel fija la estrategia y mide.',
           limite: 'No garantizamos seguidores ni alcance — dependen del algoritmo. Garantizamos constancia, criterio y datos.',
         },
         {
@@ -365,7 +374,8 @@ export const es = {
           entrego:
             'Plan de medios, configuración de campañas, creatividades de rendimiento, costo de adquisición (CAC) y ROMI contra el margen real de cada producto.',
           canales: ['Meta', 'Google', 'LinkedIn', 'TikTok'],
-          quien: 'Samuel (Growth Director).',
+          lider: 'Samuel Galeano',
+          quien: 'Samuel (Growth Director) arma y optimiza la pauta; Isabela produce las piezas de rendimiento.',
           limite: 'No prometemos ROAS; proponemos objetivos y mostramos los datos cada semana.',
         },
         {
@@ -373,7 +383,8 @@ export const es = {
           paraQuien: 'Marcas que necesitan contar lo que hacen en video corto, cada semana.',
           entrego: 'Guion, producción, edición, motion y adaptaciones por formato; piezas gráficas alineadas con la identidad.',
           canales: ['Reel', 'Short', 'Historia', 'Carrusel', 'Banner'],
-          quien: 'Edison (dirección de arte) e Isabela (producción), con Content Hub para programar.',
+          lider: 'Isabela Torrenegra',
+          quien: 'Isabela produce las piezas para redes; Edison dirige el arte; Content Hub las programa.',
           limite: 'Concepto aprobado → key visual aprobado → piezas. No se produce nada sin la aprobación anterior.',
         },
         {
@@ -381,6 +392,7 @@ export const es = {
           paraQuien: 'Empresas que quieren que las encuentren por lo que venden, incluidos los asistentes de IA.',
           entrego: 'Auditoría técnica y de contenido, arquitectura del sitio, datos estructurados (schema), llms.txt y visibilidad en respuestas de IA.',
           canales: ['Google', 'ChatGPT', 'Perplexity', 'Claude'],
+          lider: 'Samuel Galeano',
           quien: 'Samuel, con el especialista de SEO del flujo de marketing.',
           limite: 'El posicionamiento es acumulativo: resultados en meses, no en días.',
         },
@@ -390,57 +402,120 @@ export const es = {
           entrego:
             'Naming, logotipo, sistema visual, manual de marca, identidad digital y su aplicación física: papelería, señalización, avisos, piezas especiales.',
           canales: ['Impreso', 'Señalización', 'Digital'],
-          quien: 'Edison Galeano (Brand & Creative Director, +30 años de experiencia).',
+          lider: 'Edison Galeano',
+          quien: 'Edison Galeano (Brand & Creative Director, +30 años de experiencia) diseña y produce.',
           limite: 'Diseño y producción: la pieza se fabrica e instala, no se entrega solo en PDF.',
+        },
+      ],
+    },
+    // Dónde se aplica cada servicio (Samuel, 2026-09-22: "mostrar áreas de implementación de
+    // servicios"): situaciones reales de cliente, qué servicios entran, quién responde y el
+    // caso real cuando existe. Sin cifras.
+    areas: {
+      eyebrow: '/dónde-se-aplica',
+      title: 'Dónde se aplica: seis situaciones típicas',
+      intro: 'Un cliente no compra "redes" o "marca": llega con una situación. Estas son las que resolvemos y con qué.',
+      serviciosLabel: 'Entra',
+      liderLabel: 'Responde',
+      ejemploLabel: 'Caso real',
+      items: [
+        {
+          title: 'Lanzar una marca o un producto',
+          situacion: 'Hay algo nuevo que vender y todavía no existe cómo se ve ni cómo se cuenta.',
+          servicios: ['Marca e identidad', 'Campaña de lanzamiento en redes', 'Pauta por datos'],
+          lider: 'Edison · Isabela · Samuel',
+          ejemplo: '',
+        },
+        {
+          title: 'Presencia constante en redes',
+          situacion: 'El negocio tiene que publicar cada semana y contestar a la gente, sin un equipo interno para hacerlo.',
+          servicios: ['Campañas en redes y comunidad', 'Contenido y video'],
+          lider: 'Isabela',
+          ejemplo: '',
+        },
+        {
+          title: 'Vender directo con landing y pauta',
+          situacion: 'Un producto concreto, un presupuesto y la necesidad de saber cuánto cuesta cada lead o venta.',
+          servicios: ['Pauta por datos', 'Landing (Pixies Digital Web Design)', 'Medición servidor a servidor'],
+          lider: 'Samuel',
+          ejemplo: 'Xiaomi CarTech',
+        },
+        {
+          title: 'Marca personal o empresa B2B en LinkedIn',
+          situacion: 'Que a la persona o a la empresa la conozcan por lo que sabe hacer, para vender con estatus y no por precio.',
+          servicios: ['Contenido y parrilla', 'SEO y visibilidad en respuestas de IA'],
+          lider: 'Isabela · Samuel',
+          ejemplo: 'LinkedIn de Samuel',
+        },
+        {
+          title: 'Sello, artista o proyecto creativo',
+          situacion: 'Mucho material y poca estructura: hace falta un sistema de contenido que se sostenga semana a semana.',
+          servicios: ['Estrategia y sistema de contenido', 'Video corto', 'Marca'],
+          lider: 'Isabela · Edison',
+          ejemplo: 'Mamba Records',
+        },
+        {
+          title: 'Identidad física: local, avisos, impresos',
+          situacion: 'La marca tiene que verse igual de bien en la fachada, la señalización y el papel que en la pantalla.',
+          servicios: ['Marca e identidad', 'Producción e instalación de piezas'],
+          lider: 'Edison',
+          ejemplo: '',
         },
       ],
     },
     metodo: {
       eyebrow: '/método',
       title: 'Seis fases, cada una con dueño',
-      intro: 'El mismo flujo para pauta y para software. Nada se produce sin aprobar lo anterior.',
+      intro: 'El mismo flujo para pauta y para software. Isabela lidera las fases de campaña y redes; nada se produce sin aprobar lo anterior.',
       regla: 'No se produce nada sin aprobar lo anterior.',
       fases: [
         { n: '01', title: 'Estrategia', dueno: 'Samuel', desc: 'Qué se vende, a quién y con qué margen.' },
-        { n: '02', title: 'Concepto', dueno: 'Edison', desc: 'La idea que sostiene la campaña.' },
+        { n: '02', title: 'Concepto', dueno: 'Isabela · Edison', desc: 'La idea de campaña (redes) y la idea de marca.' },
         { n: '03', title: 'Key Visual', dueno: 'Edison', desc: 'La pieza madre de la que salen las demás.' },
-        { n: '04', title: 'Piezas', dueno: 'Edison · Isabela', desc: 'Adaptaciones por formato y canal.' },
-        { n: '05', title: 'Parrilla', dueno: 'Isabela', desc: 'Calendario, copys y publicación.' },
-        { n: '06', title: 'Medición', dueno: 'Samuel', desc: 'CAC, costo por lead calificado y ROMI.' },
+        { n: '04', title: 'Piezas', dueno: 'Isabela · Edison', desc: 'Copys, historias, reels y adaptaciones por formato y canal.' },
+        { n: '05', title: 'Parrilla y comunidad', dueno: 'Isabela', desc: 'Calendario, publicación y respuesta a la comunidad.' },
+        { n: '06', title: 'Medición', dueno: 'Samuel · Isabela', desc: 'CAC, costo por lead calificado y ROMI; métricas de cada red.' },
       ],
     },
     equipo: {
       eyebrow: '/equipo',
-      title: 'Quién hace qué en Marketing',
-      intro: 'Fichas completas: cargo, qué hace y de dónde viene cada uno.',
+      title: 'Tres personas, tres frentes',
+      intro: 'Quién lidera qué en Creative, con cargo, qué hace y de dónde viene cada uno.',
+      lideraLabel: 'Lidera',
       personas: [
-        {
-          nombre: 'Samuel Galeano',
-          cargo: 'Growth Director',
-          rol: 'Samuel arma la arquitectura y te cotiza.',
-          bio: 'Planeación de crecimiento, optimización de inversión publicitaria, análisis de datos comerciales y medición de ROMI.',
-          foto: '/samuel/samuel-avatar.webp',
-          cita: '',
-          trayectoria: '',
-        },
-        {
-          nombre: 'Edison Galeano',
-          cargo: 'Brand & Creative Director',
-          rol: 'Edison dirige la marca y produce las piezas.',
-          bio: 'Más de 30 años en diseño y producción: imagen corporativa, impresos, señalización, avisos y piezas especiales.',
-          foto: '',
-          cita: '"Ideas que se convierten en piezas reales." · "Diseñamos para el mundo real."',
-          trayectoria: 'Trayectoria propia (no son casos de Pixies): Pixel Med · Camvucol · Garden Secrets · Granja El Abuelo · The Carpintería',
-        },
         {
           nombre: 'Isabela Torrenegra Jiménez',
           cargo: 'Social Media Manager',
-          rol: 'Isabela crea el contenido y contesta la comunidad.',
+          rol: 'Isabela lidera las campañas en redes: crea el contenido, arma la parrilla y contesta la comunidad.',
           bio: 'Comunicación social con énfasis en publicidad y producción audiovisual.',
+          lidera: ['Campañas en redes', 'Contenido y parrilla', 'Comunidad', 'Métricas de cada red'],
           foto: '',
           cita:
             'Desarrollo ideas creativas, copys, parrillas de contenido, historias, reels, posts y piezas gráficas alineadas con la identidad de cada marca. Analizo resultados y métricas e interactúo con la comunidad.',
           trayectoria: '',
+          destacada: true,
+        },
+        {
+          nombre: 'Edison Galeano',
+          cargo: 'Brand & Creative Director',
+          rol: 'Edison dirige la marca y produce las piezas, en pantalla y en físico.',
+          bio: 'Más de 30 años en diseño y producción: imagen corporativa, impresos, señalización, avisos y piezas especiales.',
+          lidera: ['Marca e identidad', 'Concepto y key visual', 'Producción física'],
+          foto: '',
+          cita: 'Ideas que se convierten en piezas reales. · Diseñamos para el mundo real.',
+          trayectoria: 'Trayectoria propia (no son casos de Pixies): Pixel Med · Camvucol · Garden Secrets · Granja El Abuelo · The Carpintería',
+          destacada: false,
+        },
+        {
+          nombre: 'Samuel Galeano',
+          cargo: 'Growth Director',
+          rol: 'Samuel fija la estrategia, arma la pauta, mide contra el margen y cotiza.',
+          bio: 'Planeación de crecimiento, optimización de inversión publicitaria, análisis de datos comerciales y medición de ROMI.',
+          lidera: ['Estrategia de crecimiento', 'Pauta por datos', 'Medición: CAC y ROMI'],
+          foto: '/samuel/samuel-avatar.webp',
+          cita: '',
+          trayectoria: '',
+          destacada: false,
         },
       ],
     },
@@ -448,6 +523,8 @@ export const es = {
       title: 'Marketing común',
       titleEm: 'vs',
       titleEnd: 'con Pixies',
+      colMalo: 'Lo que suele pasar',
+      colBueno: 'Lo que hacemos',
       filas: [
         {
           malo: 'Métricas de vanidad (likes, vistas) que no llegan al banco.',

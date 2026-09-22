@@ -103,17 +103,18 @@
   mask: linear-gradient(125deg, #000 var(--pt-wipe), rgba(0, 0, 0, 0) calc(var(--pt-wipe) + 10%));
   animation: page-enter 0.68s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
+/* sin `filter: blur` (2026-09-22): desenfocar la página ENTERA durante 0,68 s en cada
+   navegación era un repintado completo por frame; opacity + transform + la máscara del
+   barrido conservan la entrada y corren en el compositor. */
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.985);
-    filter: blur(5px);
+    transform: translateY(16px) scale(0.99);
     --pt-wipe: 0%;
   }
   to {
     opacity: 1;
     transform: none;
-    filter: none;
     --pt-wipe: 120%;
   }
 }
@@ -121,7 +122,6 @@
   .page-enter {
     -webkit-mask: none;
     mask: none;
-    filter: none;
   }
 }
 
@@ -149,26 +149,23 @@
    arriba (compositor, sin repintar): en secciones grandes (grillas, exhibits) el blur+mask
    sobre tanta área competía por el hilo principal justo al bajar rápido (Samuel r25). */
 .js-reveal [data-reveal='wipe'] {
-  /* blur reducido (Samuel r19): 11px→4px — animar blur es caro; 4px conserva el "de-blur"
-     del ensamblaje pero repinta mucho más barato → scroll sin trabas */
-  filter: blur(4px);
+  /* sin de-blur (2026-09-22): con el scroll suave de un ancla, varios encabezados se
+     revelaban a la vez y cada blur en transición era un repintado por frame justo mientras
+     la página se desplazaba. El barrido de máscara + subida conservan el "ensamblaje". */
   --reveal-wipe: 0%;
   -webkit-mask: linear-gradient(115deg, #000 var(--reveal-wipe), rgba(0, 0, 0, 0) calc(var(--reveal-wipe) + 7%));
   mask: linear-gradient(115deg, #000 var(--reveal-wipe), rgba(0, 0, 0, 0) calc(var(--reveal-wipe) + 7%));
   transition:
     opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
     transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
-    filter 0.7s ease,
     --reveal-wipe 1s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .js-reveal [data-reveal='wipe'].is-revealed {
-  filter: none;
   --reveal-wipe: 115%;
 }
-/* Con movimiento reducido no recortamos ni desenfocamos: el contenido solo aparece. */
+/* Con movimiento reducido no recortamos: el contenido solo aparece. */
 @media (prefers-reduced-motion: reduce) {
   .js-reveal [data-reveal='wipe'] {
-    filter: none;
     -webkit-mask: none;
     mask: none;
   }
@@ -589,28 +586,44 @@ footer:hover .footer-wordmark {
   overflow: hidden;
   pointer-events: none;
 }
+/* Sin `filter: blur(90px)` (Samuel, 2026-09-22: "se siente pesada por la animación"): el
+   desenfoque va horneado en el propio degradado (caída en varios stops sobre una caja algo
+   mayor). Un blur de 90px sobre dos capas de media pantalla lo recalculaba el compositor en
+   CADA frame de la respiración — era lo más caro del sitio en GPU. Ahora la capa solo se
+   traslada/escala (compositor puro). */
 .atmosphere::before,
 .atmosphere::after {
   content: '';
   position: absolute;
-  filter: blur(90px);
   opacity: 0.5;
   will-change: transform;
 }
 .atmosphere::before {
-  left: 3%;
-  top: 3%;
-  width: 52%;
-  height: 60%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--color-pixel) 62%, transparent), transparent);
+  left: -3%;
+  top: -6%;
+  width: 64%;
+  height: 76%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-pixel) 46%, transparent) 0%,
+    color-mix(in srgb, var(--color-pixel) 30%, transparent) 28%,
+    color-mix(in srgb, var(--color-pixel) 11%, transparent) 60%,
+    transparent 100%
+  );
   animation: atmos-a 18s ease-in-out infinite;
 }
 .atmosphere::after {
-  right: 2%;
-  top: 26%;
-  width: 50%;
-  height: 60%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--color-pixel-soft) 52%, transparent), transparent);
+  right: -4%;
+  top: 18%;
+  width: 62%;
+  height: 76%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-pixel-soft) 40%, transparent) 0%,
+    color-mix(in srgb, var(--color-pixel-soft) 26%, transparent) 28%,
+    color-mix(in srgb, var(--color-pixel-soft) 9%, transparent) 60%,
+    transparent 100%
+  );
   animation: atmos-b 22s ease-in-out infinite;
 }
 .atmosphere > .vignette {
@@ -1155,19 +1168,36 @@ footer:hover .footer-wordmark {
   background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 88%, var(--color-pixel)) 0%, var(--color-surface) 62%);
   padding: 1.4rem 1.4rem 2.4rem;
   transform-style: preserve-3d;
-  /* "animado": pulso de glow continuo (box-shadow — no choca con el transform del hover) */
-  animation: eng-glow 3.2s ease-in-out infinite;
+  /* sombra base estática; el pulso vive en .eng-portal-float::after (ver abajo) */
+  box-shadow: 0 18px 42px -28px color-mix(in srgb, var(--color-pixel) 55%, transparent);
   transition:
     transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
     border-color 0.3s;
 }
+/* "animado": pulso de glow continuo. Antes animaba box-shadow en el propio panel (repintado
+   del panel y su sombra en CADA frame, para siempre — 2026-09-22). Ahora la sombra fuerte
+   vive en un pseudo detrás del panel y solo se anima su opacidad (compositor). */
+.eng-portal-float {
+  position: relative;
+  isolation: isolate;
+}
+.eng-portal-float::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: var(--radius-m);
+  box-shadow: 0 24px 56px -24px color-mix(in srgb, var(--color-pixel) 88%, transparent);
+  animation: eng-glow 3.2s ease-in-out infinite;
+  will-change: opacity;
+}
 @keyframes eng-glow {
   0%,
   100% {
-    box-shadow: 0 18px 42px -28px color-mix(in srgb, var(--color-pixel) 55%, transparent);
+    opacity: 0;
   }
   50% {
-    box-shadow: 0 24px 56px -24px color-mix(in srgb, var(--color-pixel) 88%, transparent);
+    opacity: 1;
   }
 }
 /* "3D": al hover se inclina en perspectiva y se eleva */
@@ -2923,12 +2953,34 @@ main {
     box-shadow 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
     transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.cubo:nth-child(4),
-.cubo:nth-child(5) {
+/* ritmo 3·3·2·2·2 (2026-09-22): los dos primeros — Campañas en redes (Isabela) y Pauta
+   (Samuel) — van grandes arriba; los otros tres cierran la fila de abajo */
+.cubo:nth-child(1),
+.cubo:nth-child(2) {
   grid-column: span 3;
 }
 .cubo--tinta {
   background: var(--acento-suave);
+}
+/* "Lo lidera · persona": chip a la derecha del número, con el acento de la división */
+.cubo__lider {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-s);
+  color: var(--color-ink);
+  background: color-mix(in srgb, var(--acento) 22%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--acento) 40%, var(--color-line));
+  white-space: nowrap;
+}
+.cubo__lider-label {
+  color: var(--acento-texto);
+  text-transform: uppercase;
+  font-size: 0.62rem;
 }
 @media (hover: hover) {
   .cubo:hover {
@@ -2984,18 +3036,208 @@ main {
 }
 @media (max-width: 960px) {
   .cubo,
-  .cubo:nth-child(4),
-  .cubo:nth-child(5) {
+  .cubo:nth-child(1),
+  .cubo:nth-child(2) {
     grid-column: span 3;
   }
 }
 @media (max-width: 640px) {
   .cubo,
-  .cubo:nth-child(4),
-  .cubo:nth-child(5) {
+  .cubo:nth-child(1),
+  .cubo:nth-child(2) {
     grid-column: span 6;
     min-height: 0;
   }
+  .cubo__lider {
+    white-space: normal;
+  }
+}
+
+/* ── Creative: tres frentes con dueño en el hero (2026-09-22) ─────────────────────────
+   Tira de tres "fichas" mono: área arriba, persona abajo. Las dos de Creative llevan el
+   punto ámbar; la de Samuel el violeta de Web (es el respaldo técnico del grupo). */
+.hero-frentes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  justify-content: center;
+}
+@media (min-width: 640px) {
+  .hero-frentes {
+    justify-content: flex-start;
+  }
+}
+.hero-frente {
+  --punto: var(--color-marketing);
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem 0.85rem 0.6rem 1.7rem;
+  position: relative;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--color-line);
+  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+}
+.hero-frente--web {
+  --punto: var(--color-pixel);
+}
+.hero-frente::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  top: 0.95rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--punto);
+}
+.hero-frente__area {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+.hero-frente__quien {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-ink);
+  line-height: 1.1;
+}
+
+/* ── Creative: dónde se aplica (seis situaciones) ───────────────────────────────────── */
+.areas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  counter-reset: area;
+}
+@media (max-width: 960px) {
+  .areas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .areas {
+    grid-template-columns: 1fr;
+  }
+}
+.area {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+  padding: 1.25rem 1.3rem 1.4rem;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--color-line);
+  border-left: 4px solid var(--color-marketing);
+  background: var(--color-surface);
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@media (hover: hover) {
+  .area:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 48px -32px color-mix(in srgb, var(--color-ink) 40%, transparent);
+  }
+}
+.area__num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--color-marketing-texto);
+}
+.area__meta {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.35rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-line);
+}
+.area__meta > div {
+  display: grid;
+  grid-template-columns: 4.6rem 1fr;
+  gap: 0.5rem;
+  align-items: start;
+}
+.area__meta dt {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+  padding-top: 0.2rem;
+}
+.area__servicios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.area__servicios li {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-s);
+  background: var(--color-marketing-suave);
+  color: var(--color-ink);
+}
+.area__lider {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-ink);
+}
+.area__ejemplo {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-marketing-texto);
+}
+
+/* ── Creative: equipo en tres tarjetas, Isabela destacada ───────────────────────────── */
+.equipo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+@media (max-width: 960px) {
+  .equipo {
+    grid-template-columns: 1fr;
+  }
+}
+.equipo__card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.4rem 1.6rem;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--color-line);
+  border-top: 5px solid var(--color-line);
+  background: var(--color-surface);
+}
+/* la que lidera campañas y redes: filete ámbar, fondo tintado — se lee primero */
+.equipo__card--lidera {
+  border-top-color: var(--color-marketing);
+  background: var(--color-marketing-suave);
+}
+.equipo__lidera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+.equipo__lidera li {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  padding: 0.28rem 0.55rem;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--color-line);
+  background: var(--color-void);
+  color: var(--color-ink);
+}
+.equipo__card--lidera .equipo__lidera li {
+  background: var(--color-surface);
+  border-color: color-mix(in srgb, var(--color-marketing) 45%, var(--color-line));
 }
 
 /* ── Un proyecto de punta a punta (home): 8 pasos, color implícito por equipo ────────

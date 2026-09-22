@@ -32,15 +32,18 @@ export default function ProcesoUnificado() {
         </ol>
 
         <div data-reveal className="mt-8 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
-          <dl className="proceso-uni__ejemplos">
-            {proceso.ejemplos.map((e) => (
-              <div key={e.nombre} className="flex flex-wrap gap-x-2 text-sm">
-                <dt className="font-display font-semibold text-ink">{e.nombre}</dt>
-                <dd className="text-dim">{e.recorrido}</dd>
-              </div>
-            ))}
+          <div className="proceso-uni__ejemplos">
+            <dl>
+              {proceso.ejemplos.map((e) => (
+                <div key={e.nombre} className="flex flex-wrap gap-x-2 text-sm">
+                  <dt className="font-display font-semibold text-ink">{e.nombre}</dt>
+                  <dd className="text-dim">{e.recorrido}</dd>
+                </div>
+              ))}
+            </dl>
+            {/* fuera del <dl>: un <p> dentro no es HTML válido (Lighthouse definition-list) */}
             <p className="mt-2 font-mono text-xs text-dim">{proceso.nota}</p>
-          </dl>
+          </div>
           <a
             href="#contacto"
             data-desde="proceso"

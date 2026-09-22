@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import Pending from '@/components/ui/Pending';
@@ -81,15 +82,12 @@ export default function StepTour({
   const panelInner = (
     <div ref={shotRef} className="relative aspect-[16/10] overflow-hidden rounded-(--radius-m) border border-line bg-surface-2">
       {step.screenshot ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={step.screenshot}
           alt={step.alt}
-          width={1500}
-          height={938}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover object-top transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-105"
+          fill
+          sizes="(min-width: 1024px) 720px, 100vw"
+          className="object-cover object-top transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-105"
         />
       ) : (
         <div

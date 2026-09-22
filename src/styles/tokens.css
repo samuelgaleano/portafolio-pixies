@@ -11,7 +11,7 @@
   --color-dim: #5b5480;         /* texto secundario sobre claro (5.1:1 AA) */
   --color-pixel: #6d4aff;       /* primario: marca, enlaces, foco (4.6:1 sobre lavanda) */
   --color-pixel-soft: #5a37d6;  /* violeta de TEXTO sobre claro: más oscuro que pixel (6.3:1) */
-  --color-signal: #e8395c;      /* SOLO CTAs de conversión, texto void (claro) encima */
+  --color-signal: #d0234a;      /* SOLO CTAs de conversión, texto void (claro) encima (4.6:1 AA; antes #e8395c = 3.6, fallaba) */
   --color-data: #0d7490;        /* SOLO capa técnica sobre claro: mono, badges, logs (4.7:1) */
   --color-ok: #15803d;
   --color-err: #dc2626;

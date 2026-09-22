@@ -144,13 +144,25 @@ test('LeadForm: validación en cliente y envío feliz contra /api/leads', async 
 // grupo-y-marketing (2026-09): /marketing es la división nueva — verifica que las 7
 // secciones reales estén, que los casos honestos se lean (con y sin cifra) y que su
 // propio LeadForm funcione igual que el de /web.
-test('/marketing renderiza: hero, servicios, método, equipo, comparativa y casos', async ({ page }) => {
+test('/marketing renderiza: hero, servicios, dónde se aplica, método, equipo, comparativa y casos', async ({ page }) => {
   await page.goto('/marketing');
   await expect(page.getByRole('heading', { level: 1, name: 'Pixies Creative' })).toBeVisible();
-  await expect(page.locator('#servicios').getByText('Redes sociales y comunidad')).toBeVisible();
-  await expect(page.locator('#metodo').getByText('Estrategia')).toBeVisible();
+  // Isabela al frente de campañas y redes (Samuel, 2026-09-22): en el hero, como líder del
+  // primer cubo de servicios y como primera tarjeta (destacada) del equipo
+  await expect(page.locator('.hero-frentes .hero-frente').first()).toContainText('Isabela Torrenegra');
+  const cubo1 = page.locator('#servicios .cubo').first();
+  await expect(cubo1).toContainText('Campañas en redes y comunidad');
+  await expect(cubo1.locator('.cubo__lider')).toContainText('Isabela Torrenegra');
+  await expect(page.locator('#equipo .equipo__card').first()).toHaveClass(/equipo__card--lidera/);
+  await expect(page.locator('#equipo .equipo__card').first()).toContainText('Isabela Torrenegra');
   await expect(page.locator('#equipo').getByText('Samuel Galeano')).toBeVisible();
   await expect(page.locator('#equipo').getByText('Edison Galeano')).toBeVisible();
+  // áreas de implementación: seis situaciones, con los tres casos reales y ninguno inventado
+  await expect(page.locator('#areas .area')).toHaveCount(6);
+  await expect(page.locator('#areas').getByText('Xiaomi CarTech')).toBeVisible();
+  await expect(page.locator('#areas').getByText('Mamba Records')).toBeVisible();
+  await expect(page.locator('#metodo').getByText('Estrategia')).toBeVisible();
+  await expect(page.locator('#comparativa').getByRole('columnheader', { name: 'Lo que hacemos' })).toBeVisible();
   await expect(page.locator('#comparativa').getByText('Costo por lead calificado')).toBeVisible();
   // caso con cifra real (LinkedIn) y caso sin cifra (Xiaomi CarTech, marcado "por confirmar").
   // "162.936" aparece dos veces dentro del propio caso (la cifra grande Y la descripción) —

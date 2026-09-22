@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import SchemaOrg from '@/components/seo/SchemaOrg';
 import MarketingHero from '@/components/marketing/MarketingHero';
 import Servicios from '@/components/marketing/Servicios';
+import AreasCreative from '@/components/marketing/AreasCreative';
 import Metodo from '@/components/marketing/Metodo';
 import EquipoMarketing from '@/components/marketing/EquipoMarketing';
 import Comparativa from '@/components/marketing/Comparativa';
@@ -11,8 +12,8 @@ import LeadForm from '@/components/leads/LeadForm';
 import { t } from '@/i18n';
 
 // División Marketing (grupo-y-marketing, 2026-09). Estructura aprobada en GATE 2
-// (docs/grupo-y-marketing/01-especificacion.md): Hero → Servicios → Método → Equipo →
-// Comparativa → Casos → Producto propio → Contacto. Contenido de
+// (docs/grupo-y-marketing/01-especificacion.md): Hero → Servicios → Dónde se aplica (2026-09-22)
+// → Método → Equipo → Comparativa → Casos → Producto propio → Contacto. Contenido de
 // Pixies\marketing\empresa\portafolio\SECCION-MARKETING.md.
 export const metadata: Metadata = {
   title: t.marketing.metaTitle,
@@ -27,6 +28,7 @@ export default function MarketingPage() {
       <SchemaOrg type="organization" />
       <MarketingHero />
       <Servicios />
+      <AreasCreative />
       <Metodo />
       <EquipoMarketing />
       <Comparativa />

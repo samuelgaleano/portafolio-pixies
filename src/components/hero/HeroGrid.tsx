@@ -5,8 +5,11 @@ import { useEffect, useRef } from 'react';
 // Retícula pixel reactiva al cursor (plan F6 V4): extiende la firma del hero. Las celdas
 // cercanas al mouse se iluminan en violeta. Solo desktop (pointer fino), off con
 // reduced-motion, rAF únicamente mientras el mouse se mueve (idle = 0 trabajo).
+// Cada frame limpia SOLO la caja del halo anterior (no el canvas entero del hero: a DPR 2
+// eran ~5 MP borrados y resubidos por cada movimiento del mouse — Samuel, 2026-09-22).
 const CELL = 32; // coincide con .grid-bg
 const RADIUS = 140;
+const DPR_MAX = 1.5;
 
 export default function HeroGrid() {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -23,10 +26,11 @@ export default function HeroGrid() {
 
     const rootCss = getComputedStyle(document.documentElement);
     const pixel = rootCss.getPropertyValue('--color-pixel').trim() || '#7c5cff';
-    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const dpr = Math.min(devicePixelRatio || 1, DPR_MAX);
     let w = 0;
     let h = 0;
     let mouse = { x: -9999, y: -9999 };
+    let prev = { x: -9999, y: -9999 }; // dónde se pintó el halo la última vez
     let raf = 0;
 
     const resize = () => {
@@ -38,12 +42,17 @@ export default function HeroGrid() {
       canvas.style.width = `${w}px`;
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      prev = { x: -9999, y: -9999 }; // cambiar el buffer lo deja en blanco: no hay nada que borrar
     };
     resize();
 
     const draw = () => {
       raf = 0;
-      ctx.clearRect(0, 0, w, h);
+      // borra solo la caja del halo anterior (+ margen del punto de 3px); el resto del canvas
+      // ya está transparente y no hace falta tocarlo
+      const box = RADIUS + CELL + 4;
+      if (prev.x > -9999) ctx.clearRect(prev.x - box, prev.y - box, box * 2, box * 2);
+      prev = mouse;
       // solo las celdas dentro del RADIUS del mouse (no todo el grid) → mucho menos trabajo/frame
       const cols = Math.ceil(w / CELL);
       const rows = Math.ceil(h / CELL);
@@ -68,23 +77,33 @@ export default function HeroGrid() {
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(draw);
     };
+    // rect cacheado (no un getBoundingClientRect por pointermove: forzaba un reflow por evento)
+    let rect = parent.getBoundingClientRect();
+    const refreshRect = () => {
+      rect = parent.getBoundingClientRect();
+    };
     const onMove = (e: PointerEvent) => {
-      const r = parent.getBoundingClientRect();
-      mouse = { x: e.clientX - r.left, y: e.clientY - r.top };
+      mouse = { x: e.clientX - rect.left, y: e.clientY - rect.top };
       schedule();
     };
     const onLeave = () => {
       mouse = { x: -9999, y: -9999 };
       schedule();
     };
+    const onResize = () => {
+      resize();
+      refreshRect();
+    };
 
-    parent.addEventListener('pointermove', onMove);
+    parent.addEventListener('pointermove', onMove, { passive: true });
     parent.addEventListener('pointerleave', onLeave);
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', onResize);
+    window.addEventListener('scroll', refreshRect, { passive: true });
     return () => {
       parent.removeEventListener('pointermove', onMove);
       parent.removeEventListener('pointerleave', onLeave);
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', refreshRect);
       cancelAnimationFrame(raf);
     };
   }, []);

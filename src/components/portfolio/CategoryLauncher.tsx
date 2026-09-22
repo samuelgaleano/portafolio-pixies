@@ -1,4 +1,5 @@
 import { categories } from '@/data/categories';
+import Image from 'next/image';
 import { t } from '@/i18n';
 
 // Launcher del portafolio (Samuel r4 2026-07-18): las 6 categorías como accesos directos que
@@ -12,8 +13,7 @@ export default function CategoryLauncher() {
         <a key={c.id} href={`#${c.id}`} className="portfolio-tile group">
           {c.preview && (
             <span className="portfolio-tile__preview" aria-hidden="true">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={c.preview} alt="" loading="lazy" decoding="async" />
+              <Image src={c.preview} alt="" width={320} height={200} sizes="160px" />
               <span className="portfolio-tile__preview-label">◉ vista previa</span>
             </span>
           )}

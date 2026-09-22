@@ -13,7 +13,7 @@ export default function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-line/60 bg-void/80 backdrop-blur-md">
       <nav className="header-grid mx-auto w-full max-w-[1200px] px-4 sm:px-6" aria-label={t.nav.mainLabel}>
-        <Link href="/" className="logo-grupo flex min-h-11 items-center gap-2 font-display text-lg font-bold tracking-tight" aria-label="Pixies Design Group — inicio">
+        <Link href="/" className="logo-grupo flex min-h-11 items-center gap-2 font-display text-lg font-bold tracking-tight">
           {/* marca 2×2: dos celdas toman el color de la división activa (--acento) */}
           <span className="logo-mk" aria-hidden="true">
             <i />
@@ -39,6 +39,9 @@ export default function Header() {
             xies
           </span>
           <DivisionSufijo />
+          {/* sin aria-label en el enlace (Lighthouse: el nombre accesible debe contener el
+              texto visible, y el sufijo cambia por ruta); el destino va en sr-only */}
+          <span className="sr-only"> — inicio</span>
         </Link>
 
         <DivisionSelector />

@@ -1,6 +1,7 @@
 import { t } from '@/i18n';
 
-// Tabla ✕/✓ (SECCION-MARKETING.md §Promesa): lo que suele pasar vs. lo que hago.
+// Tabla ✕/✓ (SECCION-MARKETING.md §Promesa): lo que suele pasar vs. lo que hacemos (voz
+// empresarial de Creative: plural).
 export default function Comparativa() {
   const { comparativa } = t.marketing;
   return (
@@ -14,10 +15,10 @@ export default function Comparativa() {
           <thead>
             <tr className="bg-surface-2 text-left">
               <th scope="col" className="border-b border-line px-4 py-3 font-mono text-xs uppercase tracking-wide text-dim">
-                Lo que suele pasar
+                {comparativa.colMalo}
               </th>
               <th scope="col" className="border-b border-line px-4 py-3 font-mono text-xs uppercase tracking-wide text-dim">
-                Lo que hago
+                {comparativa.colBueno}
               </th>
             </tr>
           </thead>

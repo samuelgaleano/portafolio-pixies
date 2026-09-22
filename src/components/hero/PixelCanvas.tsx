@@ -8,6 +8,12 @@ import { useEffect, useRef } from 'react';
 // Vanilla sobre canvas 2D; un solo loop rAF que se pausa fuera de viewport.
 // Sin JS, con reduced-motion o si algo falla: el h1 real queda visible.
 // El h1 se oculta con opacity (no visibility) para seguir en el árbol de accesibilidad.
+//
+// Rendimiento (Samuel, 2026-09-22: "a veces se siente trabado por la animación"): el
+// muestreo es por cobertura de celda (letras limpias, la S incluida), el buffer va a DPR
+// ≤ 1.5 y el reposo se pinta por lotes de alpha con un solo cambio de color por frame.
+// La onda, el glitch y el destello siguen siendo autónomos (no dependen del mouse); el
+// mouse solo añade la repulsión y su costo es el mismo que el de un frame en reposo.
 
 const INTRO_MS = 1400;
 const SPRING = 90; // rigidez del resorte hacia el destino (1/s²)
@@ -21,6 +27,12 @@ const GLITCH_MIN_MS = 8000;
 const GLITCH_VAR_MS = 6000;
 const GLITCH_DUR_MS = 130;
 
+// textura estática en 3 niveles (no continua): así el reposo se pinta en 3 pasadas con UN
+// globalAlpha cada una, en vez de cambiar alpha y color por partícula (2·N cambios de estado
+// por frame era lo que pesaba con el mouse encima, no la física)
+const ALPHAS = [0.86, 0.93, 1] as const;
+const DPR_MAX = 1.5; // 2 → 1.5: 44 % menos píxeles por frame; los cuadrados siguen nítidos
+
 interface Particle {
   tx: number; // destino
   ty: number;
@@ -29,7 +41,7 @@ interface Particle {
   vx: number;
   vy: number;
   delay: number; // stagger del intro (0–0.35)
-  alpha: number; // textura estática (0.85–1)
+  alpha: number; // textura estática (uno de ALPHAS)
   flickUntil: number; // acc (ms) hasta el que se pinta violeta
 }
 
@@ -87,7 +99,7 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
           const r = wrap.getBoundingClientRect();
           w = r.width;
           h = r.height;
-          const dpr = Math.min(devicePixelRatio || 1, 2);
+          const dpr = Math.min(devicePixelRatio || 1, DPR_MAX);
           canvas.width = w * dpr;
           canvas.height = h * dpr;
           // tamaño CSS explícito: sin esto el canvas se MUESTRA al tamaño del buffer
@@ -100,33 +112,71 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
           const off = document.createElement('canvas');
           off.width = Math.ceil(w);
           off.height = Math.ceil(h);
+          const ow = off.width;
+          const oh = off.height;
           const octx = off.getContext('2d');
           if (!octx) throw new Error('no octx');
           octx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
           if ('letterSpacing' in octx) (octx as CanvasRenderingContext2D).letterSpacing = cs.letterSpacing;
           octx.textBaseline = 'middle';
-          octx.fillText(h1.textContent?.trim() ?? 'PIXIES', 0, off.height / 2);
+          const text = h1.textContent?.trim() ?? 'PIXIES';
+          octx.fillText(text, 0, oh / 2);
 
           // celda adaptativa: acota el nº de partículas a un rango similar en toda pantalla.
           // /22 mantiene los huecos entre letras: con celdas más gruesas, PIXIES se fusiona
           // (con /16 en la home del grupo sigue legible y pesa la mitad en partículas)
           cell = Math.max(5, Math.round(parseFloat(cs.fontSize) / divisor));
-          const img = octx.getImageData(0, 0, off.width, off.height).data;
+
+          // Retícula centrada sobre la caja de tinta real del texto (no sobre el origen del
+          // canvas): las letras quedan simétricas y ninguna columna se pierde en el borde.
+          const m = octx.measureText(text);
+          const inkL = Math.max(0, Math.floor(-m.actualBoundingBoxLeft));
+          const inkR = Math.min(ow, Math.ceil(m.actualBoundingBoxRight));
+          const inkT = Math.max(0, Math.floor(oh / 2 - m.actualBoundingBoxAscent));
+          const inkB = Math.min(oh, Math.ceil(oh / 2 + m.actualBoundingBoxDescent));
+          const cols = Math.max(1, Math.ceil((inkR - inkL) / cell));
+          const rows = Math.max(1, Math.ceil((inkB - inkT) / cell));
+          const ox = inkL + (inkR - inkL - cols * cell) / 2;
+          const oy = inkT + (inkB - inkT - rows * cell) / 2;
+
+          // Muestreo por COBERTURA: la celda se enciende si ≥ 50 % de su área tiene tinta.
+          // Antes se leía un solo píxel (la esquina de la celda): con celdas gruesas eso
+          // producía bordes dentados y asimétricos — la S, la única letra curva, salía
+          // "rota" (Samuel, 2026-09-22: "mejora la S"). Cuesta w·h lecturas UNA vez por build.
+          const img = octx.getImageData(0, 0, ow, oh).data;
           parts = [];
-          for (let y = 0; y < off.height; y += cell)
-            for (let x = 0; x < off.width; x += cell)
-              if (img[(y * off.width + x) * 4 + 3]! > 128)
-                parts.push({
-                  tx: x,
-                  ty: y,
-                  x: settled ? x : Math.random() * w,
-                  y: settled ? y : Math.random() * h,
-                  vx: 0,
-                  vy: 0,
-                  delay: Math.random() * 0.35,
-                  alpha: 0.85 + Math.random() * 0.15,
-                  flickUntil: 0,
-                });
+          for (let rI = 0; rI < rows; rI++)
+            for (let cI = 0; cI < cols; cI++) {
+              const x0 = ox + cI * cell;
+              const y0 = oy + rI * cell;
+              const xa = Math.max(0, Math.floor(x0));
+              const xb = Math.min(ow, Math.ceil(x0 + cell));
+              const ya = Math.max(0, Math.floor(y0));
+              const yb = Math.min(oh, Math.ceil(y0 + cell));
+              let ink = 0;
+              let area = 0;
+              for (let y = ya; y < yb; y++) {
+                let i = (y * ow + xa) * 4 + 3;
+                for (let x = xa; x < xb; x++, i += 4) {
+                  ink += img[i]!;
+                  area += 255;
+                }
+              }
+              if (area === 0 || ink / area < 0.5) continue;
+              parts.push({
+                tx: x0,
+                ty: y0,
+                x: settled ? x0 : Math.random() * w,
+                y: settled ? y0 : Math.random() * h,
+                vx: 0,
+                vy: 0,
+                delay: Math.random() * 0.35,
+                alpha: ALPHAS[(Math.random() * ALPHAS.length) | 0]!,
+                flickUntil: 0,
+              });
+            }
+          // ordenadas por nivel de alpha: el reposo se pinta por lotes (ver frame)
+          parts.sort((a, b) => a.alpha - b.alpha);
           dirty = true;
         };
         build(false);
@@ -211,31 +261,60 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
               if (visible) raf = requestAnimationFrame(frame);
               return;
             }
-            ctx.clearRect(0, 0, w, h);
+            // 1) física (sin dibujar)
             for (const p of parts) {
               // resorte amortiguado hacia el destino + repulsión del cursor
-              const dxm = p.x - mouse.x;
-              const dym = p.y - mouse.y;
-              const d = Math.hypot(dxm, dym);
-              if (d < REPEL_R && d > 0.01) {
-                const f = (REPEL_F * (1 - d / REPEL_R)) / d;
-                p.vx += f * dxm * dt;
-                p.vy += f * dym * dt;
+              if (mouseNear) {
+                const dxm = p.x - mouse.x;
+                const dym = p.y - mouse.y;
+                const d = Math.hypot(dxm, dym);
+                if (d < REPEL_R && d > 0.01) {
+                  const f = (REPEL_F * (1 - d / REPEL_R)) / d;
+                  p.vx += f * dxm * dt;
+                  p.vy += f * dym * dt;
+                }
               }
               p.vx += ((p.tx - p.x) * SPRING - p.vx * DAMP) * dt;
               p.vy += ((p.ty - p.y) * SPRING - p.vy * DAMP) * dt;
               p.x += p.vx * dt;
               p.y += p.vy * dt;
-
+            }
+            // 2) dibujo por lotes: las partículas están ordenadas por alpha (build), así que
+            //    cada nivel es un tramo contiguo → un globalAlpha por tramo, un fillStyle en
+            //    total; los destellos (pocos) van en una pasada final en el color de acento.
+            const glitchOn = glitchDx !== 0;
+            const waveOn = waveX > -1e9;
+            const cw = cell - 1;
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = cInk;
+            let i = 0;
+            for (const level of ALPHAS) {
+              ctx.globalAlpha = level;
+              for (; i < parts.length && parts[i]!.alpha === level; i++) {
+                const p = parts[i]!;
+                if (p.flickUntil > acc) continue;
+                let ox = 0;
+                let oy = 0;
+                if (waveOn) {
+                  const dw = Math.abs(p.tx - waveX);
+                  if (dw < 160) oy = -Math.exp(-(dw * dw) / 6400) * cell * 0.55;
+                }
+                if (glitchOn && p.ty >= glitchY0 && p.ty <= glitchY0 + cell * 3) ox = glitchDx;
+                ctx.fillRect(p.x + ox, p.y + oy, cw, cw);
+              }
+            }
+            ctx.fillStyle = cPixel;
+            for (const p of parts) {
+              if (p.flickUntil <= acc) continue;
+              ctx.globalAlpha = p.alpha;
               let ox = 0;
               let oy = 0;
-              const dw = Math.abs(p.tx - waveX);
-              if (dw < 160) oy = -Math.exp(-(dw * dw) / 6400) * cell * 0.55;
-              if (glitchDx !== 0 && p.ty >= glitchY0 && p.ty <= glitchY0 + cell * 3) ox = glitchDx;
-
-              ctx.globalAlpha = p.alpha;
-              ctx.fillStyle = p.flickUntil > acc ? cPixel : cInk;
-              ctx.fillRect(p.x + ox, p.y + oy, cell - 1, cell - 1);
+              if (waveOn) {
+                const dw = Math.abs(p.tx - waveX);
+                if (dw < 160) oy = -Math.exp(-(dw * dw) / 6400) * cell * 0.55;
+              }
+              if (glitchOn && p.ty >= glitchY0 && p.ty <= glitchY0 + cell * 3) ox = glitchDx;
+              ctx.fillRect(p.x + ox, p.y + oy, cw, cw);
             }
           }
           ctx.globalAlpha = 1;
@@ -267,19 +346,31 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
         // de la fuente al cargar, escalado de pantalla, barra de URL móvil). Sin reescalar,
         // la repulsión se corre proporcional a x: bien en las primeras letras, desfasada en
         // las últimas. Mapear pantalla→dibujo lo corrige (factor 1 cuando coinciden).
+        // El rect del canvas se cachea y se refresca al hacer scroll/resize (y en cada build):
+        // leerlo en CADA pointermove (hasta 120/s) forzaba un reflow por evento — Lighthouse
+        // lo marcaba como "forced reflow" y era parte del "trabado" con el mouse encima.
+        let rect = canvas.getBoundingClientRect();
+        const refreshRect = () => {
+          rect = canvas.getBoundingClientRect();
+        };
+        window.addEventListener('scroll', refreshRect, { passive: true });
+        window.addEventListener('resize', refreshRect, { passive: true });
+        cleanups.push(() => {
+          window.removeEventListener('scroll', refreshRect);
+          window.removeEventListener('resize', refreshRect);
+        });
         const onMove = (e: PointerEvent) => {
-          const r = canvas.getBoundingClientRect();
-          if (!r.width || !r.height) return;
+          if (!rect.width || !rect.height) return;
           mouse = {
-            x: (e.clientX - r.left) * (w / r.width),
-            y: (e.clientY - r.top) * (h / r.height),
+            x: (e.clientX - rect.left) * (w / rect.width),
+            y: (e.clientY - rect.top) * (h / rect.height),
           };
         };
         const onLeave = () => {
           mouse = { x: -9999, y: -9999 };
         };
-        hero.addEventListener('pointermove', onMove);
-        hero.addEventListener('pointerdown', onMove);
+        hero.addEventListener('pointermove', onMove, { passive: true });
+        hero.addEventListener('pointerdown', onMove, { passive: true });
         hero.addEventListener('pointerleave', onLeave);
         cleanups.push(() => {
           hero.removeEventListener('pointermove', onMove);
@@ -298,7 +389,10 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
           if (nw === lastW || nw === 0) return;
           lastW = nw;
           clearTimeout(timer);
-          timer = window.setTimeout(() => build(true), 200);
+          timer = window.setTimeout(() => {
+            build(true);
+            refreshRect();
+          }, 200);
         });
         ro.observe(wrap);
         cleanups.push(() => {

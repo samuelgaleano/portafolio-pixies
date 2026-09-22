@@ -36,7 +36,7 @@ export default function EngineerPortal() {
     // el flotador se mueve solo (llama la atención → más tráfico al ingeniero); el Link se
     // inclina en 3D al hover. Separados para que el float (wrapper) y el tilt (link) no choquen.
     <span className="eng-portal-float">
-      <Link href="/samuel" data-desde="hero-portal" aria-label={t.hero.portalAria} className="eng-portal group">
+      <Link href="/samuel" data-desde="hero-portal" className="eng-portal group">
         {/* reposo: la FOTO entera (limpia, sin costuras). Al pasar/seleccionar la foto se apaga
             y la malla de teselas se DISPERSA en píxeles encima. */}
         <span className="eng-portal__avatar" aria-hidden="true">

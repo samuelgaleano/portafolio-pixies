@@ -32,16 +32,16 @@ export default function GrupoHero() {
         {/* "Design Group" en General Sans 600 (ya cargada, sin costo): registro más
             empresarial y neutro que el Clash Display de los titulares de sección. La misma
             pieza (.hero-titulo) se replica en "Creative" (/marketing). */}
-        <p className="hero-in hero-titulo mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-1" style={{ '--d': '0.9s' } as React.CSSProperties}>
+        <p className="hero-in hero-titulo mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-1" style={{ '--d': '0.5s' } as React.CSSProperties}>
           <span className="hero-titulo__nombre">{grupoHero.subtitle}</span>
           <span className="hero-titulo__kicker">{grupoHero.kicker}</span>
         </p>
 
-        <p className="hero-in mt-5 max-w-[34ch] text-center text-[1.1rem] leading-snug text-ink sm:text-left sm:text-xl" style={{ '--d': '1.0s' } as React.CSSProperties}>
+        <p className="hero-in mt-5 max-w-[34ch] text-center text-[1.1rem] leading-snug text-ink sm:text-left sm:text-xl" style={{ '--d': '0.6s' } as React.CSSProperties}>
           {grupoHero.tesis}
         </p>
 
-        <div className="hero-in mt-7 flex flex-wrap items-center justify-center gap-3 sm:justify-start" style={{ '--d': '1.1s' } as React.CSSProperties}>
+        <div className="hero-in mt-7 flex flex-wrap items-center justify-center gap-3 sm:justify-start" style={{ '--d': '0.7s' } as React.CSSProperties}>
           <a href="#grupo-split-h" className="hero-cta press">
             <span>{grupoHero.cta}</span>
             <span className="hero-cta__arrow" aria-hidden="true">

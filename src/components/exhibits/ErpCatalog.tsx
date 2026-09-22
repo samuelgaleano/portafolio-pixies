@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import type { TourStep } from './StepTour';
@@ -71,13 +72,12 @@ export default function ErpCatalog({
         <article className="proj-card group relative flex flex-col overflow-hidden rounded-(--radius-m) border border-line bg-surface">
           <div ref={shotRef} className="relative aspect-[16/9] overflow-hidden border-b border-line bg-surface-2">
             {step.screenshot ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={step.screenshot}
                 alt={step.alt}
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover object-top transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-105"
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-cover object-top transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-105"
               />
             ) : (
               <div className="pixel-mask absolute inset-0" aria-hidden="true" />
@@ -146,8 +146,7 @@ export default function ErpCatalog({
             >
               <span className="relative aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-(--radius-s) border border-line bg-surface-2">
                 {s.screenshot ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={s.screenshot} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover object-top" />
+                  <Image src={s.screenshot} alt="" fill sizes="80px" className="object-cover object-top" />
                 ) : (
                   <span className="pixel-mask absolute inset-0" aria-hidden="true" />
                 )}
