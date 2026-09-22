@@ -2,13 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
 import type { TourStep } from './StepTour';
 import Collapsible from '@/components/ui/Collapsible';
 import { t } from '@/i18n';
-
-gsap.registerPlugin(useGSAP);
 
 // Catálogo del ERP (Samuel r24): la grilla de 5 tarjetas sueltas (r23) se veía completa
 // de un vistazo y no invitaba a seguir mirando. Ahora es destacado + laterales: un panel
@@ -50,18 +46,19 @@ export default function ErpCatalog({
     return () => io.disconnect();
   }, []);
 
-  // Crossfade al cambiar el destacado (clic o scroll-spy): la captura no salta, se funde.
-  useGSAP(
-    () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      gsap.fromTo(
-        shotRef.current,
-        { opacity: 0.3, scale: 1.012 },
-        { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out', overwrite: 'auto' }
-      );
-    },
-    { dependencies: [active] }
-  );
+  // Crossfade al cambiar de paso con la API nativa de animaciones (2026-09-22): hacía lo
+  // mismo con GSAP, y GSAP pesa ~95 KB de JS para una transición de medio segundo. WAAPI
+  // es nativa, cancela sola la anterior y no entra en el bundle.
+  useEffect(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    shotRef.current?.animate(
+      [
+        { opacity: 0.3, transform: 'scale(1.012)' },
+        { opacity: 1, transform: 'scale(1)' },
+      ],
+      { duration: 500, easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', fill: 'none' }
+    );
+  }, [active]);
 
   const step = steps[active] ?? steps[0];
 

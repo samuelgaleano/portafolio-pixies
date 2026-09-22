@@ -12,22 +12,25 @@ import { WORDMARK_BITMAP, WORDMARK_COLS, WORDMARK_ROWS } from '@/lib/wordmark-bi
 // 2026-09-22 (Samuel): las letras ya NO se muestrean de la fuente — son un bitmap propio
 // (`lib/wordmark-bitmap.ts`): a celdas gruesas, rasterizar Clash Display dejaba esquinas
 // perdidas en la P y la I y una S que parecía un 8. Con el bitmap cada letra está dibujada
-// a mano, sin píxeles perdidos, con ~220 partículas (antes 370–700). La única animación
-// autónoma es el destello de color (violeta y/o ámbar según el entorno: --wm-flick y
-// --wm-flick-2); la onda y el glitch se quitaron ("como que salta la palabra"). Intro y
-// resorte más rápidos ("más frenético"). Buffer a DPR ≤ 1,5 y dibujo por lotes de alpha.
+// a mano, sin píxeles perdidos. La única animación autónoma es el destello de color
+// (violeta y/o ámbar según el entorno: --wm-flick y --wm-flick-2); la onda y el glitch se
+// quitaron ("como que salta la palabra"). Intro y resorte rápidos ("más frenético"),
+// destellos lentos y con fundido. Buffer a DPR ≤ 1,5 y dibujo por lotes de alpha: el
+// reposo son 3 pasadas de rects con un solo fillStyle, más las ~7 celdas que funden.
 
 const INTRO_MS = 900;
 const SPRING = 170; // rigidez del resorte hacia el destino (1/s²)
 const DAMP = 15; // amortiguación de la velocidad (1/s)
 const REPEL_R = 120; // radio de repulsión del cursor (px)
 const REPEL_F = 3600; // fuerza de repulsión (px/s²)
-// destellos por partícula y segundo: ~0.17 × 224 celdas ≈ 38/s, y como cada uno dura
-// 180–440 ms, hay ~12 encendidas a la vez (5 % del wordmark) — vivo y visible en los dos
-// colores sin volverse ruido
-const FLICK_RATE = 0.17;
-const FLICK_MIN_MS = 180;
-const FLICK_VAR_MS = 260;
+// Destellos (Samuel, 2026-09-22 · 2ª ronda: "el cambio es muy constante y muy rápido,
+// reducir eso; transiciones más lentas y transitables"): pocos y largos, y cada uno
+// ENTRA Y SALE con un fundido (se interpola el color entre la tinta y el acento) en vez
+// de encenderse y apagarse de golpe. ~0.008 × 428 celdas ≈ 3,4/s × 2,2 s de vida ≈ 7
+// encendidas a la vez, casi todas a media intensidad: respira, no parpadea.
+const FLICK_RATE = 0.008; // destellos por celda y segundo
+const FLICK_MIN_MS = 1700;
+const FLICK_VAR_MS = 1000;
 
 // textura estática en 3 niveles (no continua): así el reposo se pinta en 3 pasadas con UN
 // globalAlpha cada una, en vez de cambiar alpha y color por partícula
@@ -43,7 +46,8 @@ interface Particle {
   vy: number;
   delay: number; // stagger del intro (0–0.35)
   alpha: number; // textura estática (uno de ALPHAS)
-  flickUntil: number; // acc (ms) hasta el que se pinta de color
+  flickStart: number; // acc (ms) en que arrancó el destello (0 = apagada)
+  flickEnd: number; // acc (ms) en que termina
   flickColor: number; // índice en la paleta de destello
 }
 
@@ -84,6 +88,29 @@ export default function PixelCanvas() {
         const flickColors = [leer('--wm-flick') || leer('--color-pixel') || '#7c5cff', leer('--wm-flick-2')].filter(Boolean);
         const cInk = leer('--color-ink') || '#1c1533';
 
+        // Para poder FUNDIR entre la tinta y el acento hay que interpolar en RGB. Se
+        // precalculan las rampas (13 pasos por color): en el bucle solo se indexa, sin
+        // parsear ni componer strings por frame.
+        const rgb = (css: string): [number, number, number] => {
+          const hex = css.trim();
+          if (hex.startsWith('#')) {
+            const h = hex.length === 4 ? hex.slice(1).split('').map((c) => c + c).join('') : hex.slice(1, 7);
+            return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+          }
+          const n = hex.match(/[\d.]+/g)?.map(Number) ?? [0, 0, 0];
+          return [n[0] ?? 0, n[1] ?? 0, n[2] ?? 0];
+        };
+        const PASOS = 13;
+        const tinta = rgb(cInk);
+        const rampas = flickColors.map((c) => {
+          const dest = rgb(c);
+          return Array.from({ length: PASOS }, (_, i) => {
+            const k = i / (PASOS - 1);
+            const m = (j: number) => Math.round(tinta[j]! + (dest[j]! - tinta[j]!) * k);
+            return `rgb(${m(0)},${m(1)},${m(2)})`;
+          });
+        });
+
         let parts: Particle[] = [];
         let cell = 8;
         let w = 0;
@@ -105,10 +132,16 @@ export default function PixelCanvas() {
           canvas.style.height = `${h}px`;
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-          // la celda es la mayor que hace caber el bitmap entero en la caja del h1
-          cell = Math.max(3, Math.floor(Math.min(w / WORDMARK_COLS, h / WORDMARK_ROWS)));
-          const ox = Math.round((w - cell * WORDMARK_COLS) / 2);
-          const oy = Math.round((h - cell * WORDMARK_ROWS) / 2);
+          // El bitmap se centra sobre la caja DEL H1, no sobre la del contenedor: si el
+          // contenedor tiene otros hijos (en /web cuelga la tarjeta del ingeniero), medir el
+          // contenedor desplazaba el wordmark encima de ellos. El canvas sí cubre todo el
+          // contenedor (inset-0), así que basta con dibujar en el offset del h1.
+          const rh1 = h1.getBoundingClientRect();
+          const hw = rh1.width;
+          const hh = rh1.height;
+          cell = Math.max(3, Math.floor(Math.min(hw / WORDMARK_COLS, hh / WORDMARK_ROWS)));
+          const ox = Math.round(rh1.left - r.left + (hw - cell * WORDMARK_COLS) / 2);
+          const oy = Math.round(rh1.top - r.top + (hh - cell * WORDMARK_ROWS) / 2);
 
           parts = [];
           for (let rI = 0; rI < WORDMARK_ROWS; rI++) {
@@ -126,7 +159,8 @@ export default function PixelCanvas() {
                 vy: 0,
                 delay: Math.random() * 0.35,
                 alpha: ALPHAS[(Math.random() * ALPHAS.length) | 0]!,
-                flickUntil: 0,
+                flickStart: 0,
+                flickEnd: 0,
                 flickColor: 0,
               });
             }
@@ -185,11 +219,12 @@ export default function PixelCanvas() {
             const pFlick = FLICK_RATE * dt;
             for (const p of parts) {
               // destello de color: la ÚNICA animación autónoma del wordmark
-              if (p.flickUntil < acc && Math.random() < pFlick) {
-                p.flickUntil = acc + FLICK_MIN_MS + Math.random() * FLICK_VAR_MS;
+              if (p.flickEnd < acc && Math.random() < pFlick) {
+                p.flickStart = acc;
+                p.flickEnd = acc + FLICK_MIN_MS + Math.random() * FLICK_VAR_MS;
                 p.flickColor = (Math.random() * flickColors.length) | 0;
               }
-              if (p.flickUntil + 100 > acc || Math.abs(p.vx) + Math.abs(p.vy) > 0.5 || Math.abs(p.x - p.tx) + Math.abs(p.y - p.ty) > 0.5)
+              if (p.flickEnd > acc || Math.abs(p.vx) + Math.abs(p.vy) > 0.5 || Math.abs(p.x - p.tx) + Math.abs(p.y - p.ty) > 0.5)
                 alive = true;
             }
             if (!alive && !mouseNear) {
@@ -225,14 +260,19 @@ export default function PixelCanvas() {
               ctx.globalAlpha = level;
               for (; i < parts.length && parts[i]!.alpha === level; i++) {
                 const p = parts[i]!;
-                if (p.flickUntil > acc) continue;
+                if (p.flickEnd > acc) continue;
                 ctx.fillRect(p.x, p.y, cw, cw);
               }
             }
+            // las que están destellando se pintan aparte, con el color INTERPOLADO según
+            // en qué punto de su vida están: sube hasta la mitad y vuelve a bajar
             for (const p of parts) {
-              if (p.flickUntil <= acc) continue;
+              if (p.flickEnd <= acc) continue;
+              const t = (acc - p.flickStart) / (p.flickEnd - p.flickStart);
+              const k = t < 0.5 ? t * 2 : (1 - t) * 2; // 0 → 1 → 0, lineal en el tiempo
+              const rampa = rampas[p.flickColor]!;
               ctx.globalAlpha = p.alpha;
-              ctx.fillStyle = flickColors[p.flickColor]!;
+              ctx.fillStyle = rampa[Math.min(PASOS - 1, Math.max(0, Math.round(k * (PASOS - 1))))]!;
               ctx.fillRect(p.x, p.y, cw, cw);
             }
           }

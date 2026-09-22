@@ -2,18 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
 import Pending from '@/components/ui/Pending';
 import Collapsible from '@/components/ui/Collapsible';
 import { t } from '@/i18n';
 
-gsap.registerPlugin(useGSAP);
-
 // Recorrido guiado genérico (§12): panel sticky con la lámina del paso activo +
 // lista de pasos numerados, clicables y con scroll-spy. Lo usan el ERP y el proyecto
 // de analítica — misma interacción, distinto contenido. El panel es un <a> (se siente
-// tarjeta-botón, clase .proj-card) y la lámina hace crossfade GSAP al cambiar de paso.
+// tarjeta-botón, clase .proj-card) y la lámina hace crossfade al cambiar de paso.
 // Todo el contenido de los pasos se renderiza en el servidor (legible sin JS).
 export interface TourStep {
   id: string;
@@ -63,19 +59,19 @@ export default function StepTour({
     return () => io.disconnect();
   }, []);
 
-  // Crossfade GSAP al cambiar de paso (clic o scroll): la lámina no salta, se funde.
-  // Con reduced-motion no se anima (GSAP ignora el bloqueo CSS global, hay que guardarlo).
-  useGSAP(
-    () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      gsap.fromTo(
-        shotRef.current,
-        { opacity: 0.3, scale: 1.012 },
-        { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out', overwrite: 'auto' }
-      );
-    },
-    { dependencies: [active] }
-  );
+    // Crossfade al cambiar de paso con la API nativa de animaciones (2026-09-22): hacía lo
+  // mismo con GSAP, y GSAP pesa ~95 KB de JS para una transición de medio segundo. WAAPI
+  // es nativa, cancela sola la anterior y no entra en el bundle.
+  useEffect(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    shotRef.current?.animate(
+      [
+        { opacity: 0.3, transform: 'scale(1.012)' },
+        { opacity: 1, transform: 'scale(1)' },
+      ],
+      { duration: 500, easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', fill: 'none' }
+    );
+  }, [active]);
 
   const step = steps[active] ?? steps[0];
 

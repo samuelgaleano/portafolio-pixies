@@ -3,7 +3,6 @@
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
-import gsap from 'gsap';
 
 // Transición global al ingeniero (Samuel r5 2026-07-18): CUALQUIER enlace a /samuel dispara
 // el barrido (header, footer, teaser, portal del hero) — no solo el botón del hero. Delega
@@ -27,25 +26,27 @@ export default function EngineerTransition() {
       leaving.current = false;
       return;
     }
-    gsap
-      .timeline()
-      .set(overlay.current, { pointerEvents: 'auto', x: 0, xPercent: -103 })
-      // cubre la pantalla de izquierda a derecha, luego navega
-      .to(overlay.current, {
-        xPercent: 0,
-        duration: 0.45,
-        ease: 'power3.inOut',
-        onComplete: () => router.push('/samuel'),
-      })
-      // destapa hacia la derecha (deja ver la página nueva) y resetea para el próximo uso
-      .to(overlay.current, { xPercent: 103, duration: 0.45, ease: 'power3.inOut', delay: 0.08 })
-      .set(overlay.current, {
-        xPercent: -103,
-        pointerEvents: 'none',
-        onComplete: () => {
-          leaving.current = false;
-        },
-      });
+    // 2026-09-22: el barrido era una timeline de GSAP; ahora son dos animaciones CSS
+    // encadenadas por `animationend` (cubre → navega → destapa). Quitar GSAP de aquí lo
+    // saca del bundle de TODAS las rutas: este componente vive en el layout.
+    const capa = overlay.current;
+    capa.style.pointerEvents = 'auto';
+    capa.classList.remove('is-out');
+    capa.classList.add('is-in');
+    const alCubrir = () => {
+      capa.removeEventListener('animationend', alCubrir);
+      router.push('/samuel');
+      capa.classList.remove('is-in');
+      capa.classList.add('is-out');
+      const alDestapar = () => {
+        capa.removeEventListener('animationend', alDestapar);
+        capa.classList.remove('is-out');
+        capa.style.pointerEvents = 'none';
+        leaving.current = false;
+      };
+      capa.addEventListener('animationend', alDestapar);
+    };
+    capa.addEventListener('animationend', alCubrir);
   };
 
   useEffect(() => {

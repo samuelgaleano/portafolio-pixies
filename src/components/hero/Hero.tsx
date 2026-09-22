@@ -26,19 +26,19 @@ export default function Hero() {
           centrado, y la fila CTA + botón del ingeniero centrada como grupo (el botón deja de
           estar pegado a la derecha → más hacia la izquierda). Todo alineado al centro. */}
       <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col items-center px-4 pt-20 pb-6 sm:items-start sm:px-6 sm:pb-[7rem]">
-        {/* wordmark alineado a la IZQUIERDA (Samuel r21) arrancando ALTO (en la "línea roja" que
-            marcó Samuel). La tarjeta del ingeniero se ancla a su esquina inferior-derecha y roza la
-            "S" (.eng-dock), equilibrando la derecha. Todo el bloque sube junto con este margen. */}
+        {/* wordmark alineado a la IZQUIERDA (Samuel r21) arrancando ALTO. La tarjeta del
+            ingeniero queda debajo, a la derecha, sin solaparse (Samuel, 2026-09-22). */}
         <div className="relative mt-14 inline-block max-w-full sm:mt-[70px]">
           {/* tracking normal: a escala mosaico, el tight fusiona letras en el muestreo del canvas */}
           <h1 id="wordmark" className="font-display text-wordmark font-bold text-ink">
             {t.hero.title}
           </h1>
           <PixelCanvas />
-          {/* desktop: portal encajado en la esquina de la "S"; en móvil va en la fila CTA (intacto) */}
-          <div className="eng-dock hidden sm:block">
-            <EngineerPortal />
-          </div>
+        </div>
+        {/* desktop: el portal va DEBAJO del wordmark, alineado a la derecha y sin taparlo
+            (Samuel, 2026-09-22); en móvil sigue en la fila CTA, intacto */}
+        <div className="eng-dock hidden w-full sm:block">
+          <EngineerPortal />
         </div>
 
         {/* el texto decorado con puntos medios se oculta a lectores; sr-only lleva el texto limpio */}

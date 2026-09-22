@@ -44,7 +44,9 @@ export const es = {
   portfolio: {
     eyebrow: '/portafolio',
     title: 'Proyectos que ya corren',
-    intro: 'El trabajo real de Pixies: el stack a la vista y las decisiones de ingeniería explicadas.',
+    // Samuel (2026-09-22): "optimizar el tiempo de scroll para suplir la necesidad lo más
+    // rápido posible" — la entrada manda a elegir en el menú de abajo, no describe el sitio.
+    intro: 'Elige lo que necesitas y salta directo: todo lo de abajo está en producción o tiene demo en vivo.',
     navLabel: 'Categorías del portafolio',
     statusLive: '● En producción',
     statusCode: '‹/› Código',
@@ -254,13 +256,21 @@ export const es = {
   // ni portal del ingeniero — esos son de la división Web, no del grupo (Samuel, 2026-09-21).
   // Voz EMPRESARIAL (Pixies Design Group es una empresa de varias personas, no la voz de un
   // solo ingeniero): nada en primera persona del singular en esta capa.
+  // Hero del grupo (Samuel, 2026-09-22 · 2ª ronda): eslogan "súper directo, algo como que
+  // son soluciones que también se ven bien"; un solo CTA de acción ("qué necesitas,
+  // contáctanos, te contactamos de una vez"); y los dos accesos laterales — Creative a la
+  // izquierda, Web a la derecha — con una línea de qué resuelve cada uno.
   grupoHero: {
     title: 'PIXIES',
     subtitle: 'Design Group',
     kicker: 'Bogotá · alcance global',
-    tesis: 'Un mismo proceso ordenado para cualquier requerimiento: cambia el entregable, no el flujo.',
-    cta: 'Conoce las dos divisiones',
-    ctaContacto: 'Hablemos de tu proyecto',
+    tesis: 'Soluciones que funcionan. Y que además se ven bien.',
+    cta: '¿Qué necesitas? Cuéntanos y te contactamos',
+    ctaSecundario: 'Ver cómo trabajamos',
+    accesos: {
+      creative: { etiqueta: 'Creative', que: 'Campañas, marca y contenido', ir: 'Entrar' },
+      web: { etiqueta: 'Web', que: 'Sitios, sistemas, datos e IA', ir: 'Entrar' },
+    },
   },
   // Bifurcación Pixies Design Group (grupo-y-marketing, 2026-09): frase-puente + los dos
   // "capítulos". Nombres y taglines textuales de Samuel (2026-09-21): la división Web se
@@ -306,25 +316,27 @@ export const es = {
   // Web": pasos cortos, segmentados por color de forma IMPLÍCITA (ámbar = Creative, violeta =
   // Web, ambos = medición). Los ejemplos son casos reales y solo los pasos que recorrieron de
   // verdad — nada de atribuirle a Xiaomi CarTech una marca que no se le hizo.
+  // La ruta del proyecto (Samuel, 2026-09-22 · 2ª ronda): "títulos y subtítulos mucho más
+  // simples, muy directo al cliente"; de 8 pasos a 6 — arquitectura y construcción se
+  // fusionan, entra un paso de soluciones empresariales — y **cada paso es un botón** que
+  // lleva a la sección donde está ese trabajo de verdad. Con flechas entre pasos.
   proceso: {
-    eyebrow: '/de-punta-a-punta',
-    title: 'Así se ve un proyecto completo',
-    intro: 'Dos equipos, un mismo flujo. Cada paso lleva el color del equipo que lo ejecuta; nadie tiene que elegir división para empezar.',
-    ejemplos: [
-      { nombre: 'Mamba Records', recorrido: 'pasos 01 a 03: marca, estrategia y sistema de contenido (7 documentos aprobados).' },
-      { nombre: 'Xiaomi CarTech', recorrido: 'pasos 03 a 07: campaña en Meta, landing de venta directa y medición servidor a servidor.' },
-    ],
-    nota: 'Las cifras de cada caso se muestran solo donde existen y están confirmadas.',
+    eyebrow: '/la-ruta',
+    title: 'De la idea a los números',
+    intro: 'Seis pasos. Oprime cualquiera y mira lo que ya hicimos ahí.',
     pasos: [
-      { n: '01', lado: 'creative', title: 'Marca', desc: 'Identidad, sistema visual y tono.' },
-      { n: '02', lado: 'creative', title: 'Estrategia digital', desc: 'Público, canales y mensaje.' },
-      { n: '03', lado: 'creative', title: 'Piezas y campaña', desc: 'Key visual, creatividades y pauta sobre margen comprobado.' },
-      { n: '04', lado: 'web', title: 'Arquitectura web', desc: 'Estructura, contenidos y SEO desde el plano.' },
-      { n: '05', lado: 'web', title: 'Construcción', desc: 'Diseño e implementación: la landing, el ERP o el sistema.' },
-      { n: '06', lado: 'web', title: 'Despliegue y pruebas', desc: 'Dominio, rendimiento y control de calidad.' },
-      { n: '07', lado: 'ambas', title: 'Medición', desc: 'Métricas del sitio y de la pauta; costo por lead calificado.' },
-      { n: '08', lado: 'ambas', title: 'Optimización', desc: 'Se itera sobre datos, no sobre gustos.' },
+      { n: '01', lado: 'creative', title: 'Marca', desc: 'Identidad, sistema visual y tono.', href: '/marketing#servicios', destino: 'Ver marca' },
+      { n: '02', lado: 'creative', title: 'Estrategia', desc: 'Público, canales y mensaje.', href: '/marketing#areas', destino: 'Ver dónde aplica' },
+      { n: '03', lado: 'creative', title: 'Campaña', desc: 'Piezas, parrilla y pauta.', href: '/marketing#casos', destino: 'Ver casos' },
+      { n: '04', lado: 'web', title: 'Web', desc: 'Arquitectura, diseño y construcción del sitio.', href: '/web#landing', destino: 'Ver sitios' },
+      { n: '05', lado: 'web', title: 'Sistemas', desc: 'ERP, automatización e IA para operar.', href: '/web#erp', destino: 'Ver el ERP' },
+      { n: '06', lado: 'ambas', title: 'Datos', desc: 'Medición, análisis y la siguiente decisión.', href: '/web#datos', destino: 'Ver el análisis' },
     ],
+    cierreTitle: 'Y lo que aprendemos vuelve a entrar',
+    cierreBody:
+      'Reuniones, entrevistas y notas de voz se convierten en contexto citado con escuchacomprendiendo.ai, nuestra propia aplicación. Ese conocimiento alimenta la siguiente campaña y el siguiente sistema.',
+    cierreCta: 'Probar la aplicación →',
+    cierreHref: '/aplicaciones/escuchacomprendiendo-ai',
     cta: 'Cuéntanos tu caso',
   },
   // Contenido de /marketing (grupo-y-marketing, 2026-09). Fuente:
@@ -345,21 +357,26 @@ export const es = {
       'Publicidad, marca y contenido que se miden contra el margen real de cada producto, no contra los likes. Estrategia creativa y pauta por datos, bajo un mismo flujo de trabajo.',
     cta: 'Hablemos de tu marca',
     ctaAreas: 'Ver dónde se aplica →',
-    // Tres frentes con dueño, visibles desde el hero (Samuel, 2026-09-22: "darle mucha
-    // prioridad de creación de campaña y redes a Isabela y dejarlo claro"). Orden = prioridad.
+    // Tres frentes del hero. Samuel (2026-09-22 · 2ª ronda): "quita los nombres de la parte
+    // inicial; que sea algo implícito de las áreas que manejamos, que son los especialistas,
+    // pero como EMPRESA". Los nombres siguen abajo, en Equipo — ahí sí tienen sentido.
     frentes: [
-      { area: 'Campañas y redes', quien: 'Isabela Torrenegra', lado: 'creative' },
-      { area: 'Marca y dirección de arte', quien: 'Edison Galeano', lado: 'creative' },
-      { area: 'Crecimiento, pauta y datos', quien: 'Samuel Galeano', lado: 'web' },
+      { area: 'Campañas y redes', quien: 'Especialista dedicada', lado: 'creative' },
+      { area: 'Marca y dirección de arte', quien: '+30 años de oficio', lado: 'creative' },
+      { area: 'Crecimiento, pauta y datos', quien: 'Ingeniería propia', lado: 'web' },
     ],
     servicios: {
-      eyebrow: '/servicios',
-      title: 'Cinco servicios, con lo que entregamos y quién lo lidera escrito dentro',
-      intro: 'Cada cubo dice el canal, la pieza que recibes y la persona que responde por ella. Nada más.',
+      eyebrow: '/con-qué-te-ayudamos',
+      title: 'Cinco formas de ayudarte',
+      intro: 'Oprime la que te suene: te contactamos con eso en concreto.',
       liderLabel: 'Lo lidera',
+      pedir: 'Lo quiero',
       items: [
         {
           title: 'Campañas en redes y comunidad',
+          ayuda: 'Que te vean y te escriban cada semana.',
+          icono: ['11111', '10001', '11111', '00100', '01000'],
+          desde: 'creative-campanas',
           paraQuien: 'Empresas y marcas personales jóvenes que necesitan presencia constante sin armar equipo propio.',
           entrego:
             'Concepto de campaña, estrategia de contenido (dos pilares: autoridad y alcance), parrilla mensual, copys, historias, reels y shorts, gestión de comunidad y reporte mensual de métricas.',
@@ -370,6 +387,9 @@ export const es = {
         },
         {
           title: 'Publicidad pagada por datos',
+          ayuda: 'Que cada peso invertido se pueda medir.',
+          icono: ['01110', '10001', '10101', '10001', '01110'],
+          desde: 'creative-pauta',
           paraQuien: 'PyMEs que ya venden y quieren escalar sin quemar presupuesto.',
           entrego:
             'Plan de medios, configuración de campañas, creatividades de rendimiento, costo de adquisición (CAC) y ROMI contra el margen real de cada producto.',
@@ -380,6 +400,9 @@ export const es = {
         },
         {
           title: 'Contenido y video',
+          ayuda: 'Que tengas qué publicar sin improvisar.',
+          icono: ['11000', '11100', '11110', '11100', '11000'],
+          desde: 'creative-contenido',
           paraQuien: 'Marcas que necesitan contar lo que hacen en video corto, cada semana.',
           entrego: 'Guion, producción, edición, motion y adaptaciones por formato; piezas gráficas alineadas con la identidad.',
           canales: ['Reel', 'Short', 'Historia', 'Carrusel', 'Banner'],
@@ -389,6 +412,9 @@ export const es = {
         },
         {
           title: 'SEO y contenidos',
+          ayuda: 'Que te encuentren cuando te buscan.',
+          icono: ['01110', '10001', '10001', '01110', '00011'],
+          desde: 'creative-seo',
           paraQuien: 'Empresas que quieren que las encuentren por lo que venden, incluidos los asistentes de IA.',
           entrego: 'Auditoría técnica y de contenido, arquitectura del sitio, datos estructurados (schema), llms.txt y visibilidad en respuestas de IA.',
           canales: ['Google', 'ChatGPT', 'Perplexity', 'Claude'],
@@ -398,6 +424,9 @@ export const es = {
         },
         {
           title: 'Marca e identidad',
+          ayuda: 'Que te vean como la empresa que eres.',
+          icono: ['00100', '01110', '11111', '01110', '00100'],
+          desde: 'creative-marca',
           paraQuien: 'Empresas nuevas o que quieren renovar cómo se ven, dentro y fuera de la pantalla.',
           entrego:
             'Naming, logotipo, sistema visual, manual de marca, identidad digital y su aplicación física: papelería, señalización, avisos, piezas especiales.',

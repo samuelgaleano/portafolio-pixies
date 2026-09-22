@@ -1146,30 +1146,30 @@ footer:hover .footer-wordmark {
     transform: translate(var(--engx), calc(var(--engy) - 6px));
   }
 }
-/* Overlap r21 (Samuel): en DESKTOP la tarjeta del ingeniero se ancla al vértice inferior-derecho
-   del wordmark y se sobrepone un poco a la "S" de PIXIES. En móvil no aplica (va en la fila CTA).
-   --dock-r = corrimiento horizontal (negativo = hacia afuera/derecha); --dock-y = cuánto sube
-   para solaparse con la S (más negativo = más solape). Se ajusta el par para las 3 opciones. */
+/* El portal del ingeniero (Samuel, 2026-09-22 · 2ª ronda): "hazlo un poco más pequeño y NO
+   sobrepuesto, sino un poco más abajo". Antes se anclaba en absoluto al vértice del wordmark
+   y se solapaba con la "S" (ronda r21); ahora queda en el flujo, debajo del wordmark y
+   alineado a la derecha del bloque, sin tapar nada. */
 @media (min-width: 640px) {
   .eng-dock {
-    position: absolute;
-    top: 100%;
-    right: var(--dock-r, -9rem);
-    z-index: 20;
-    transform: translateY(var(--dock-y, -5.5rem));
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.25rem;
   }
-  /* anclada: anulamos el nudge del float para no descolocarla (el bob vertical sutil sigue) */
+  /* sin nudge: la tarjeta ya no compensa ningún anclaje (el bob vertical sutil sigue) */
   .eng-dock .eng-portal-float {
     --engx: 0px;
     --engy: 0px;
   }
-}
-/* desktop ANGOSTO (640–1023): con el wordmark más pequeño, el empuje completo (-9rem) sacaría la
-   tarjeta del viewport y la recortaría; aquí se empuja menos (sigue rozando la "S"). A partir de
-   1024 el ancho ya da para el empuje completo aprobado. */
-@media (min-width: 640px) and (max-width: 1023px) {
-  .eng-dock {
-    right: -4rem;
+  /* versión reducida: ~30 % menos de caja que la anclada */
+  .eng-dock .eng-portal {
+    width: 236px;
+    gap: 0.6rem;
+    padding: 1rem 1rem 1.5rem;
+  }
+  .eng-dock .eng-portal__avatar {
+    width: 104px;
+    height: 104px;
   }
 }
 /* panel CUADRADO vertical (Samuel r17): la foto arriba (malla que se dispersa), texto debajo,
@@ -1794,144 +1794,6 @@ footer:hover .footer-wordmark {
 .collapse-inner {
   overflow: hidden;
   min-height: 0;
-}
-
-/* ── Lanzador del portafolio (selección DIRECTA, Samuel r3 2026-07-18) ───────────
-   Grid de tiles: el visitante elige la categoría y ve solo esa — sin deslizar por
-   todas hasta encontrarla. Más práctico e intuitivo que la barra de scroll. */
-.portfolio-launcher {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
-}
-@media (min-width: 640px) {
-  .portfolio-launcher {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (min-width: 1024px) {
-  .portfolio-launcher {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-.portfolio-tile {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  min-height: 120px;
-  text-align: left;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-m);
-  background: var(--color-surface);
-  padding: 1rem 1.1rem;
-  transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.35s ease;
-}
-.portfolio-tile:hover {
-  transform: translateY(-4px);
-  z-index: 20;
-  border-color: var(--color-pixel);
-  box-shadow: 0 26px 52px -26px color-mix(in srgb, var(--color-pixel) 72%, transparent);
-}
-/* previa: MICRO-DESPLIEGUE (Samuel r6) — una miniatura LIMPIA en 16:10 (sin deformar) que
-   flota bajo el tile y aparece con scale+fade al hover. No es fondo espichado tras el texto. */
-.portfolio-tile__preview {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% + 0.6rem);
-  z-index: 20;
-  opacity: 0;
-  /* despliegue MÁS NOTABLE (Samuel r7): entra desde más arriba y más pequeño, con un
-     ease con leve rebote, para que se lea claramente como un micro-visualizador que se abre */
-  transform: translateY(-16px) scale(0.88);
-  transform-origin: top center;
-  pointer-events: none;
-  overflow: hidden;
-  border-radius: var(--radius-m);
-  border: 1.5px solid var(--color-pixel);
-  box-shadow: 0 32px 64px -18px color-mix(in srgb, var(--color-pixel) 72%, transparent);
-  transition:
-    opacity 0.35s ease,
-    transform 0.45s cubic-bezier(0.25, 1.1, 0.4, 1);
-}
-.portfolio-tile__preview img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  object-position: top;
-}
-.portfolio-tile__preview-label {
-  position: absolute;
-  top: 0.55rem;
-  left: 0.55rem;
-  border-radius: var(--radius-s);
-  background: color-mix(in srgb, var(--color-void) 76%, transparent);
-  backdrop-filter: blur(6px);
-  padding: 0.2rem 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.02em;
-  color: var(--color-pixel-soft);
-}
-.portfolio-tile:hover .portfolio-tile__preview {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-/* Solo con puntero fino: en táctil el :hover se queda "pegado" tras tocar y una miniatura
-   invisible pero oprimible taparía la fila de abajo. Ahí el tile entero ya salta a la sección. */
-@media (hover: hover) and (pointer: fine) {
-  /* la miniatura desplegada TAMBIÉN es oprimible y salta a la sección (Samuel): vive dentro del
-     <a> del tile, así que basta con devolverle los eventos mientras está visible. En reposo
-     sigue en pointer-events:none para no robarle el cursor a la fila de tiles de abajo. */
-  .portfolio-tile:hover .portfolio-tile__preview {
-    pointer-events: auto;
-  }
-  /* puente invisible sobre el hueco tile↔miniatura (0.6rem): sin él, al bajar el cursor hacia la
-     previa se pierde el :hover y la miniatura se cierra antes de poder oprimirla. Solo existe
-     mientras hay hover, y cabe en el gap de 0.75rem del grid: no roba clics a la fila siguiente. */
-  .portfolio-tile:hover::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
-    height: 0.7rem;
-  }
-}
-.portfolio-tile__glyph {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2px;
-  width: 16px;
-  height: 16px;
-}
-.portfolio-tile__glyph i {
-  border-radius: 1px;
-  background: var(--color-pixel);
-  opacity: 0.5;
-}
-.portfolio-tile:hover .portfolio-tile__glyph i {
-  opacity: 1;
-}
-.portfolio-tile__title {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--color-ink);
-}
-.portfolio-tile__desc {
-  position: relative;
-  z-index: 1;
-  font-size: 0.8rem;
-  line-height: 1.4;
-  color: var(--color-dim);
 }
 
 /* Deslizador horizontal de Capacidades por dominio (Samuel r5 2026-07-18) */
@@ -2777,7 +2639,7 @@ main {
   padding: 0.55rem 0.9rem 0.55rem 0.65rem;
 }
 .hero-firma--compacta .hero-firma-g {
-  --cell: 10px;
+  --cell: 8px;
   --gap: 2px;
 }
 .hero-firma--compacta .hero-firma-g i {
@@ -3267,136 +3129,475 @@ main {
   border-color: color-mix(in srgb, var(--color-marketing) 45%, var(--color-line));
 }
 
-/* ── Un proyecto de punta a punta (home): 8 pasos, color implícito por equipo ────────
-   ámbar = Creative (01–03), violeta = Web (04–06), degradado ámbar→violeta = los dos
-   (07–08, medición y optimización). Desktop 4×2, tablet 2 columnas, móvil 1. */
-.proceso-uni {
+/* ── La ruta del proyecto (home): 6 pasos oprimibles con flechas ─────────────────────
+   Samuel (2026-09-22): el roadmap tenía que ser "visualmente más disruptivo, con flechas
+   que se entienda", y cada paso un botón que lleva a donde ese trabajo ya está hecho.
+   Color implícito por equipo: ámbar = Creative (01–03), violeta = Web (04–05), degradado
+   = los dos (06). Desktop 6 en fila, tablet 3, móvil 2. La flecha es un ::after del <li>
+   que vive en el hueco del gap, así nunca desalinea la retícula. */
+.ruta {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
-  counter-reset: paso;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1.5rem 2.1rem;
+  counter-reset: ruta;
 }
-@media (max-width: 960px) {
-  .proceso-uni {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.ruta__item {
+  position: relative;
+  display: flex;
 }
-@media (max-width: 560px) {
-  .proceso-uni {
-    grid-template-columns: 1fr;
-  }
+/* flecha entre pasos (no después del último de cada fila) */
+.ruta__item::after {
+  content: '';
+  position: absolute;
+  top: 2.15rem;
+  right: -1.45rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-top: 2px solid var(--color-line);
+  border-right: 2px solid var(--color-line);
+  transform: rotate(45deg);
+  transition: border-color 0.3s ease;
+  pointer-events: none;
 }
-.paso {
-  --paso-c: var(--color-ink);
+.ruta__item:last-child::after {
+  display: none;
+}
+.ruta__item:hover::after {
+  border-color: var(--paso-color, var(--color-pixel));
+}
+.ruta__paso {
+  --paso-color: var(--color-pixel);
   --paso-fondo: var(--color-surface);
   position: relative;
   display: grid;
-  gap: 0.45rem;
   align-content: start;
-  padding: 1.1rem 1.15rem 1.25rem;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 1rem 1.05rem 1.1rem;
   border-radius: var(--radius-m);
   border: 1px solid var(--color-line);
+  border-top: 4px solid var(--paso-color);
   background: var(--paso-fondo);
   transition:
     transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
-    box-shadow 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-/* filete superior con el color del equipo */
-.paso::before {
-  content: '';
-  position: absolute;
-  left: 1.15rem;
-  right: 1.15rem;
-  top: 0;
-  height: 4px;
-  border-radius: 0 0 3px 3px;
-  background: var(--paso-c);
-}
-.paso--creative {
-  --paso-c: var(--color-marketing);
-  --paso-fondo: var(--color-marketing-suave);
-}
-.paso--web {
-  --paso-c: var(--color-pixel);
-  --paso-fondo: var(--color-surface-2);
-}
-.paso--ambas::before {
-  background: linear-gradient(90deg, var(--color-marketing), var(--color-pixel));
-}
-.paso__num {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  color: var(--paso-c);
-}
-.paso--creative .paso__num {
-  color: var(--color-marketing-texto);
-}
-.paso--web .paso__num {
-  color: var(--color-pixel-soft);
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 @media (hover: hover) {
-  .paso:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 40px -28px color-mix(in srgb, var(--paso-c) 60%, transparent);
+  .ruta__paso:hover,
+  .ruta__paso:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 40px -28px color-mix(in srgb, var(--paso-color) 90%, transparent);
+    border-color: color-mix(in srgb, var(--paso-color) 45%, var(--color-line));
+    border-top-color: var(--paso-color);
   }
 }
-.proceso-uni__ejemplos {
-  display: grid;
-  gap: 0.35rem;
-  max-width: 60ch;
+.ruta__item--creative .ruta__paso {
+  --paso-color: var(--color-marketing);
+  --paso-fondo: var(--color-marketing-suave);
 }
-
-/* Nota de unificación: CENTRADA entre los dos capítulos — el tercer punto de la
-   gramática espacial (izquierda / derecha / centro). */
-.grupo-union {
-  text-align: center;
-  max-width: 46ch;
-  margin-inline: auto;
+.ruta__item--web .ruta__paso {
+  --paso-color: var(--color-pixel);
+  --paso-fondo: var(--color-surface-2);
 }
-
-/* Frase-puente del hero de la bifurcación: las dos palabras de destino SON el enlace a
-   cada división (subrayado que se rellena al hover/foco), técnica validada en el mockup
-   15-final-ajustado.html tomada de 01-puente.html. */
-.grupo-bridge {
-  --gb-c: var(--color-pixel);
-  color: inherit;
-  text-decoration: none;
-  background-image: linear-gradient(var(--gb-c), var(--gb-c));
-  background-repeat: no-repeat;
-  background-size: 100% 0.14em;
-  background-position: 0 96%;
-  padding: 0 0.04em;
-  border-radius: var(--radius-s);
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-  transition:
-    background-size 0.3s ease,
-    color 0.3s ease;
+.ruta__item--ambas .ruta__paso {
+  --paso-color: var(--color-pixel);
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(90deg, var(--color-marketing), var(--color-pixel)) 1;
+  border-image-width: 4px 0 0 0;
 }
-.grupo-bridge:hover,
-.grupo-bridge:focus-visible {
-  background-size: 100% 100%;
-  color: #fff;
+.ruta__num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--paso-color) 70%, var(--color-ink));
 }
-.grupo-bridge--marketing {
-  --gb-c: var(--color-marketing);
-}
-.grupo-bridge--marketing:hover,
-.grupo-bridge--marketing:focus-visible {
+.ruta__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.12rem;
+  line-height: 1.1;
   color: var(--color-ink);
 }
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+.ruta__desc {
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: var(--color-dim);
+}
+.ruta__destino {
+  margin-top: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paso-color) 72%, var(--color-ink));
+  opacity: 0.85;
+}
+@media (max-width: 1100px) {
+  .ruta {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    animation-delay: 0s !important;
-    transition-duration: 0.01ms !important;
+  .ruta__item:nth-child(3)::after {
+    display: none;
+  }
+}
+@media (max-width: 720px) {
+  .ruta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.6rem;
+  }
+  .ruta__item::after {
+    right: -1.15rem;
+    top: 1.9rem;
+  }
+  .ruta__item:nth-child(3)::after {
+    display: block;
+  }
+  .ruta__item:nth-child(2)::after,
+  .ruta__item:nth-child(4)::after {
+    display: none;
+  }
+}
+.ruta-cierre {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-line);
+}
+@media (min-width: 860px) {
+  .ruta-cierre {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
+
+/* ── Hero del GRUPO: marca al centro, accesos a los lados (2026-09-22) ──────────────────
+   Samuel: "en el primer frame hay un espacio a la izquierda y otro a la derecha: ahí poner
+   el botón de Creative a la izquierda y el de Web a la derecha, más pequeños para que no
+   se vea saturado". Rejilla de tres columnas en escritorio; en móvil la marca va primero y
+   los dos accesos quedan debajo, lado a lado. */
+.grupo-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: center;
+  padding-top: calc(var(--nav-h) + 1.25rem);
+  padding-bottom: 2.5rem;
+}
+.grupo-hero__marca {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* wordmark más arriba y "Design Group" más chico (Samuel: que el primer frame muestre
+   logo → H2 → eslogan sin desplazar) */
+.grupo-hero__marca .text-wordmark {
+  font-size: clamp(3.4rem, 19vw, 13.5rem);
+}
+.grupo-hero .hero-titulo__nombre {
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+}
+.grupo-hero__eslogan {
+  margin-top: 0.85rem;
+  max-width: 26ch;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 2.1vw, 1.65rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+
+/* los dos accesos laterales: compactos, con el glifo de su división */
+.acceso {
+  --tinte: var(--color-pixel);
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.45rem;
+  padding: 1rem 0.9rem 0.9rem;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--color-line);
+  background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+  text-align: center;
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.acceso--creative {
+  --tinte: var(--color-marketing);
+}
+@media (hover: hover) {
+  .acceso:hover,
+  .acceso:focus-visible {
+    border-color: color-mix(in srgb, var(--tinte) 60%, var(--color-line));
+    box-shadow: 0 18px 36px -26px color-mix(in srgb, var(--tinte) 90%, transparent);
+  }
+  /* la gramática espacial también aquí: Creative se corre a la IZQUIERDA, Web a la DERECHA */
+  .acceso--creative:hover,
+  .acceso--creative:focus-visible {
+    transform: translateX(-4px);
+  }
+  .acceso--web:hover,
+  .acceso--web:focus-visible {
+    transform: translateX(4px);
+  }
+}
+.acceso__glyph {
+  --cell: 9px;
+  --gap: 2px;
+}
+.acceso__nombre {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-ink);
+  line-height: 1;
+}
+.acceso__que {
+  font-size: 0.82rem;
+  line-height: 1.25;
+  color: var(--color-dim);
+  max-width: 18ch;
+}
+.acceso__ir {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tinte) 72%, var(--color-ink));
+}
+@media (min-width: 900px) {
+  .grupo-hero {
+    grid-template-columns: minmax(150px, 0.8fr) minmax(0, 3fr) minmax(150px, 0.8fr);
+    gap: 1.5rem;
+  }
+  .acceso {
+    padding: 1.15rem 1rem 1rem;
+  }
+  .acceso__glyph {
+    --cell: 10px;
+  }
+}
+@media (max-width: 899px) {
+  /* móvil/tablet: marca primero, los dos accesos debajo en una fila */
+  .grupo-hero__marca {
+    order: -1;
+  }
+  .grupo-hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .grupo-hero__marca {
+    grid-column: 1 / -1;
+  }
+  .acceso__que {
+    font-size: 0.76rem;
+  }
+}
+
+/* ── Catálogo de /web: menú de accesos directos (2026-09-22) ───────────────────────────
+   Reemplaza los tiles con previa en imagen: ícono en píxeles + título en las palabras del
+   cliente + evidencia concreta. Tres columnas en escritorio, una en móvil; toda la fila es
+   oprimible y el ícono toma el violeta al pasar. */
+.catalogo-menu {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+@media (max-width: 1000px) {
+  .catalogo-menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 620px) {
+  .catalogo-menu {
+    grid-template-columns: 1fr;
+  }
+}
+.catalogo-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  transition:
+    transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+@media (hover: hover) {
+  .catalogo-item:hover,
+  .catalogo-item:focus-visible {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--color-pixel) 55%, var(--color-line));
+    box-shadow: 0 16px 32px -26px color-mix(in srgb, var(--color-pixel) 90%, transparent);
+  }
+}
+.catalogo-item__icono {
+  display: grid;
+  grid-template-columns: repeat(5, 4px);
+  grid-auto-rows: 4px;
+  gap: 1px;
+}
+.catalogo-item__icono i {
+  background: transparent;
+}
+.catalogo-item__icono i.on {
+  background: var(--color-dim);
+  transition: background 0.25s ease;
+}
+.catalogo-item:hover .catalogo-item__icono i.on,
+.catalogo-item:focus-visible .catalogo-item__icono i.on {
+  background: var(--color-pixel);
+}
+.catalogo-item__texto {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.catalogo-item__titulo {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1.15;
+  color: var(--color-ink);
+}
+.catalogo-item__evidencia {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  color: var(--color-dim);
+}
+.catalogo-item__flecha {
+  color: var(--color-dim);
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.25s ease;
+}
+.catalogo-item:hover .catalogo-item__flecha {
+  transform: translateX(3px);
+  color: var(--color-pixel);
+}
+
+/* ── Cubos de Creative: ícono, beneficio y cubo entero oprimible (2026-09-22) ──────────── */
+.cubo {
+  position: relative;
+}
+.cubo__icono {
+  display: grid;
+  grid-template-columns: repeat(5, 5px);
+  grid-auto-rows: 5px;
+  gap: 1px;
+}
+.cubo__icono i {
+  background: transparent;
+}
+.cubo__icono i.on {
+  background: var(--acento-texto);
+  transition: background 0.3s ease;
+}
+.cubo:hover .cubo__icono i.on {
+  background: var(--color-ink);
+}
+.cubo__ayuda {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.25;
+  color: var(--color-ink);
+  margin-top: -0.25rem;
+}
+.cubo__pedir {
+  justify-self: start;
+  margin-top: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--acento-texto);
+  transition: color 0.25s ease;
+}
+/* enlace estirado: cubre el cubo entero (el texto sigue seleccionable porque el <a> va al
+   final del flujo y solo su ::after se estira) */
+.cubo__pedir::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-m);
+}
+.cubo:hover .cubo__pedir,
+.cubo:focus-within .cubo__pedir {
+  color: var(--color-ink);
+}
+.cubo:focus-within {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
+}
+
+/* ── fx sin GSAP (2026-09-22) ───────────────────────────────────────────────────────────
+   ScrollProgress, Parallax, StaggerIn y el barrido al ingeniero se movieron a CSS + un
+   poco de JS vanilla: GSAP ya no entra en el bundle de ninguna ruta salvo las exhibiciones
+   de /web. Era ~100 KB de JS en el camino crítico de TODAS las páginas para mover cosas
+   decorativas (Samuel: "a veces se traba, bajos FPS"). */
+.scroll-progress__bar {
+  /* --sp (0–1) lo escribe ScrollProgress en cada frame de scroll */
+  transform: translateX(calc((var(--sp, 0) - 1) * 100%));
+}
+.parallax {
+  /* --par lo escribe Parallax; sin JS queda en 0% y la capa no se mueve */
+  transform: translate3d(0, var(--par, 0%), 0);
+  will-change: transform;
+}
+.stagger-in > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.stagger-in.is-in > * {
+  opacity: 1;
+  transform: none;
+}
+/* barrido al ingeniero: cubre de izquierda a derecha y destapa hacia la derecha */
+.sig-transition.is-in {
+  animation: sig-cubrir 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.sig-transition.is-out {
+  animation: sig-destapar 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.08s forwards;
+}
+@keyframes sig-cubrir {
+  from {
+    transform: translateX(-103%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes sig-destapar {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(103%);
+  }
+}
+
+/* en pantallas chicas el kicker del hero del grupo baja a su propia línea (en una sola se
+   iba contra el borde derecho) */
+@media (max-width: 640px) {
+  .grupo-hero .hero-titulo {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
   }
 }

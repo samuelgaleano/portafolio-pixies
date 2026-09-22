@@ -24,14 +24,33 @@ test('home renderiza: wordmark animado del grupo, bifurcación y proyecto de pun
   expect(flick[1]).toBeTruthy();
   expect(flick[0]).not.toBe(flick[1]);
   expect(await page.evaluate(() => document.documentElement.dataset.division)).toBe('grupo');
-  // la selección de división es la bifurcación (sin tarjetas chicas en el hero de la home)
-  await expect(page.locator('.hero-firma')).toHaveCount(0);
+  // los dos accesos laterales del primer frame: Creative a la IZQUIERDA, Web a la DERECHA
+  const creative = page.locator('.acceso--creative');
+  const web = page.locator('.acceso--web');
+  await expect(creative).toHaveAttribute('href', '/marketing');
+  await expect(web).toHaveAttribute('href', '/web');
+  const [cajaC, cajaW] = [await creative.boundingBox(), await web.boundingBox()];
+  expect(cajaC!.x).toBeLessThan(cajaW!.x);
+  // y el primer frame muestra logo → H2 → eslogan → CTA sin desplazar (900px de alto)
+  for (const sel of ['#wordmark', '.hero-titulo__nombre', '.grupo-hero__eslogan', '.hero-cta']) {
+    const caja = await page.locator(sel).first().boundingBox();
+    expect(caja!.y + caja!.height).toBeLessThanOrEqual(900);
+  }
   await expect(page.getByRole('link', { name: 'Ver Pixies Creative' })).toHaveAttribute('href', '/marketing');
   await expect(page.getByRole('link', { name: 'Ver Pixies Digital Web Design' })).toHaveAttribute('href', '/web');
-  // justo debajo: los 8 pasos de un proyecto completo, con los dos casos reales
-  await expect(page.locator('#proceso .paso')).toHaveCount(8);
-  await expect(page.locator('#proceso').getByText('Xiaomi CarTech')).toBeVisible();
-  await expect(page.locator('#proceso').getByText('Mamba Records')).toBeVisible();
+  // justo debajo, la ruta: 6 pasos y TODOS son botones con un destino real (Samuel, 2026-09-22)
+  const pasos = page.locator('#proceso .ruta__paso');
+  await expect(pasos).toHaveCount(6);
+  expect(await pasos.evaluateAll((els) => els.map((el) => el.getAttribute('href')))).toEqual([
+    '/marketing#servicios',
+    '/marketing#areas',
+    '/marketing#casos',
+    '/web#landing',
+    '/web#erp',
+    '/web#datos',
+  ]);
+  // y el cierre del bucle de conocimiento enlaza a la app propia
+  await expect(page.locator('.ruta-cierre a[href="/aplicaciones/escuchacomprendiendo-ai"]')).toBeVisible();
 });
 
 // Header del grupo (mockup → producción): marca del grupo + selector "ver como" con las dos
@@ -93,13 +112,13 @@ test('/samuel y un post renderizan (highlight de código incluido)', async ({ pa
 test('launcher: un acceso salta a su sección', async ({ page }) => {
   await page.goto('/web');
   const nav = page.getByRole('navigation', { name: 'Categorías del portafolio' });
-  await nav.getByRole('link', { name: /Sistema ERP/ }).click();
+  await nav.getByRole('link', { name: /sistema para mi operación/ }).click();
   await expect(page.locator('#erp')).toBeInViewport();
 });
 
 // Red de seguridad de las zonas oprimibles (Samuel): son fáciles de romper en silencio con un
 // z-index o un pointer-events, y no se ven rotas — solo "no pasa nada" al oprimir.
-test('catálogo oprimible: toda la tarjeta y la miniatura del launcher llevan a su destino', async ({ page }) => {
+test('catálogo oprimible: la tarjeta entera y la fila del menú llevan a su destino', async ({ page }) => {
   await page.goto('/web');
 
   // 1) el cuadrado ENTERO de la tarjeta navega al sitio del producto: quien recibe el clic en la
@@ -120,12 +139,19 @@ test('catálogo oprimible: toda la tarjeta y la miniatura del launcher llevan a 
     expect(recibe).toBe(href);
   }
 
-  // 2) la miniatura del launcher flota FUERA del tile: aun así es oprimible y salta a la sección
-  const tile = page.locator('.portfolio-tile').filter({ hasText: 'Sistema ERP' }).first();
-  await tile.hover();
-  const miniatura = tile.locator('.portfolio-tile__preview');
-  await expect(miniatura).toHaveCSS('opacity', '1');
-  await miniatura.locator('img').click();
+  // 2) el catálogo (2026-09-22): fila entera oprimible, con título directo y evidencia
+  const fila = page.locator('.catalogo-item').filter({ hasText: 'sistema para mi operación' }).first();
+  await expect(fila).toHaveAttribute('href', '#erp');
+  await expect(fila.locator('.catalogo-item__evidencia')).toContainText('Demo en vivo');
+  // elementFromPoint usa coordenadas de VIEWPORT: sin esto el punto cae fuera y devuelve null
+  await fila.scrollIntoViewIfNeeded();
+  const caja = await fila.boundingBox();
+  const recibeFila = await page.evaluate(
+    ([x, y]: number[]) => document.elementFromPoint(x, y)?.closest('a')?.getAttribute('href') ?? null,
+    [caja!.x + caja!.width - 24, caja!.y + caja!.height / 2],
+  );
+  expect(recibeFila).toBe('#erp');
+  await fila.click();
   await expect(page).toHaveURL(/#erp$/);
 });
 
@@ -155,9 +181,13 @@ test('LeadForm: validación en cliente y envío feliz contra /api/leads', async 
 test('/marketing renderiza: hero, servicios, dónde se aplica, método, equipo, comparativa y casos', async ({ page }) => {
   await page.goto('/marketing');
   await expect(page.getByRole('heading', { level: 1, name: 'Pixies Creative' })).toBeVisible();
-  // Isabela al frente de campañas y redes (Samuel, 2026-09-22): en el hero, como líder del
-  // primer cubo de servicios y como primera tarjeta (destacada) del equipo
-  await expect(page.locator('.hero-frentes .hero-frente').first()).toContainText('Isabela Torrenegra');
+  // el hero habla como EMPRESA: áreas y especialidad, sin nombres propios (2026-09-22)
+  const frentes = page.locator('.hero-frentes');
+  await expect(frentes.locator('.hero-frente').first()).toContainText('Campañas y redes');
+  for (const nombre of ['Isabela', 'Edison', 'Samuel']) await expect(frentes).not.toContainText(nombre);
+  // cada servicio es oprimible y dice con qué ayuda (Samuel: "que puedan oprimir, no solo leer")
+  await expect(page.locator('#servicios .cubo__pedir')).toHaveCount(5);
+  await expect(page.locator('#servicios .cubo').first().locator('.cubo__ayuda')).toBeVisible();
   const cubo1 = page.locator('#servicios .cubo').first();
   await expect(cubo1).toContainText('Campañas en redes y comunidad');
   await expect(cubo1.locator('.cubo__lider')).toContainText('Isabela Torrenegra');

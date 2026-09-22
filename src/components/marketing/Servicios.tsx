@@ -1,13 +1,14 @@
 import { t } from '@/i18n';
 
-// Cinco servicios de Creative como los "cubos" del mockup 15-final-ajustado.html (Samuel,
-// 2026-09-21: "la selección de servicios se ve genial, impleméntala así"): retícula de 6
-// columnas, número en mono con el acento de la división, filete superior de 5px en
-// --acento, dos cubos tintados (--acento-suave) para dar ritmo, y los canales como chips.
-// Ritmo 3·3·2·2·2 (2026-09-22): los dos cubos grandes arriba son Campañas en redes
-// (Isabela) y Pauta (Samuel) — lo que más se vende va primero y más grande. Cada cubo
-// lleva "Lo lidera · persona" como chip: quién responde por la pieza, a la vista.
-// Contenido de servicios/*.md, en voz empresarial.
+// Los cinco servicios de Creative, como "cubos" (mockup 15-final-ajustado.html).
+//
+// Samuel (2026-09-22 · 2ª ronda): "ser más visual en lo que se ofrece, lo que le interesa
+// al cliente directamente, y que puedan OPRIMIR — que no sea solo leer — con qué se puede
+// ayudar, qué ofrecemos". Por eso cada cubo abre con un **ícono en píxeles** y con **con
+// qué te ayudamos** en las palabras del cliente, y **todo el cubo es oprimible**: lleva al
+// formulario marcando de qué servicio viene (enlace estirado, el resto del texto sigue
+// seleccionable). Debajo se mantiene lo que ya había: canales, entrega, para quién, quién
+// responde y el límite honesto.
 export default function Servicios() {
   const { servicios } = t.marketing;
   return (
@@ -27,13 +28,20 @@ export default function Servicios() {
             data-reveal={i % 2 === 0 ? 'left' : 'right'}
             className={`cubo${i === 0 || i === 3 ? ' cubo--tinta' : ''}`}
           >
-            <div className="flex items-center justify-between gap-3">
-              <span className="cubo__num">0{i + 1}</span>
+            <div className="flex items-start justify-between gap-3">
+              <span className="cubo__icono" aria-hidden="true">
+                {s.icono.map((fila, y) =>
+                  fila.split('').map((bit, x) => <i key={`${y}-${x}`} className={bit === '1' ? 'on' : undefined} />)
+                )}
+              </span>
               <span className="cubo__lider">
                 <span className="cubo__lider-label">{servicios.liderLabel}</span> {s.lider}
               </span>
             </div>
-            <h3 className="font-display text-xl font-semibold text-ink">{s.title}</h3>
+
+            <h3 className="font-display text-xl font-semibold leading-tight text-ink">{s.title}</h3>
+            <p className="cubo__ayuda">{s.ayuda}</p>
+
             <ul className="cubo__canales" aria-label="Canales">
               {s.canales.map((c) => (
                 <li key={c}>{c}</li>
@@ -46,6 +54,12 @@ export default function Servicios() {
             </p>
             <p className="cubo__quien">{s.quien}</p>
             <p className="cubo__limite">{s.limite}</p>
+
+            {/* enlace estirado: el cubo entero es oprimible sin envolver el texto en un <a> */}
+            <a href="#contacto" data-desde={s.desde} className="cubo__pedir">
+              {servicios.pedir} <span aria-hidden="true">→</span>
+              <span className="sr-only"> — {s.title}</span>
+            </a>
           </article>
         ))}
       </div>

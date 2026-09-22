@@ -1,17 +1,13 @@
 'use client';
 
-import { useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
+import { useEffect, useRef } from 'react';
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-// Entrada en cascada de los hijos marcados con [data-stagger] al entrar en viewport.
-// Patrón oficial gsap-skills: useGSAP con scope (los selectores no salen del componente)
-// + gsap.matchMedia() con condiciones — con reduced-motion no se anima nada (el contenido
-// queda visible tal cual), y en móvil la distancia/cadencia son menores (responsivo).
-// once: el ScrollTrigger se mata tras disparar; sin JS los ítems simplemente se ven.
+// Entrada en cascada de los hijos directos al entrar en viewport.
+//
+// 2026-09-22: antes GSAP + ScrollTrigger; ahora un IntersectionObserver que añade una clase
+// y deja la animación al CSS (`.stagger-in > *`, con `--i` por hijo). Mismo efecto, sin
+// arrastrar GSAP a /samuel. Mejora progresiva: sin JS o con `prefers-reduced-motion` los
+// hijos se ven tal cual (la clase que los oculta la pone este componente, no el HTML).
 export default function StaggerIn({
   children,
   className,
@@ -21,32 +17,24 @@ export default function StaggerIn({
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add(
-        {
-          reduce: '(prefers-reduced-motion: reduce)',
-          isMobile: '(max-width: 767px)',
-          isDesktop: '(min-width: 768px)',
-        },
-        (context) => {
-          const { reduce, isMobile } = context.conditions as { reduce: boolean; isMobile: boolean };
-          if (reduce) return; // sin animación: los ítems quedan visibles
-          gsap.from('[data-stagger]', {
-            opacity: 0,
-            y: isMobile ? 16 : 26,
-            duration: 0.7,
-            ease: 'power2.out',
-            stagger: isMobile ? 0.06 : 0.1,
-            scrollTrigger: { trigger: ref.current, start: 'top 82%', once: true },
-          });
-        }
-      );
-      return () => mm.revert();
-    },
-    { scope: ref }
-  );
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    el.classList.add('stagger-in');
+    Array.from(el.children).forEach((hijo, i) => (hijo as HTMLElement).style.setProperty('--i', String(i)));
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        el.classList.add('is-in');
+        io.disconnect();
+      },
+      { rootMargin: '0px 0px -12% 0px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <div ref={ref} className={className}>
