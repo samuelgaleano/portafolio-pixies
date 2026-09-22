@@ -32,9 +32,10 @@ for (const route of ROUTES) {
 }
 
 test('el wordmark del hero cabe en su contenedor en todos los anchos', async ({ page }) => {
+  // grupo-y-marketing (2026-09-21): #wordmark (texto + canvas) es el hero de /web
   for (const width of [320, 390, 768, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto('/');
+    await page.goto('/web');
     const fits = await page.evaluate(() => {
       const h1 = document.getElementById('wordmark')!;
       const box = h1.getBoundingClientRect();

@@ -5,12 +5,39 @@ import { test, expect } from '@playwright/test';
 // grupo-y-marketing (2026-09): el portafolio se movió de `/` a `/web` — este test antes
 // vivía en `/` y verificaba las 7 categorías ahí; ahora `/` es la landing del grupo
 // (hero + bifurcación) y `/web` es quien tiene el portafolio completo.
-test('home renderiza: hero + bifurcación del grupo', async ({ page }) => {
+test('home renderiza: wordmark bitmap del grupo + bifurcación', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#wordmark')).toHaveText('PIXIES');
-  // los dos "capítulos" de la bifurcación llevan a su división real
-  await expect(page.getByRole('link', { name: 'Ver Pixies Creative' })).toHaveAttribute('href', '/marketing');
-  await expect(page.getByRole('link', { name: 'Ver Pixies Digital Web Design' })).toHaveAttribute('href', '/web');
+  // el wordmark del mockup, renderizado en servidor: 35×7 celdas y un h1 accesible "PIXIES"
+  const wm = page.locator('[data-wordmark-bitmap]');
+  await expect(wm.locator('.wm-px')).toHaveCount(35 * 7);
+  await expect(wm.locator('.wm-px--a').first()).toBeAttached();
+  await expect(page.getByRole('heading', { level: 1, name: 'PIXIES' })).toBeAttached();
+  // en Grupo la banda es tinta neutra: --acento no es el violeta ni el ámbar
+  expect(await page.evaluate(() => document.documentElement.dataset.division)).toBe('grupo');
+  // los dos "capítulos" de la bifurcación llevan a su división real (hay 2 pares: hero-firma y paneles)
+  await expect(page.getByRole('link', { name: 'Ver Pixies Creative' }).last()).toHaveAttribute('href', '/marketing');
+  await expect(page.getByRole('link', { name: 'Ver Pixies Digital Web Design' }).last()).toHaveAttribute('href', '/web');
+});
+
+// Header del grupo (mockup → producción): marca del grupo + selector "ver como" con las dos
+// divisiones + Grupo, indicador y CTA con el color de la ruta activa. "Ingeniero" ya no es
+// enlace de primer nivel.
+test('header: selector "ver como" marca la división de la ruta y el hilo de color la sigue', async ({ page }) => {
+  await page.goto('/marketing');
+  const nav = page.getByRole('navigation', { name: 'Ver como' });
+  await expect(nav.getByRole('link')).toHaveCount(3);
+  await expect(nav.getByRole('link', { name: 'Creative' })).toHaveAttribute('aria-current', 'page');
+  expect(await page.evaluate(() => document.documentElement.dataset.division)).toBe('creative');
+  // el CTA del header toma el texto de Creative y no existe "Ingeniero" en el header
+  const header = page.locator('header');
+  await expect(header.getByRole('link', { name: /Hablemos de tu marca/ })).toBeVisible();
+  await expect(header.getByRole('link', { name: 'Ingeniero' })).toHaveCount(0);
+
+  // navegar por el selector cambia la ruta, el atributo y el activo
+  await nav.getByRole('link', { name: 'Web' }).click();
+  await expect(page).toHaveURL(/\/web$/);
+  await expect(nav.getByRole('link', { name: 'Web' })).toHaveAttribute('aria-current', 'page');
+  expect(await page.evaluate(() => document.documentElement.dataset.division)).toBe('web');
 });
 
 test('/web renderiza: hero, 7 categorías, proyectos reales y el tour de datos', async ({ page }) => {
@@ -141,11 +168,28 @@ test('/marketing: LeadForm propio funciona igual que el de /web', async ({ page 
 // La bifurcación de la home es el único camino de navegación entre las 3 rutas del
 // grupo: si se rompe, cada división queda aislada de las otras dos.
 test('bifurcación del grupo: los paneles llevan a /marketing y /web de verdad', async ({ page }) => {
+  // hay dos pares de enlaces con este nombre (hero-firma arriba, paneles abajo): se prueban los paneles
   await page.goto('/');
-  await page.getByRole('link', { name: 'Ver Pixies Creative' }).click();
+  await page.getByRole('link', { name: 'Ver Pixies Creative' }).last().click();
   await expect(page).toHaveURL(/\/marketing$/);
 
   await page.goto('/');
-  await page.getByRole('link', { name: 'Ver Pixies Digital Web Design' }).click();
+  await page.getByRole('link', { name: 'Ver Pixies Digital Web Design' }).last().click();
   await expect(page).toHaveURL(/\/web$/);
+});
+
+// El morph del glifo es progresivo (Samuel: "no que solo cambie el frame"): cada celda del
+// ícono entra con su propio desfase. Se comprueba que las celdas "c-in" del glifo NO fijo
+// tienen retardos distintos entre sí y que al hover pasan a opacidad 1.
+test('glifo M/W: morph progresivo celda por celda al hover del panel', async ({ page }) => {
+  await page.goto('/');
+  const panel = page.locator('.grupo-cap--web');
+  await panel.scrollIntoViewIfNeeded();
+  const celdasIn = panel.locator('.division-glyph i.c-in');
+  await expect(celdasIn.first()).toBeAttached();
+  const delays = await celdasIn.evaluateAll((els) => els.map((el) => getComputedStyle(el).transitionDelay));
+  expect(new Set(delays).size).toBeGreaterThan(1);
+  await expect(celdasIn.first()).toHaveCSS('opacity', '0');
+  await panel.hover();
+  await expect(celdasIn.last()).toHaveCSS('opacity', '1', { timeout: 2000 });
 });

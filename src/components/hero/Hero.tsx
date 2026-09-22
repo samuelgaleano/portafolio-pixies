@@ -2,6 +2,7 @@ import { t } from '@/i18n';
 import PixelCanvas from './PixelCanvas';
 import HeroGrid from './HeroGrid';
 import EngineerPortal from './EngineerPortal';
+import HeroFirma from './HeroFirma';
 import Atmosphere from '@/components/fx/Atmosphere';
 import Parallax from '@/components/fx/Parallax';
 
@@ -46,6 +47,12 @@ export default function Hero() {
           <span aria-hidden="true">/{t.hero.subtitle.toLowerCase().replaceAll(' ', '·')}</span>
           <span className="sr-only">{t.hero.subtitle}</span>
         </p>
+
+        {/* grupo-y-marketing (2026-09-21): la firma M/W del grupo también aquí (W fija en cursor:
+            esta es la división Web). Misma pieza que en / y /marketing — cohesión entre las 3 rutas. */}
+        <div className="hero-in flex w-full justify-center sm:justify-start" style={{ '--d': '1.0s' } as React.CSSProperties}>
+          <HeroFirma activa="web" />
+        </div>
 
         <div
           className="hero-in mt-8 flex flex-col items-center gap-4 sm:mt-8 sm:flex-row sm:justify-start sm:gap-6"

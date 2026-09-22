@@ -256,6 +256,7 @@ export const es = {
   grupoHero: {
     title: 'PIXIES',
     subtitle: 'Design Group',
+    kicker: 'Bogotá · alcance global',
     tesis: 'Un mismo proceso ordenado para cualquier requerimiento: cambia el entregable, no el flujo.',
     cta: 'Conoce las dos divisiones',
     ctaContacto: 'Hablemos de tu proyecto',

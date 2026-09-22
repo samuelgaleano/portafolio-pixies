@@ -1,48 +1,43 @@
 import { t } from '@/i18n';
 
-// Cinco servicios (SECCION-MARKETING.md §2 + servicios/*.md): cada cubo dice canal y
-// entregable, nada de humo. Mismo patrón de cabecera que PortfolioSection/Statement.
+// Cinco servicios de Creative como los "cubos" del mockup 15-final-ajustado.html (Samuel,
+// 2026-09-21: "la selección de servicios se ve genial, impleméntala así"): retícula de 6
+// columnas con ritmo 2·2·2·3·3, número en mono con el acento de la división, filete
+// superior de 5px en --acento, dos cubos tintados (--acento-suave) para dar ritmo, y los
+// canales como chips. Contenido de servicios/*.md, en voz empresarial.
 export default function Servicios() {
   const { servicios } = t.marketing;
   return (
     <section id="servicios" className="mx-auto w-full max-w-[1200px] scroll-mt-16 px-4 py-20 sm:px-6">
       <header data-reveal="wipe" className="mb-10">
-        <p className="font-mono text-sm text-[color:var(--color-marketing-texto)]">{servicios.eyebrow}</p>
+        <p className="font-mono text-sm text-[color:var(--acento-texto)]">{servicios.eyebrow}</p>
         <h2 className="mt-2 font-display text-h2 font-semibold">{servicios.title}</h2>
         <p className="mt-3 max-w-xl text-dim">{servicios.intro}</p>
       </header>
 
       {/* overflow-x-hidden: contiene el translateX de los data-reveal="left|right" mientras el
-          grid sigue fuera de viewport (sin esto crea scroll horizontal real, no solo durante la
-          transición -- ver la misma nota en GrupoSplit.tsx). */}
-      <div className="grid gap-5 overflow-x-hidden sm:grid-cols-2 lg:grid-cols-3">
+          grid sigue fuera de viewport (sin esto crea scroll horizontal real). */}
+      <div className="cubos overflow-x-hidden">
         {servicios.items.map((s, i) => (
           <article
             key={s.title}
             data-reveal={i % 2 === 0 ? 'left' : 'right'}
-            className="flex flex-col gap-3 rounded-(--radius-m) border border-line bg-surface p-6"
+            className={`cubo${i === 1 || i === 4 ? ' cubo--tinta' : ''}`}
           >
-            <h3 className="font-display text-lg font-semibold text-ink">{s.title}</h3>
-            <p className="text-sm text-dim">
-              <span className="font-medium text-ink">Para quién: </span>
-              {s.paraQuien}
-            </p>
-            <p className="text-sm text-dim">
-              <span className="font-medium text-ink">Qué entregamos: </span>
-              {s.entrego}
-            </p>
-            <ul className="flex flex-wrap gap-1.5" aria-label="Canales">
+            <span className="cubo__num">0{i + 1}</span>
+            <h3 className="font-display text-xl font-semibold text-ink">{s.title}</h3>
+            <ul className="cubo__canales" aria-label="Canales">
               {s.canales.map((c) => (
-                <li
-                  key={c}
-                  className="rounded-(--radius-s) border border-line px-2 py-0.5 font-mono text-[0.68rem] uppercase tracking-wide text-dim"
-                >
-                  {c}
-                </li>
+                <li key={c}>{c}</li>
               ))}
             </ul>
-            <p className="mt-1 font-mono text-xs text-[color:var(--color-marketing-texto)]">{s.quien}</p>
-            <p className="mt-auto border-t border-line pt-3 text-xs text-dim">{s.limite}</p>
+            <p className="cubo__entrega">{s.entrego}</p>
+            <p className="cubo__para">
+              <span className="text-ink">Para quién: </span>
+              {s.paraQuien}
+            </p>
+            <p className="cubo__quien">{s.quien}</p>
+            <p className="cubo__limite">{s.limite}</p>
           </article>
         ))}
       </div>

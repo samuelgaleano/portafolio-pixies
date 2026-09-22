@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 // Hero "Píxel vivo" (spec 2026-07-14): el canvas persiste y el h1 queda accesible.
+// grupo-y-marketing (2026-09-21): el canvas de partículas es el hero de la división Web (/web);
+// la home (/) y /marketing usan el wordmark en bitmap del mockup (ver smoke.spec.ts).
 
 test('hero vivo: el canvas persiste tras el intro y el h1 sigue en el árbol (opacity 0)', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/web');
   const canvas = page.locator('#wordmark + canvas');
   await expect(canvas).toBeVisible();
   // regresión watchdog: a los 4s el canvas seguía vivo antes de morir por el timeout ciego
@@ -20,7 +22,7 @@ test('hero vivo: el canvas persiste tras el intro y el h1 sigue en el árbol (op
 test('hero con reduced-motion: h1 estático visible, canvas nunca aparece', async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: 'reduce' });
   const page = await ctx.newPage();
-  await page.goto('/');
+  await page.goto('/web');
   await page.waitForTimeout(800);
   await expect(page.locator('#wordmark')).toBeVisible();
   await expect(page.locator('#wordmark + canvas')).toBeHidden();
@@ -30,7 +32,7 @@ test('hero con reduced-motion: h1 estático visible, canvas nunca aparece', asyn
 test('hero sin JS: el wordmark real queda visible', async ({ browser }) => {
   const ctx = await browser.newContext({ javaScriptEnabled: false });
   const page = await ctx.newPage();
-  await page.goto('/');
+  await page.goto('/web');
   await expect(page.locator('#wordmark')).toBeVisible();
   await ctx.close();
 });

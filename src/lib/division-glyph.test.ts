@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { LETRAS, ICONOS, celdasEncendidas } from './division-glyph';
+import { LETRAS, ICONOS, celdasEncendidas, rolesDeCeldas, celdasWordmark, WORDMARK_COLS, enBanda } from './division-glyph';
 
 describe('celdasEncendidas — bitmap 5×7 → índices 0–34 encendidos', () => {
   test('bitmap vacío no enciende ninguna celda', () => {
@@ -29,5 +29,60 @@ describe('LETRAS / ICONOS — cada bitmap tiene 7 filas de 5 bits', () => {
   test('el corazón de M no usa esquinas redondeadas de emoji: fila central completa (bloque duro)', () => {
     expect(ICONOS.M[1]).toBe('11111');
     expect(ICONOS.M[2]).toBe('11111');
+  });
+
+  test('el cursor de W es una silueta RELLENA (cabeza triangular), no un contorno', () => {
+    // la cabeza crece una celda por fila hasta el ancho completo
+    expect(ICONOS.W.slice(0, 5)).toEqual(['10000', '11000', '11100', '11110', '11111']);
+    // y la cola baja hacia la derecha, separada de la cabeza
+    expect(ICONOS.W[5]).toBe('00110');
+    expect(ICONOS.W[6]).toBe('00011');
+  });
+});
+
+describe('rolesDeCeldas — el morph letra→ícono es celda por celda', () => {
+  test('clasifica cada una de las 35 celdas y no pierde ninguna', () => {
+    const roles = rolesDeCeldas(LETRAS.W, ICONOS.W);
+    expect(roles).toHaveLength(35);
+    const conteo = { keep: 0, out: 0, in: 0, off: 0 };
+    for (const r of roles) conteo[r] += 1;
+    expect(conteo.keep + conteo.out).toBe(celdasEncendidas(LETRAS.W).length);
+    expect(conteo.keep + conteo.in).toBe(celdasEncendidas(ICONOS.W).length);
+  });
+
+  test('una letra idéntica a su ícono solo tiene keep/off (nada que animar)', () => {
+    const roles = rolesDeCeldas(LETRAS.M, LETRAS.M);
+    expect(roles.filter((r) => r === 'in' || r === 'out')).toHaveLength(0);
+  });
+});
+
+describe('celdasWordmark — PIXIES en 7×35 con banda diagonal de acento', () => {
+  test('35 columnas × 7 filas, siempre', () => {
+    expect(WORDMARK_COLS).toBe(35);
+    expect(celdasWordmark(0)).toHaveLength(35 * 7);
+  });
+
+  test('las columnas de aire entre letras están apagadas en todas las filas', () => {
+    const celdas = celdasWordmark(0);
+    for (let f = 0; f < 7; f++) for (const col of [5, 11, 17, 23, 29]) expect(celdas[f * 35 + col]).toBe('off');
+  });
+
+  test('la banda de acento solo pinta celdas encendidas y cambia con el desplazamiento', () => {
+    const a = celdasWordmark(0);
+    const b = celdasWordmark(4);
+    expect(a.filter((c) => c === 'acento').length).toBeGreaterThan(0);
+    expect(a).not.toEqual(b);
+    // ninguna celda de aire se vuelve acento por la banda
+    expect(a.filter((c, i) => c === 'acento' && [5, 11, 17, 23, 29].includes(i % 35))).toHaveLength(0);
+  });
+
+  test('enBanda es periódica y nunca negativa', () => {
+    expect(enBanda(0, 0, 0)).toBe(true);
+    expect(enBanda(12, 0, 0)).toBe(true);
+    expect(enBanda(2, 0, 0)).toBe(false);
+    // desplazamiento negativo: (0 + 0 - 1) mod 12 = 11, fuera de la banda (11 >= 2) y sin
+    // que el módulo negativo de JS lo convierta en un índice inválido
+    expect(enBanda(0, 0, -1)).toBe(false);
+    expect(enBanda(1, 0, -1)).toBe(true);
   });
 });

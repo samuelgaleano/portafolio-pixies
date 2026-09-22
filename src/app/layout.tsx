@@ -9,9 +9,18 @@ import PageTransition from '@/components/fx/PageTransition';
 import ScrollProgress from '@/components/fx/ScrollProgress';
 import AmbientDots from '@/components/fx/AmbientDots';
 import EngineerTransition from '@/components/fx/EngineerTransition';
+import DivisionSync from '@/components/fx/DivisionSync';
 import { t } from '@/i18n';
 import { site } from '@/data/site';
 import './globals.css';
+
+// Fija data-division en <html> ANTES de hidratar (mismo patrón que un script de tema): el
+// header, el CTA y la banda del wordmark leen --acento desde el primer pintado, sin flash de
+// tinta neutra → color. Debe coincidir con divisionDeRuta() en src/lib/division.ts.
+const DIVISION_SCRIPT =
+  "(function(){var p=location.pathname;document.documentElement.dataset.division=" +
+  "p==='/marketing'||p.indexOf('/marketing/')===0?'creative':" +
+  "/^\\/(web|demos|proyectos|aplicaciones|samuel)(\\/|$)/.test(p)?'web':'grupo'})();";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -40,8 +49,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // esto, al ir de la home a /aplicaciones/... el scroll animado se quedaba a mitad y la
   // página nueva aparecía por el footer en vez de por arriba.
   return (
-    <html lang="es" data-scroll-behavior="smooth">
+    <html lang="es" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: DIVISION_SCRIPT }} />
         <link
           rel="preload"
           href="/fonts/ClashDisplay-Bold.woff2"
@@ -66,6 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <AmbientDots />
         <EngineerTransition />
+        <DivisionSync />
         <OriginTracker />
         <RevealObserver />
         <ScrollProgress />

@@ -2225,64 +2225,509 @@ footer:hover .footer-wordmark {
   }
 }
 
-/* ── Grupo + Marketing (2026-09): glifo de división y paneles "capítulo" ──────────
-   Mismo lenguaje de píxeles que el wordmark del hero (bitmap 5×7), aplicado a las dos
-   iniciales de división. Ver DivisionGlyph.tsx / GrupoSplit.tsx. */
-.division-glyph {
+/* ── Hilo de color por entorno (mockup 15-final-ajustado.html → producción) ─────────
+   <html data-division="grupo|web|creative"> lo pone el script inline de layout.tsx antes
+   de hidratar y lo mantiene DivisionSync al navegar. Todo lo que "pertenece" a la división
+   activa (indicador del selector, CTA del header, banda del wordmark, marca 2×2 del logo)
+   lee --acento y compañía; al cambiar de ruta el color se desliza (@property + transition),
+   no salta. Grupo = tinta neutra: el color lo ponen las dos divisiones, no el paraguas. */
+@property --acento {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1c1533;
+}
+@property --acento-texto {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #5b5480;
+}
+@property --acento-suave {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ece4fb;
+}
+:root {
+  --acento: var(--color-ink);
+  --acento-texto: var(--color-dim);
+  --acento-suave: var(--color-surface-2);
+  --acento-tinta: #ffffff; /* texto sobre --acento */
+  --nav-h: 56px;
+  /* 0.4s, no 0.6: ámbar→violeta interpolado en sRGB pasa por un tono sucio; más corto, y
+     cubierto por el barrido de color (.hilo-transicion), ese tramo no se alcanza a notar. */
+  transition:
+    --acento 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
+    --acento-texto 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
+    --acento-suave 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+:root[data-division='web'] {
+  --acento: var(--color-pixel);
+  --acento-texto: var(--color-pixel-soft);
+  --acento-suave: var(--color-surface-2);
+  --acento-tinta: #ffffff;
+}
+:root[data-division='creative'] {
+  --acento: var(--color-marketing);
+  --acento-texto: var(--color-marketing-texto);
+  --acento-suave: var(--color-marketing-suave);
+  --acento-tinta: var(--color-ink);
+}
+/* En móvil el selector baja a una segunda fila del header fijo: el contenido y las anclas
+   se corren lo que crece la barra, sin tocar el padding de cada página. */
+@media (max-width: 639px) {
+  :root {
+    --nav-h: 104px;
+  }
+}
+main {
+  padding-top: calc(var(--nav-h) - 56px);
+}
+[id] {
+  scroll-margin-top: calc(var(--nav-h) + 1.5rem);
+}
+
+/* Header del grupo: [logo + sufijo] [ver como] [CTA]. Desktop una fila; móvil dos. */
+.header-grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 56px;
+}
+@media (max-width: 639px) {
+  .header-grid {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 56px 44px;
+    gap: 0 0.5rem;
+    padding-bottom: 4px;
+  }
+  .header-grid .logo-grupo {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .header-grid .btn-acento {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+  .header-grid .selector-div {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: stretch;
+  }
+}
+.logo-mk {
+  display: grid;
+  grid-template-columns: repeat(2, 8px);
+  gap: 2px;
+}
+.logo-mk i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--color-ink);
+}
+.logo-mk i:nth-child(2) {
+  background: var(--acento);
+  transition: background 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.logo-mk i:nth-child(3) {
+  background: var(--acento);
+  opacity: 0.55;
+  transition: background 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.logo-sufijo {
+  margin-left: 0.15rem;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--color-dim);
+}
+.selector-div {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.selector-div__pre {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+  white-space: nowrap;
+}
+@media (max-width: 639px) {
+  .selector-div__pre {
+    display: none;
+  }
+  .selector-div .seg {
+    flex: 1;
+  }
+}
+.seg {
   position: relative;
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 3px;
+  border-radius: var(--radius-m);
+  background: var(--color-void);
+  border: 1px solid var(--color-line);
 }
-.division-glyph__capa {
-  grid-area: 1 / 1;
+/* indicador: 1/3 del ancho útil, se desliza a la opción activa (--i) y toma su color */
+.seg__ind {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / 3);
+  border-radius: var(--radius-s);
+  background: var(--acento);
+  transform: translateX(calc(var(--i, 2) * 100%));
+  transition:
+    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+    background 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.seg__opt {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 38px;
+  padding: 0 0.85rem;
+  border-radius: var(--radius-s);
+  font: 500 0.875rem/1 var(--font-sans);
+  color: var(--color-dim);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.seg__opt::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 1.5px;
+  opacity: 0.9;
+  flex: none;
+}
+.seg__opt[data-div='grupo']::before {
+  background: var(--color-ink);
+}
+.seg__opt[data-div='creative']::before {
+  background: var(--color-marketing);
+}
+.seg__opt[data-div='web']::before {
+  background: var(--color-pixel);
+}
+.seg__opt[aria-current='page'] {
+  color: var(--acento-tinta);
+}
+.seg__opt[aria-current='page']::before {
+  background: var(--acento-tinta);
+  opacity: 0.7;
+}
+.seg__opt:hover:not([aria-current='page']) {
+  color: var(--color-ink);
+}
+.seg__opt:focus-visible {
+  outline-offset: -2px;
+}
+@media (max-width: 639px) {
+  .seg__opt {
+    padding: 0 0.4rem;
+    font-size: 0.8rem;
+    min-height: 36px;
+  }
+}
+/* CTA del header con el color de la división activa (en Grupo: signal, el rojo de
+   conversión del sitio; en Web violeta; en Creative ámbar con tinta oscura). */
+.btn-acento {
+  background: var(--color-signal);
+  color: var(--color-void);
+  transition:
+    background 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.2s;
+}
+:root[data-division='web'] .btn-acento,
+:root[data-division='creative'] .btn-acento {
+  background: var(--acento);
+  color: var(--acento-tinta);
+}
+.btn-acento:hover {
+  filter: brightness(1.06);
+}
+
+/* Barrido de unificación: al cambiar de división, el color de destino cruza la pantalla
+   (izquierda→derecha cubre, luego descubre desde la derecha). No tapa el contenido. */
+.hilo-transicion {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: var(--acento);
+  opacity: 0.14;
+  transform-origin: left center;
+  animation: hilo-barrido 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes hilo-barrido {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  45% {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+  55% {
+    transform: scaleX(1);
+    transform-origin: right center;
+  }
+  100% {
+    transform: scaleX(0);
+    transform-origin: right center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hilo-transicion {
+    display: none;
+  }
+}
+
+/* ── Grupo + Marketing (2026-09): glifo de división ──────────────────────────────
+   Mismo lenguaje de píxeles que el wordmark (bitmap 5×7), aplicado a las dos iniciales.
+   MORPH PROGRESIVO (Samuel, 2026-09-21: "no quiero que solo cambie el frame"): cada celda
+   se pinta una sola vez con su rol — c-keep (queda), c-out (se apaga al pasar a ícono),
+   c-in (se enciende) — y se anima POR SEPARADO con un desfase diagonal (--gi = fila +
+   columna, 0..10) y un overshoot de escala (el único lugar del sitio con un easing "back";
+   es LA firma). Se dispara por :hover/:focus-within/.is-teasing del anfitrión
+   [data-glyph-host], o queda fijo con .is-fijo (división activa). Ver DivisionGlyph.tsx. */
+.division-glyph {
+  --cell: 20px;
+  --gap: 3px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-auto-rows: 1fr;
-  gap: 3px;
-  transition: opacity 0.3s ease;
+  grid-template-columns: repeat(5, var(--cell));
+  grid-auto-rows: var(--cell);
+  gap: var(--gap);
 }
 .division-glyph i {
   display: block;
   border-radius: 2px;
   background: transparent;
-  transition: background-color 0s;
+  transform: scale(1);
+  transition:
+    transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    background-color 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--gi, 0) * 30ms);
 }
-.division-glyph__capa--icono {
+.division-glyph i.c-in {
   opacity: 0;
-  transition-delay: 0.05s;
+  transform: scale(0.2);
 }
-/* Al morfear a ícono, cada celda "despierta" con un pequeño desfase (--gi, columna
-   0–4) — el mismo efecto de reorganización escalonada del mockup, en CSS puro vía
-   transition-delay sobre opacity. */
-.division-glyph__capa--icono i {
-  transition: opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transition-delay: calc(var(--gi, 0) * 25ms);
-}
-.grupo-cap:hover .division-glyph__capa--letra,
-.grupo-cap:focus-within .division-glyph__capa--letra {
+/* estado ÍCONO: al hover/foco/teaser del anfitrión, o fijo por división activa */
+[data-glyph-host]:hover .division-glyph i.c-out,
+[data-glyph-host]:focus-within .division-glyph i.c-out,
+[data-glyph-host].is-teasing .division-glyph i.c-out,
+.division-glyph.is-fijo i.c-out {
   opacity: 0;
+  transform: scale(0.2);
 }
-.grupo-cap:hover .division-glyph__capa--icono,
-.grupo-cap:focus-within .division-glyph__capa--icono {
+[data-glyph-host]:hover .division-glyph i.c-in,
+[data-glyph-host]:focus-within .division-glyph i.c-in,
+[data-glyph-host].is-teasing .division-glyph i.c-in,
+.division-glyph.is-fijo i.c-in {
   opacity: 1;
+  transform: scale(1);
 }
-.division-glyph--marketing i.on {
+/* al volver a la letra las celdas c-out reaparecen con el mismo desfase, pero las c-in se
+   apagan primero (desfase invertido) para que se lea como "vuelve", no como "se rompe" */
+[data-glyph-host]:not(:hover):not(:focus-within):not(.is-teasing) .division-glyph:not(.is-fijo) i.c-in {
+  transition-delay: calc((10 - var(--gi, 0)) * 22ms);
+}
+.division-glyph--marketing i.c-keep,
+.division-glyph--marketing i.c-out,
+.division-glyph--marketing i.c-in {
   background: var(--color-marketing);
   box-shadow: 0 0 0 1px var(--color-surface);
 }
-.division-glyph--web i.on {
+.division-glyph--web i.c-keep,
+.division-glyph--web i.c-out,
+.division-glyph--web i.c-in {
   background: var(--color-pixel);
   box-shadow: 0 0 0 1px var(--color-surface);
 }
-/* El glifo M usa --color-marketing por defecto, pero DENTRO de .grupo-cap--marketing
-   el fondo de la tarjeta YA es --color-marketing: sin este override las celdas
-   "encendidas" quedan del mismo color que el fondo y el glifo se vuelve invisible
-   (mismo bug ya corregido una vez en el mockup 15-final-ajustado.html). */
-.grupo-cap--marketing .division-glyph--marketing i.on {
+/* Dentro del panel ámbar el fondo YA es --color-marketing: el glifo pasa a tinta para no
+   volverse invisible (mismo bug ya corregido en el mockup). */
+.grupo-cap--marketing .division-glyph--marketing i.c-keep,
+.grupo-cap--marketing .division-glyph--marketing i.c-out,
+.grupo-cap--marketing .division-glyph--marketing i.c-in {
   background: var(--color-ink);
   box-shadow: 0 0 0 1px var(--color-marketing-suave);
 }
-.grupo-cap--web .division-glyph--web i.on {
+.grupo-cap--web .division-glyph--web i.c-keep,
+.grupo-cap--web .division-glyph--web i.c-out,
+.grupo-cap--web .division-glyph--web i.c-in {
   box-shadow: 0 0 0 1px var(--color-ink);
+}
+/* pulso leve cuando el glifo queda fijo (división elegida) — el "clic" del selector */
+@keyframes glyph-pulso {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+.division-glyph.is-fijo {
+  animation: glyph-pulso 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s 1;
+}
+
+/* ── Wordmark PIXIES en bitmap (mockup → producción) ────────────────────────────────
+   35 columnas × 7 filas; las celdas de la banda diagonal usan --acento (hilo de color por
+   división). Entrada: cada celda aparece con desfase por columna (--c), izquierda→derecha,
+   con el mismo overshoot suave del glifo. En reduced-motion se ve completo de inmediato. */
+.wm {
+  width: 100%;
+  max-width: 1100px;
+}
+.wm-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 35), 1fr);
+  grid-auto-rows: 1fr;
+  aspect-ratio: 35 / 7;
+  width: 100%;
+}
+.wm-px {
+  width: 82%;
+  aspect-ratio: 1;
+  justify-self: center;
+  align-self: center;
+  border-radius: 14%;
+  background: var(--color-ink);
+  animation: wm-in 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  animation-delay: calc(var(--c, 0) * 22ms);
+}
+.wm-px--a {
+  background: var(--acento);
+  transition: background 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.wm-px--0 {
+  visibility: hidden;
+  animation: none;
+}
+@keyframes wm-in {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Hero-firma: las dos tarjetas M/W del hero (mockup) ─────────────────────────────
+   Únicas superficies de color sólido del hero: un lavado radial al 16% detrás del bitmap
+   las hace leer como bloques de color en reposo (sin hover), y el glifo lleva halo. */
+.hero-firma {
+  display: flex;
+  gap: 1.25rem;
+  align-items: stretch;
+  margin-top: 1.5rem;
+}
+.hero-firma-item {
+  position: relative;
+  display: grid;
+  gap: 0.6rem;
+  justify-items: start;
+  overflow: hidden;
+  padding: 1rem 1.2rem;
+  border-radius: var(--radius-m);
+  border: 1.5px solid var(--color-line);
+  background: var(--color-surface);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.hero-firma-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.16;
+  background: radial-gradient(120% 140% at 0% 0%, var(--tinte), transparent 70%);
+}
+.hero-firma-item[data-firma='marketing'] {
+  --tinte: var(--color-marketing);
+}
+.hero-firma-item[data-firma='web'] {
+  --tinte: var(--color-pixel);
+}
+.hero-firma-item > * {
+  position: relative;
+  z-index: 1;
+}
+.hero-firma-item:hover,
+.hero-firma-item:focus-visible {
+  transform: translateY(-2px);
+}
+.hero-firma-item[data-firma='marketing']:hover,
+.hero-firma-item[data-firma='marketing']:focus-visible {
+  border-color: var(--color-marketing);
+  box-shadow: 0 8px 24px -12px var(--color-marketing);
+}
+.hero-firma-item[data-firma='web']:hover,
+.hero-firma-item[data-firma='web']:focus-visible {
+  border-color: var(--color-pixel);
+  box-shadow: 0 8px 24px -12px var(--color-pixel);
+}
+.hero-firma-g {
+  --cell: clamp(22px, 3vw, 30px);
+  --gap: 4px;
+}
+.hero-firma-g i {
+  border-radius: 4px;
+}
+.hero-firma-item[data-firma='marketing'] .hero-firma-g i.c-keep,
+.hero-firma-item[data-firma='marketing'] .hero-firma-g i.c-out,
+.hero-firma-item[data-firma='marketing'] .hero-firma-g i.c-in {
+  box-shadow:
+    0 0 0 1px var(--color-surface),
+    0 0 14px -2px var(--color-marketing);
+}
+.hero-firma-item[data-firma='web'] .hero-firma-g i.c-keep,
+.hero-firma-item[data-firma='web'] .hero-firma-g i.c-out,
+.hero-firma-item[data-firma='web'] .hero-firma-g i.c-in {
+  box-shadow:
+    0 0 0 1px var(--color-surface),
+    0 0 14px -2px var(--color-pixel);
+}
+.hero-firma-item__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+@media (max-width: 639px) {
+  .hero-firma {
+    gap: 0.75rem;
+  }
+  .hero-firma-item {
+    padding: 0.8rem 0.9rem;
+  }
+  .hero-firma-g {
+    --cell: 18px;
+    --gap: 3px;
+  }
 }
 
 /* Los dos "capítulos" de la bifurcación: Marketing en superficie plana ámbar (ancla
@@ -2338,9 +2783,11 @@ footer:hover .footer-wordmark {
   letter-spacing: 0.02em;
   opacity: 0.8;
 }
+/* celda cuadrada explícita (5×7 con aire): ~28px desktop, 20px móvil — la escala a la que el
+   glifo se lee como letra Y como ícono (aprendido en el mockup, ronda 2). */
 .grupo-cap__glyph {
-  width: clamp(72px, 9vw, 96px);
-  height: clamp(72px, 9vw, 96px);
+  --cell: clamp(20px, 2.6vw, 28px);
+  --gap: 3px;
 }
 .grupo-cap__chips {
   display: flex;
@@ -2392,6 +2839,104 @@ footer:hover .footer-wordmark {
 .grupo-cap:hover,
 .grupo-cap:focus-within {
   box-shadow: 0 24px 48px -32px color-mix(in srgb, var(--color-ink) 45%, transparent);
+}
+
+/* ── Cubos de servicios de Creative (mockup 15-final-ajustado.html, sección servicios) ── */
+.cubos {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+.cubo {
+  grid-column: span 2;
+  display: grid;
+  gap: 0.8rem;
+  align-content: start;
+  min-height: 260px;
+  padding: 1.4rem 1.6rem 1.6rem;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--color-line);
+  border-top: 5px solid var(--acento);
+  background: var(--color-surface);
+  transition:
+    border-color 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    background 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.cubo:nth-child(4),
+.cubo:nth-child(5) {
+  grid-column: span 3;
+}
+.cubo--tinta {
+  background: var(--acento-suave);
+}
+@media (hover: hover) {
+  .cubo:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 48px -32px color-mix(in srgb, var(--color-ink) 40%, transparent);
+  }
+}
+.cubo__num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--acento-texto);
+  transition: color 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.cubo__canales {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.cubo__canales li {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.55rem;
+  border-radius: var(--radius-s);
+  background: var(--color-void);
+  border: 1px solid var(--color-line);
+}
+.cubo--tinta .cubo__canales li {
+  background: var(--color-surface);
+}
+.cubo__entrega {
+  color: var(--color-ink);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+.cubo__para {
+  color: var(--color-dim);
+  font-size: 0.875rem;
+}
+.cubo__quien {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--acento-texto);
+}
+.cubo__limite {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-line);
+  color: var(--color-dim);
+  font-size: 0.78rem;
+}
+@media (max-width: 960px) {
+  .cubo,
+  .cubo:nth-child(4),
+  .cubo:nth-child(5) {
+    grid-column: span 3;
+  }
+}
+@media (max-width: 640px) {
+  .cubo,
+  .cubo:nth-child(4),
+  .cubo:nth-child(5) {
+    grid-column: span 6;
+    min-height: 0;
+  }
 }
 
 /* Nota de unificación: CENTRADA entre los dos capítulos — el tercer punto de la

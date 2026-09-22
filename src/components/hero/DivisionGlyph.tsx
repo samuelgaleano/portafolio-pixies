@@ -1,36 +1,28 @@
-import { LETRAS, ICONOS, celdasEncendidas, type DivisionLetra } from '@/lib/division-glyph';
+import { LETRAS, ICONOS, rolesDeCeldas, type DivisionLetra } from '@/lib/division-glyph';
 
 interface DivisionGlyphProps {
   letra: DivisionLetra;
   variant: 'marketing' | 'web';
+  /** true = queda FIJO en ícono (división activa); false = letra en reposo, ícono al
+   * hover/foco/teaser del anfitrión `[data-glyph-host]`. */
+  fijo?: boolean;
   className?: string;
 }
 
-function Celdas({ bitmap }: { bitmap: string[] }) {
-  const encendidas = new Set(celdasEncendidas(bitmap));
+// El glifo de división (mockup 15-final-ajustado.html): bitmap 5×7 de la inicial (M/W)
+// que se REORGANIZA en su ícono propio (corazón / cursor). Morph progresivo, no cambio de
+// frame (Samuel, 2026-09-21): las 35 celdas se pintan una sola vez con su ROL — las que
+// quedan, las que se apagan (c-out), las que se encienden (c-in) — y el CSS anima cada
+// celda por separado con desfase diagonal (--gi = fila + columna) y un pequeño overshoot
+// en la escala. Sin estado ni JS: lo dispara :hover/:focus-within/.is-teasing del
+// anfitrión, o `fijo` cuando esa división es la activa.
+export default function DivisionGlyph({ letra, variant, fijo = false, className }: DivisionGlyphProps) {
+  const roles = rolesDeCeldas(LETRAS[letra], ICONOS[letra]);
   return (
-    <>
-      {Array.from({ length: 35 }, (_, i) => (
-        <i key={i} className={encendidas.has(i) ? 'on' : undefined} style={{ '--gi': i % 5 } as React.CSSProperties} />
+    <span className={`division-glyph division-glyph--${variant} ${fijo ? 'is-fijo' : ''} ${className ?? ''}`} aria-hidden="true">
+      {roles.map((rol, i) => (
+        <i key={i} className={rol === 'off' ? undefined : `c-${rol}`} style={{ '--gi': Math.floor(i / 5) + (i % 5) } as React.CSSProperties} />
       ))}
-    </>
-  );
-}
-
-// El glifo de división: bitmap 5×7 de la inicial (M/W) que se reorganiza en su ícono
-// propio (corazón / cursor) al hover/foco del panel padre `.grupo-cap` — mismo lenguaje
-// de píxeles del wordmark del hero, aplicado a las dos letras. CSS puro (sin estado ni
-// JS): las dos capas (letra e ícono) se renderizan siempre; `.grupo-cap:hover`/
-// `:focus-within` en globals.css decide cuál se ve.
-export default function DivisionGlyph({ letra, variant, className }: DivisionGlyphProps) {
-  return (
-    <span className={`division-glyph division-glyph--${variant} ${className ?? ''}`} aria-hidden="true">
-      <span className="division-glyph__capa division-glyph__capa--letra">
-        <Celdas bitmap={LETRAS[letra]} />
-      </span>
-      <span className="division-glyph__capa division-glyph__capa--icono">
-        <Celdas bitmap={ICONOS[letra]} />
-      </span>
     </span>
   );
 }

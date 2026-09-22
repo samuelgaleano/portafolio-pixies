@@ -24,17 +24,24 @@ export default function Footer() {
 
       <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-4 py-14 sm:grid-cols-3 sm:px-6">
         <div>
-          <p className="font-display text-lg font-bold">pixies</p>
+          <p className="font-display text-lg font-bold">
+            pixies <span className="font-mono text-[0.7rem] font-normal tracking-[0.06em] text-dim">design group</span>
+          </p>
           <p className="mt-2 text-sm text-dim">{t.footer.tagline}</p>
           <PixelGlyph name="spark" className="mt-6 text-[9px] text-pixel-soft/40" />
         </div>
-        {/* min-h-11 en los enlaces: área táctil cómoda (el gap-2 ya no basta en móvil) */}
+        {/* min-h-11 en los enlaces: área táctil cómoda (el gap-2 ya no basta en móvil).
+            grupo-y-marketing (2026-09-21): las dos divisiones son los destinos principales; el
+            ingeniero queda como enlace secundario (es el respaldo de Web, no un par del grupo). */}
         <nav aria-label={t.footer.navLabel} className="flex flex-col text-sm">
           <Link href="/#inicio" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
             {t.footer.navHome}
           </Link>
-          <Link href="/web#portafolio" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
-            {t.nav.portfolio}
+          <Link href="/web" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
+            Pixies Digital Web Design
+          </Link>
+          <Link href="/marketing" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
+            Pixies Creative
           </Link>
           <Link href="/samuel" className="flex min-h-11 items-center text-dim transition-colors hover:text-ink">
             {t.nav.engineer}

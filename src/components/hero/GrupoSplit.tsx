@@ -40,6 +40,7 @@ export default function GrupoSplit() {
           <a
             href={split.marketing.href}
             data-desde="grupo-split-marketing"
+            data-glyph-host
             data-reveal="left"
             className="grupo-cap grupo-cap--marketing"
             aria-label="Ver Pixies Creative"
@@ -66,6 +67,7 @@ export default function GrupoSplit() {
           <a
             href={split.web.href}
             data-desde="grupo-split-web"
+            data-glyph-host
             data-reveal="right"
             className="grupo-cap grupo-cap--web"
             aria-label="Ver Pixies Digital Web Design"
