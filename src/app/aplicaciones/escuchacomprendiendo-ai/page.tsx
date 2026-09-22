@@ -32,7 +32,7 @@ export default function EscuchaComprendiendoPage() {
 
       <ProductDemoExhibit />
 
-      <SubpageNav backHref="/#productos" backLabel={t.escucha.appBack} desde="productos" ctaLabel={t.escucha.appContact} />
+      <SubpageNav backHref="/web#productos" backLabel={t.escucha.appBack} desde="productos" ctaLabel={t.escucha.appContact} />
     </article>
   );
 }

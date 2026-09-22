@@ -1,23 +1,26 @@
 import Link from 'next/link';
 import { t } from '@/i18n';
+import DivisionSelector from './DivisionSelector';
+import DivisionCta from './DivisionCta';
+import DivisionSufijo from './DivisionSufijo';
 
+// Header del grupo (mockup 15-final-ajustado.html → producción, Samuel 2026-09-21):
+//   [logo del GRUPO + sufijo de la división activa] [ver como: Creative | Web | Grupo] [CTA de la división]
+// "Ingeniero" ya no es un enlace de primer nivel: el ingeniero es el respaldo de la división
+// Web (vive en el hero y el teaser de /web y en el pie), igual que el equipo de tres es el
+// respaldo de Creative. Sin menú hamburguesa: en móvil el selector baja a una segunda fila.
 export default function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-line/60 bg-void/80 backdrop-blur-md">
-      <nav
-        className="mx-auto flex h-14 w-full max-w-[1200px] items-center justify-between gap-2 px-4 sm:px-6"
-        aria-label={t.nav.mainLabel}
-      >
-        <Link
-          href="/#inicio"
-          className="flex min-h-11 items-center gap-2 font-display text-lg font-bold tracking-tight"
-        >
-          <svg width="18" height="18" viewBox="0 0 32 32" aria-hidden="true">
-            <rect x="0" y="0" width="14" height="14" fill="var(--color-pixel)" />
-            <rect x="18" y="0" width="14" height="14" fill="var(--color-pixel)" opacity="0.45" />
-            <rect x="0" y="18" width="14" height="14" fill="var(--color-pixel)" opacity="0.45" />
-            <rect x="18" y="18" width="14" height="14" fill="var(--color-signal)" />
-          </svg>
+      <nav className="header-grid mx-auto w-full max-w-[1200px] px-4 sm:px-6" aria-label={t.nav.mainLabel}>
+        <Link href="/" className="logo-grupo flex min-h-11 items-center gap-2 font-display text-lg font-bold tracking-tight">
+          {/* marca 2×2: dos celdas toman el color de la división activa (--acento) */}
+          <span className="logo-mk" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+            <i />
+          </span>
           <span>
             p
             {/* firma de marca: la "i" se desarma en píxeles cada tanto y vuelve —
@@ -35,33 +38,15 @@ export default function Header() {
             </span>
             xies
           </span>
+          <DivisionSufijo />
+          {/* sin aria-label en el enlace (Lighthouse: el nombre accesible debe contener el
+              texto visible, y el sufijo cambia por ruta); el destino va en sr-only */}
+          <span className="sr-only"> — inicio</span>
         </Link>
-        {/* sin menú hamburguesa; 3 enlaces caben a 360px con el CTA corto en móvil.
-            min-h-11 (44px): área táctil cómoda en móvil sin engordar la barra (h-14 la contiene) */}
-        <div className="flex items-center gap-1 text-sm sm:gap-2">
-          <Link
-            href="/#portafolio"
-            className="flex min-h-11 items-center whitespace-nowrap px-2 text-dim transition-colors hover:text-ink"
-          >
-            {t.nav.portfolio}
-          </Link>
-          {/* por debajo de 375px los 3 enlaces + CTA no caben: el nav se sale 50px del
-              viewport. "El Ingeniero" cede (sigue accesible desde el hero y el footer) */}
-          <Link
-            href="/samuel"
-            className="hidden min-h-11 items-center whitespace-nowrap px-2 text-dim transition-colors hover:text-ink min-[375px]:flex"
-          >
-            {t.nav.engineer}
-          </Link>
-          <Link
-            href="/#contacto"
-            data-desde="header"
-            className="ml-1 flex min-h-11 items-center rounded-(--radius-s) press bg-signal px-3 font-medium text-void transition hover:brightness-110"
-          >
-            <span className="sm:hidden">{t.nav.ctaShort}</span>
-            <span className="hidden sm:inline">{t.nav.cta}</span>
-          </Link>
-        </div>
+
+        <DivisionSelector />
+
+        <DivisionCta />
       </nav>
     </header>
   );

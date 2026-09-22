@@ -11,6 +11,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Las apps salen de src/data/apps.ts, igual que los posts de getAllPosts(): una sola lista.
   const routes = [
     '',
+    '/web',
+    '/marketing',
     '/samuel',
     '/samuel/casos',
     '/samuel/posts',

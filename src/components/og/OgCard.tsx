@@ -10,21 +10,27 @@ const INK = '#F2F3F7';
 const DIM = '#9AA3B8';
 const PIXEL = '#7C5CFF';
 const SIGNAL = '#FF5D73';
+const AMBER = '#F5B400';
 const LINE = '#262C3D';
 
 // titleSize: 84px por defecto; un título de una sola palabra larga (escuchacomprendiendo.ai,
 // 23 caracteres sin quiebre) no cabe en los 1056px útiles a ese tamaño y Satori lo cortaría.
+// accent (2026-09-22): 'creative' pinta el eyebrow y la celda firma en ámbar — la tarjeta de
+// /marketing lleva el color de su división, igual que el hilo de color del sitio.
 export function OgCard({
   eyebrow,
   title,
   subtitle,
   titleSize = 84,
+  accent = 'web',
 }: {
   eyebrow: string;
   title: string;
   subtitle: string;
   titleSize?: number;
+  accent?: 'web' | 'creative';
 }): ReactElement {
+  const ACCENT = accent === 'creative' ? AMBER : PIXEL;
   return (
     <div
       style={{
@@ -43,16 +49,16 @@ export function OgCard({
       <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
         {/* mosaico firma */}
         <div style={{ display: 'flex', flexWrap: 'wrap', width: 56, height: 56 }}>
-          <div style={{ width: 26, height: 26, background: PIXEL }} />
-          <div style={{ width: 26, height: 26, background: PIXEL, opacity: 0.45, marginLeft: 4 }} />
-          <div style={{ width: 26, height: 26, background: PIXEL, opacity: 0.45, marginTop: 4 }} />
+          <div style={{ width: 26, height: 26, background: ACCENT }} />
+          <div style={{ width: 26, height: 26, background: ACCENT, opacity: 0.45, marginLeft: 4 }} />
+          <div style={{ width: 26, height: 26, background: ACCENT, opacity: 0.45, marginTop: 4 }} />
           <div style={{ width: 26, height: 26, background: SIGNAL, marginLeft: 4, marginTop: 4 }} />
         </div>
         <div style={{ fontSize: 30, color: INK, fontWeight: 700, letterSpacing: -1 }}>pixies</div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ fontSize: 24, color: PIXEL, fontFamily: 'monospace', marginBottom: 16 }}>{eyebrow}</div>
+        <div style={{ fontSize: 24, color: ACCENT, fontFamily: 'monospace', marginBottom: 16 }}>{eyebrow}</div>
         <div style={{ fontSize: titleSize, color: INK, fontWeight: 800, lineHeight: 1.05, letterSpacing: -2 }}>{title}</div>
         <div style={{ fontSize: 30, color: DIM, marginTop: 20, maxWidth: 900 }}>{subtitle}</div>
       </div>

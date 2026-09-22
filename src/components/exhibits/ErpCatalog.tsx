@@ -1,13 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
+import Image from 'next/image';
 import type { TourStep } from './StepTour';
 import Collapsible from '@/components/ui/Collapsible';
 import { t } from '@/i18n';
-
-gsap.registerPlugin(useGSAP);
 
 // Catálogo del ERP (Samuel r24): la grilla de 5 tarjetas sueltas (r23) se veía completa
 // de un vistazo y no invitaba a seguir mirando. Ahora es destacado + laterales: un panel
@@ -49,18 +46,19 @@ export default function ErpCatalog({
     return () => io.disconnect();
   }, []);
 
-  // Crossfade al cambiar el destacado (clic o scroll-spy): la captura no salta, se funde.
-  useGSAP(
-    () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      gsap.fromTo(
-        shotRef.current,
-        { opacity: 0.3, scale: 1.012 },
-        { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out', overwrite: 'auto' }
-      );
-    },
-    { dependencies: [active] }
-  );
+  // Crossfade al cambiar de paso con la API nativa de animaciones (2026-09-22): hacía lo
+  // mismo con GSAP, y GSAP pesa ~95 KB de JS para una transición de medio segundo. WAAPI
+  // es nativa, cancela sola la anterior y no entra en el bundle.
+  useEffect(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    shotRef.current?.animate(
+      [
+        { opacity: 0.3, transform: 'scale(1.012)' },
+        { opacity: 1, transform: 'scale(1)' },
+      ],
+      { duration: 500, easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', fill: 'none' }
+    );
+  }, [active]);
 
   const step = steps[active] ?? steps[0];
 
@@ -71,13 +69,12 @@ export default function ErpCatalog({
         <article className="proj-card group relative flex flex-col overflow-hidden rounded-(--radius-m) border border-line bg-surface">
           <div ref={shotRef} className="relative aspect-[16/9] overflow-hidden border-b border-line bg-surface-2">
             {step.screenshot ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={step.screenshot}
                 alt={step.alt}
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover object-top transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-105"
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-cover object-top transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-105"
               />
             ) : (
               <div className="pixel-mask absolute inset-0" aria-hidden="true" />
@@ -146,8 +143,7 @@ export default function ErpCatalog({
             >
               <span className="relative aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-(--radius-s) border border-line bg-surface-2">
                 {s.screenshot ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={s.screenshot} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover object-top" />
+                  <Image src={s.screenshot} alt="" fill sizes="80px" className="object-cover object-top" />
                 ) : (
                   <span className="pixel-mask absolute inset-0" aria-hidden="true" />
                 )}

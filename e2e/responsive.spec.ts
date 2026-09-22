@@ -6,7 +6,15 @@ import { test, expect } from '@playwright/test';
 
 const WIDTHS = [320, 360, 390, 414, 768, 1024, 1280, 1440, 1920];
 // /aplicaciones/…: su h1 es una sola palabra de 23 caracteres — el caso más hostil al ancho.
-const ROUTES = ['/', '/samuel', '/samuel/posts/hola-mundo-pixies', '/aplicaciones/escuchacomprendiendo-ai'];
+// /web y /marketing (grupo-y-marketing, 2026-09): mismas reglas de overflow que el resto.
+const ROUTES = [
+  '/',
+  '/web',
+  '/marketing',
+  '/samuel',
+  '/samuel/posts/hola-mundo-pixies',
+  '/aplicaciones/escuchacomprendiendo-ai',
+];
 
 for (const route of ROUTES) {
   test(`sin scroll horizontal en ${route} (9 anchos)`, async ({ page }) => {
@@ -24,9 +32,10 @@ for (const route of ROUTES) {
 }
 
 test('el wordmark del hero cabe en su contenedor en todos los anchos', async ({ page }) => {
+  // grupo-y-marketing (2026-09-21): #wordmark (texto + canvas) es el hero de /web
   for (const width of [320, 390, 768, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto('/');
+    await page.goto('/web');
     const fits = await page.evaluate(() => {
       const h1 = document.getElementById('wordmark')!;
       const box = h1.getBoundingClientRect();

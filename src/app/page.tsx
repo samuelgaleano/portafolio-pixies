@@ -1,32 +1,33 @@
 import type { Metadata } from 'next';
 import SchemaOrg from '@/components/seo/SchemaOrg';
-import Hero from '@/components/hero/Hero';
-import PortfolioSection from '@/components/portfolio/PortfolioSection';
-import Statement from '@/components/cta/Statement';
-import MidCta from '@/components/cta/MidCta';
-import EngineerTeaser from '@/components/cta/EngineerTeaser';
+import GrupoHero from '@/components/hero/GrupoHero';
+import GrupoSplit from '@/components/hero/GrupoSplit';
+import ProcesoUnificado from '@/components/grupo/ProcesoUnificado';
 import LeadForm from '@/components/leads/LeadForm';
 import GradientText from '@/components/ui/GradientText';
 import Atmosphere from '@/components/fx/Atmosphere';
 import { t } from '@/i18n';
 
+// Home = landing del grupo (grupo-y-marketing, 2026-09): el contenido que vivía aquí
+// (portafolio, principios, CTA intermedio, teaser del ingeniero) se movió a `/web` —
+// es, hoy, la división Web. Esta página tiene su PROPIO hero (GrupoHero: sin
+// "/digital·web·design" ni portal del ingeniero, que son identidad de Web), la
+// bifurcación (GrupoSplit) y un contacto general; `/web` y `/marketing` tienen su propio
+// contenido completo y su propio contacto.
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
+  openGraph: { type: 'website', title: 'Pixies Design Group', description: t.meta.description },
 };
 
 export default function HomePage() {
   return (
     <>
       <SchemaOrg type="organization" />
-      <Hero />
+      <GrupoHero />
 
-      <PortfolioSection />
+      <GrupoSplit />
 
-      <Statement />
-
-      <MidCta />
-
-      <EngineerTeaser />
+      <ProcesoUnificado />
 
       <section id="contacto" className="relative overflow-hidden border-t border-line">
         <Atmosphere animate={false} />

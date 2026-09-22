@@ -2,6 +2,7 @@ import { t } from '@/i18n';
 import PixelCanvas from './PixelCanvas';
 import HeroGrid from './HeroGrid';
 import EngineerPortal from './EngineerPortal';
+import HeroFirma from './HeroFirma';
 import Atmosphere from '@/components/fx/Atmosphere';
 import Parallax from '@/components/fx/Parallax';
 
@@ -25,44 +26,53 @@ export default function Hero() {
           centrado, y la fila CTA + botón del ingeniero centrada como grupo (el botón deja de
           estar pegado a la derecha → más hacia la izquierda). Todo alineado al centro. */}
       <div className="relative z-10 mx-auto flex w-full max-w-[1200px] flex-col items-center px-4 pt-20 pb-6 sm:items-start sm:px-6 sm:pb-[7rem]">
-        {/* wordmark alineado a la IZQUIERDA (Samuel r21) arrancando ALTO (en la "línea roja" que
-            marcó Samuel). La tarjeta del ingeniero se ancla a su esquina inferior-derecha y roza la
-            "S" (.eng-dock), equilibrando la derecha. Todo el bloque sube junto con este margen. */}
+        {/* wordmark alineado a la IZQUIERDA (Samuel r21) arrancando ALTO. La tarjeta del
+            ingeniero queda debajo, a la derecha, sin solaparse (Samuel, 2026-09-22). */}
         <div className="relative mt-14 inline-block max-w-full sm:mt-[70px]">
           {/* tracking normal: a escala mosaico, el tight fusiona letras en el muestreo del canvas */}
           <h1 id="wordmark" className="font-display text-wordmark font-bold text-ink">
             {t.hero.title}
           </h1>
           <PixelCanvas />
-          {/* desktop: portal encajado en la esquina de la "S"; en móvil va en la fila CTA (intacto) */}
+        </div>
+
+        {/* UNA sola fila bajo el wordmark (Samuel, 2026-09-22): antes el portal del ingeniero
+            y la firma C/W ocupaban cada uno su propia franja horizontal con el resto vacío.
+            Ahora el bloque de texto + accesos + CTA va a la izquierda y el portal a la
+            derecha: la franja se llena y nada queda solo. En móvil se apila. */}
+        <div className="hero-fila">
+          <div className="hero-fila__texto">
+            {/* el texto decorado con puntos medios se oculta a lectores; sr-only lleva el texto limpio */}
+            <p className="hero-in text-center font-mono text-lg text-data sm:text-left sm:text-xl" style={{ '--d': '0.35s' } as React.CSSProperties}>
+              <span aria-hidden="true">/{t.hero.subtitle.toLowerCase().replaceAll(' ', '·')}</span>
+              <span className="sr-only">{t.hero.subtitle}</span>
+            </p>
+
+            {/* la firma C/W del grupo también aquí (W fija en cursor: esta es la división Web).
+                Misma pieza que en / y /marketing — cohesión entre las 3 rutas. */}
+            <div className="hero-in mt-3 flex justify-center sm:justify-start" style={{ '--d': '0.42s' } as React.CSSProperties}>
+              <HeroFirma activa="web" compacta />
+            </div>
+
+            <div className="hero-in mt-6 flex justify-center sm:justify-start" style={{ '--d': '0.5s' } as React.CSSProperties}>
+              <a href="#contacto" data-desde="hero" className="hero-cta press">
+                <span>{t.hero.cta}</span>
+                <span className="hero-cta__arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </div>
+          </div>
+
+          {/* desktop: el portal comparte fila con el bloque de texto, a la derecha */}
           <div className="eng-dock hidden sm:block">
             <EngineerPortal />
           </div>
         </div>
 
-        {/* el texto decorado con puntos medios se oculta a lectores; sr-only lleva el texto limpio */}
-        {/* stagger corto: Casey scrollea a los ~1.5s; el contenido no puede llegar tarde */}
-        <p className="hero-in mt-3 text-center font-mono text-lg text-data sm:text-left sm:text-xl" style={{ '--d': '0.9s' } as React.CSSProperties}>
-          <span aria-hidden="true">/{t.hero.subtitle.toLowerCase().replaceAll(' ', '·')}</span>
-          <span className="sr-only">{t.hero.subtitle}</span>
-        </p>
-
-        <div
-          className="hero-in mt-8 flex flex-col items-center gap-4 sm:mt-8 sm:flex-row sm:justify-start sm:gap-6"
-          style={{ '--d': '1.05s' } as React.CSSProperties}
-        >
-          <a href="#contacto" data-desde="hero" className="hero-cta press">
-            <span>{t.hero.cta}</span>
-            <span className="hero-cta__arrow" aria-hidden="true">
-              →
-            </span>
-          </a>
-
-          {/* botón disruptivo → /samuel: en MÓVIL va aquí (fila CTA); en desktop se muestra
-              encajado en la "S" del wordmark (arriba). El wipe lo dispara el interceptor global. */}
-          <div className="sm:hidden">
-            <EngineerPortal />
-          </div>
+        {/* móvil: el portal cierra el hero (en desktop va en la fila de arriba) */}
+        <div className="mt-7 self-center sm:hidden">
+          <EngineerPortal />
         </div>
       </div>
     </section>

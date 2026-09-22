@@ -1,34 +1,51 @@
 'use client';
 
-import { useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
+import { useEffect, useRef } from 'react';
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
-
-// Barra de progreso de lectura (GSAP ScrollTrigger, patrón oficial gsap-skills):
-// una franja violeta con remate de píxel que se desliza (xPercent, no scale — el remate
-// no se deforma) siguiendo el scroll de toda la página. scrub: true = mapeo directo a la
-// posición de scroll (solo se mueve cuando el usuario se desplaza, seguro también con
-// reduced-motion). end: 'max' se recalcula solo en cada ScrollTrigger.refresh().
+// Barra de progreso de lectura: una franja violeta con remate de píxel que sigue el scroll
+// de la página.
+//
+// 2026-09-22 (Samuel: "la página a veces se traba, bajos FPS"): antes esto usaba GSAP +
+// ScrollTrigger, y como vive en el layout **arrastraba GSAP al bundle de TODAS las rutas**
+// para mover una barra de 3 px. Ahora es vanilla: un listener de scroll pasivo que solo
+// apunta el valor y un rAF que escribe una única variable CSS (`--sp`). Sin dependencias,
+// sin layout thrashing (se lee scrollY, no el DOM) y el pintado lo hace el compositor.
 export default function ScrollProgress() {
   const bar = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    // x: 0 en el "from": el CSS trae translateX(-101%) para que el HTML estático no
-    // muestre la barra; GSAP lo leería como offset en px y lo SUMARÍA a xPercent
-    // (doble desplazamiento). Al fijar x:0 aquí, xPercent queda como única fuente.
-    gsap.fromTo(
-      bar.current,
-      { x: 0, xPercent: -101 },
-      {
-        xPercent: 0,
-        ease: 'none',
-        scrollTrigger: { start: 0, end: 'max', scrub: true },
-      }
-    );
-  });
+  useEffect(() => {
+    const el = bar.current;
+    if (!el) return;
+    let raf = 0;
+    let alto = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+
+    const pintar = () => {
+      raf = 0;
+      const p = Math.min(1, Math.max(0, scrollY / alto));
+      el.style.setProperty('--sp', String(p));
+    };
+    const pedir = () => {
+      if (!raf) raf = requestAnimationFrame(pintar);
+    };
+    const medir = () => {
+      alto = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+      pedir();
+    };
+
+    medir();
+    addEventListener('scroll', pedir, { passive: true });
+    addEventListener('resize', medir, { passive: true });
+    // el alto del documento cambia al abrir desplegables o al cargar imágenes
+    const ro = new ResizeObserver(medir);
+    ro.observe(document.body);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      removeEventListener('scroll', pedir);
+      removeEventListener('resize', medir);
+      ro.disconnect();
+    };
+  }, []);
 
   return (
     <div className="scroll-progress" aria-hidden="true">

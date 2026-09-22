@@ -11,11 +11,18 @@
   --color-dim: #5b5480;         /* texto secundario sobre claro (5.1:1 AA) */
   --color-pixel: #6d4aff;       /* primario: marca, enlaces, foco (4.6:1 sobre lavanda) */
   --color-pixel-soft: #5a37d6;  /* violeta de TEXTO sobre claro: más oscuro que pixel (6.3:1) */
-  --color-signal: #e8395c;      /* SOLO CTAs de conversión, texto void (claro) encima */
+  --color-signal: #d0234a;      /* SOLO CTAs de conversión, texto void (claro) encima (4.6:1 AA; antes #e8395c = 3.6, fallaba) */
   --color-data: #0d7490;        /* SOLO capa técnica sobre claro: mono, badges, logs (4.7:1) */
   --color-ok: #15803d;
   --color-err: #dc2626;
   --color-code: #171326;        /* fondo OSCURO para bloques de código (Shiki poimandres) */
+
+  /* Marketing (división Pixies Marketing, grupo-y-marketing 2026-09): amarillo proceso,
+     la Y del CMYK de Edison Galeano (Brand & Creative Director). Validado en el mockup
+     15-final-ajustado.html — mismos 3 tonos, misma relación con --color-ink/--color-void. */
+  --color-marketing: #f5b400;       /* superficie plana del capítulo Marketing */
+  --color-marketing-texto: #8a5a00; /* texto sobre --color-void o --color-marketing (5.2:1) */
+  --color-marketing-suave: #fff1bf; /* tinte para chips y fondos de apoyo */
 
   /* Tipografía */
   --font-display: 'Clash Display', system-ui, sans-serif;

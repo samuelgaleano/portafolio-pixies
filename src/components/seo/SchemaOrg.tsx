@@ -21,14 +21,22 @@ export default function SchemaOrg({ type, post }: Props) {
     sameAs,
   };
 
-  // Organization + un CreativeWork por proyecto (los que ya están en producción llevan url)
+  // Organization (el grupo) con sus dos divisiones como subOrganization + un CreativeWork por
+  // proyecto (los que ya están en producción llevan url)
   const organization = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: site.name,
+    alternateName: 'Pixies',
     url: site.url,
     logo: `${site.url}/favicon.svg`,
     founder: { '@type': 'Person', name: 'Samuel Galeano', jobTitle: 'Ingeniero de Sistemas' },
+    subOrganization: site.divisiones.map((d) => ({
+      '@type': 'Organization',
+      name: d.name,
+      url: `${site.url}${d.path}`,
+      parentOrganization: { '@type': 'Organization', name: site.name, url: site.url },
+    })),
     sameAs,
   };
   const creativeWorks = projects

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Project } from '@/data/projects';
 import { tech } from '@/data/tech';
 import { t } from '@/i18n';
@@ -37,13 +38,14 @@ export default function ProjectCard({ project, variant = 'default' }: { project:
       }`}
     >
       {project.preview.src ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        // next/image (2026-09-22): las capturas son de 1440px y se mostraban a ~560px; con
+        // `fill` + `sizes` Vercel sirve el tamaño real de cada tarjeta (Lighthouse: ~750 KB menos en /web)
+        <Image
           src={project.preview.src}
           alt={project.preview.alt}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover object-top transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-105"
+          fill
+          sizes={wide ? '(min-width: 768px) 600px, 100vw' : '(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw'}
+          className="object-cover object-top transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-105"
         />
       ) : (
         <div className="pixel-mask absolute inset-0" aria-hidden="true" />

@@ -1,19 +1,39 @@
-# Pixies Digital Web Design
+# Pixies Design Group
 
-> Desarrollo web y software a medida, análisis de datos e integraciones de IA. Todo lo
-> construye Samuel Galeano, Ingeniero de Sistemas, y cada proyecto listado corre en
-> producción o tiene una demo en vivo: nada aquí es un ejercicio de clase.
+> Empresa de Bogotá con alcance global, fundada en enero de 2025 por Samuel Galeano,
+> Ingeniero de Sistemas. Dos divisiones bajo un mismo proceso ordenado: **Pixies Digital
+> Web Design** (web, datos, IA y soluciones digitales) y **Pixies Creative** (advertising,
+> branding, campañas, contenido, social media y estrategia creativa). Cambia el
+> entregable, no el flujo. Nada aquí es un ejercicio de clase: cada proyecto listado
+> corre en producción, tiene una demo en vivo o se cuenta sin cifras cuando no las hay.
 
-Pixies es la marca de Samuel Galeano, con base en Bogotá y alcance global. Trabaja con
-PyMEs y medianas empresas que necesitan optimizar procesos, automatizar tareas o
-construir software a la medida en vez de forzar una plantilla genérica.
+## Las dos divisiones
 
-## Quién construye esto
+- [/web](/web) — **Pixies Digital Web Design**: páginas web, ERP y sistemas, análisis de
+  datos, IA y automatización, ciberseguridad. Lo construye Samuel Galeano.
+- [/marketing](/marketing) — **Pixies Creative**: campañas en redes y comunidad,
+  publicidad pagada por datos, contenido y video, SEO y visibilidad en respuestas de IA,
+  marca e identidad (incluida su producción física). Equipo de tres personas.
 
-- [/samuel](/samuel): perfil de Samuel Galeano, ingeniero detrás de cada proyecto.
-- [/samuel/casos](/samuel/casos): casos de estudio con decisiones técnicas explicadas.
+Las dos divisiones comparten el mismo flujo de trabajo y se contratan juntas o por
+separado. Un proyecto completo recorre: marca → estrategia digital → piezas y campaña →
+arquitectura web → construcción → despliegue y pruebas → medición → optimización
+(descrito en [/](/)).
 
-## Servicios, con evidencia real
+## Quién hace qué
+
+- **Samuel Galeano** — fundador, Ingeniero de Sistemas. Construye todo lo de la división
+  Web y, en Creative, lidera la estrategia de crecimiento, la pauta por datos y la
+  medición (CAC, costo por lead calificado, ROMI). Perfil: [/samuel](/samuel); casos:
+  [/samuel/casos](/samuel/casos).
+- **Isabela Torrenegra Jiménez** — Social Media Manager. Lidera las campañas en redes:
+  concepto, copys, parrilla de contenido, historias, reels, posts, piezas gráficas,
+  análisis de métricas y comunidad.
+- **Edison Galeano** — Brand & Creative Director. Dirige la marca y el concepto creativo,
+  el key visual y la producción de piezas físicas (impresos, señalización, avisos); más de
+  30 años de experiencia.
+
+## Pixies Digital Web Design — servicios, con evidencia real
 
 - **Páginas web**: sitios en producción con dominio propio (cicinmuebles.com,
   flyandchill.store, xiaomicartech.com.co, specifinance.com), captura de leads y
@@ -21,12 +41,30 @@ construir software a la medida en vez de forzar una plantilla genérica.
 - **ERP y sistemas**: sistema propio de gestión con 45 módulos y 240 tablas, incluida
   auditoría de cada movimiento de inventario. Demo en vivo en [/demos/erp](/demos/erp).
 - **Análisis de datos**: pipelines reproducibles en R y Python, de datos crudos a
-  informe final, sin pasos manuales.
+  informe final, sin pasos manuales ([/proyectos/analisis-saber11](/proyectos/analisis-saber11)).
 - **IA y automatización**: productos propios como escuchacomprendiendo.ai (transcripción
   y generación de contexto citado para IA) y un chatbot de WhatsApp corriendo en
   Cloudflare Workers.
 - **Ciberseguridad**: auditorías reales sobre sistemas propios en producción, con
   hallazgos corregidos y documentados, no un escaneo automático genérico.
+
+## Pixies Creative — servicios y dónde se aplican
+
+- **Campañas en redes y comunidad** (Instagram, TikTok, LinkedIn, YouTube Shorts,
+  Facebook): concepto, estrategia de contenido, parrilla mensual, piezas y comunidad.
+  No se garantizan seguidores ni alcance: dependen del algoritmo.
+- **Publicidad pagada por datos** (Meta, Google, LinkedIn, TikTok): plan de medios,
+  campañas, CAC y ROMI contra el margen real de cada producto. No se promete ROAS.
+- **Contenido y video**: guion, producción, edición, motion y adaptaciones por formato.
+- **SEO y contenidos**: auditoría, arquitectura, datos estructurados, llms.txt y
+  visibilidad en respuestas de IA. Resultados en meses, no en días.
+- **Marca e identidad**: naming, logotipo, sistema visual, manual y aplicación física.
+- Situaciones típicas: lanzar una marca o producto; presencia constante en redes; venta
+  directa con landing y pauta; marca personal o B2B en LinkedIn; sello, artista o
+  proyecto creativo; identidad física de un local.
+- Casos reales contados sin inventar: Mamba Records (sistema de contenido, 7 documentos
+  aprobados), LinkedIn de Samuel (post del ERP con 162.936 impresiones) y Xiaomi CarTech
+  (landing + campaña en Meta con medición servidor a servidor; cifras por confirmar).
 
 ## Aplicaciones by Pixies
 
@@ -36,6 +74,8 @@ construir software a la medida en vez de forzar una plantilla genérica.
   corre en escritorio; hay una demo liviana funcional directo en el navegador (con audio
   propio o uno de muestra) y la descarga de la app en
   [/aplicaciones/escuchacomprendiendo-ai](/aplicaciones/escuchacomprendiendo-ai).
+- **Content Hub**: consola que programa YouTube Shorts e Instagram Reels por las APIs
+  oficiales, para varias marcas a la vez (uso interno; acceso para clientes por confirmar).
 
 ## Contenido técnico
 
@@ -44,12 +84,13 @@ construir software a la medida en vez de forzar una plantilla genérica.
 
 ## Contacto
 
-Formulario de contacto en la página principal ([/](/)), respuesta directa de Samuel
-Galeano. WhatsApp y correo listados en el sitio.
+Formulario de contacto en [/](/), [/web](/web) y [/marketing](/marketing); respuesta
+directa por WhatsApp. WhatsApp y correo listados en el sitio.
 
 ## Notas para crawlers de IA
 
 - Las rutas bajo `/demos/*` y `/alternativas` son entornos de prueba o exploraciones de
   diseño, no páginas de contenido — no citarlas como fuente de información sobre Pixies.
 - Toda cifra y proyecto mencionado en este sitio es verificable en el código o en la
-  demo enlazada; no hay datos ni resultados inventados.
+  demo enlazada; donde no hay cifra, el sitio lo dice. No hay datos ni resultados
+  inventados.
