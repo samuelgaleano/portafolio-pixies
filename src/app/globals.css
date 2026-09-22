@@ -638,6 +638,26 @@ footer:hover .footer-wordmark {
   animation: none;
   opacity: 0.3;
 }
+/* Hero del GRUPO (2026-09-22): el halo izquierdo es ámbar (Creative, a la izquierda) y el
+   derecho violeta (Web, a la derecha) — la gramática espacial dicha desde el fondo. */
+.atmosphere--grupo::before {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-marketing) 34%, transparent) 0%,
+    color-mix(in srgb, var(--color-marketing) 20%, transparent) 30%,
+    color-mix(in srgb, var(--color-marketing) 7%, transparent) 62%,
+    transparent 100%
+  );
+}
+.atmosphere--grupo::after {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-pixel) 44%, transparent) 0%,
+    color-mix(in srgb, var(--color-pixel) 28%, transparent) 30%,
+    color-mix(in srgb, var(--color-pixel) 10%, transparent) 62%,
+    transparent 100%
+  );
+}
 
 /* Marco "pantalla" de las demos embebidas + skeleton de carga (mientras Render despierta).
    Píxeles cuadrados en la barra (eco de la marca, no los típicos círculos). */
@@ -2303,6 +2323,12 @@ footer:hover .footer-wordmark {
   /* el destello del wordmark de partículas (PixelCanvas) toma el ámbar del entorno */
   --wm-flick: var(--color-marketing);
 }
+/* El grupo destella en los DOS colores (Samuel, 2026-09-22: "hay morados, meterle unos
+   amarillos"): violeta de Web y ámbar de Creative, a partes iguales. */
+:root[data-division='grupo'] {
+  --wm-flick: var(--color-pixel);
+  --wm-flick-2: var(--color-marketing);
+}
 /* En móvil el selector baja a una segunda fila del header fijo: el contenido y las anclas
    se corren lo que crece la barra, sin tocar el padding de cada página. */
 @media (max-width: 639px) {
@@ -2530,7 +2556,7 @@ main {
 }
 
 /* ── Grupo + Marketing (2026-09): glifo de división ──────────────────────────────
-   Mismo lenguaje de píxeles que el wordmark (bitmap 5×7), aplicado a las dos iniciales.
+   Mismo lenguaje de píxeles que el wordmark (bitmap 7×9), aplicado a las dos iniciales (C/W).
    MORPH PROGRESIVO (Samuel, 2026-09-21: "no quiero que solo cambie el frame"): cada celda
    se pinta una sola vez con su rol — c-keep (queda), c-out (se apaga al pasar a ícono),
    c-in (se enciende) — y se anima POR SEPARADO con un desfase diagonal (--gi = fila +
@@ -2538,10 +2564,11 @@ main {
    es LA firma). Se dispara por :hover/:focus-within/.is-teasing del anfitrión
    [data-glyph-host], o queda fijo con .is-fijo (división activa). Ver DivisionGlyph.tsx. */
 .division-glyph {
-  --cell: 20px;
+  /* retícula 7×9 (2026-09-22: C en vez de M y cursor con cola; antes 5×7) */
+  --cell: 16px;
   --gap: 3px;
   display: grid;
-  grid-template-columns: repeat(5, var(--cell));
+  grid-template-columns: repeat(7, var(--cell));
   grid-auto-rows: var(--cell);
   gap: var(--gap);
 }
@@ -2639,7 +2666,7 @@ main {
   color: var(--color-dim);
 }
 
-/* ── Hero-firma: las dos tarjetas M/W del hero (mockup) ─────────────────────────────
+/* ── Hero-firma: las dos tarjetas C/W del hero (mockup) ─────────────────────────────
    Únicas superficies de color sólido del hero: un lavado radial al 16% detrás del bitmap
    las hace leer como bloques de color en reposo (sin hover), y el glifo lleva halo. */
 .hero-firma {
@@ -2698,8 +2725,8 @@ main {
   box-shadow: 0 8px 24px -12px var(--color-pixel);
 }
 .hero-firma-g {
-  --cell: clamp(22px, 3vw, 30px);
-  --gap: 4px;
+  --cell: clamp(16px, 2.2vw, 22px);
+  --gap: 3px;
 }
 .hero-firma-g i {
   border-radius: 4px;
@@ -2733,8 +2760,8 @@ main {
     padding: 0.8rem 0.9rem;
   }
   .hero-firma-g {
-    --cell: 18px;
-    --gap: 3px;
+    --cell: 13px;
+    --gap: 2px;
   }
 }
 /* versión compacta (/web, /marketing): firma + atajo a la otra división, en fila, con la
@@ -2750,7 +2777,7 @@ main {
   padding: 0.55rem 0.9rem 0.55rem 0.65rem;
 }
 .hero-firma--compacta .hero-firma-g {
-  --cell: 14px;
+  --cell: 10px;
   --gap: 2px;
 }
 .hero-firma--compacta .hero-firma-g i {
@@ -2872,10 +2899,10 @@ main {
   letter-spacing: 0.02em;
   opacity: 0.8;
 }
-/* celda cuadrada explícita (5×7 con aire): ~28px desktop, 20px móvil — la escala a la que el
-   glifo se lee como letra Y como ícono (aprendido en el mockup, ronda 2). */
+/* celda cuadrada explícita (7×9 con aire): ~21px desktop, 15px móvil — misma caja que tenía
+   el 5×7 a 28px, la escala a la que el glifo se lee como letra Y como ícono. */
 .grupo-cap__glyph {
-  --cell: clamp(20px, 2.6vw, 28px);
+  --cell: clamp(15px, 1.9vw, 21px);
   --gap: 3px;
 }
 .grupo-cap__chips {

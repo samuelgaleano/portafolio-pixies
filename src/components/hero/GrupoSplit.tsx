@@ -46,7 +46,7 @@ export default function GrupoSplit() {
             aria-label="Ver Pixies Creative"
           >
             <span className="grupo-cap__num">{split.marketing.capNum}</span>
-            <DivisionGlyph letra="M" variant="marketing" className="grupo-cap__glyph" />
+            <DivisionGlyph letra="C" variant="marketing" className="grupo-cap__glyph" />
             <h3 className="font-display text-[clamp(1.6rem,2.6vw,2.2rem)] font-bold text-balance">{split.marketing.title}</h3>
             <p className="grupo-cap__tagline">{split.marketing.tagline}</p>
             <p className="max-w-[34ch] text-[1.1rem]">{split.marketing.que}</p>

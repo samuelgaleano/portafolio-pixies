@@ -12,9 +12,17 @@ test('home renderiza: wordmark animado del grupo, bifurcación y proyecto de pun
   const ld = await page.locator('script[type="application/ld+json"]').first().textContent();
   expect(ld).toContain('"name":"Pixies Design Group"');
   expect(ld).toContain('"subOrganization"');
-  // el mismo PIXIES animado de /web (PixelCanvas, menos partículas) y el h1 accesible
+  // el mismo PIXIES animado de /web (PixelCanvas con el bitmap propio) y el h1 accesible
   await expect(page.locator('#wordmark')).toHaveText('PIXIES');
   await expect(page.locator('#wordmark + canvas')).toBeVisible();
+  // el grupo destella en los DOS colores de división (violeta de Web + ámbar de Creative)
+  const flick = await page.evaluate(() => {
+    const cs = getComputedStyle(document.documentElement);
+    return [cs.getPropertyValue('--wm-flick').trim(), cs.getPropertyValue('--wm-flick-2').trim()];
+  });
+  expect(flick[0]).toBeTruthy();
+  expect(flick[1]).toBeTruthy();
+  expect(flick[0]).not.toBe(flick[1]);
   expect(await page.evaluate(() => document.documentElement.dataset.division)).toBe('grupo');
   // la selección de división es la bifurcación (sin tarjetas chicas en el hero de la home)
   await expect(page.locator('.hero-firma')).toHaveCount(0);
@@ -199,10 +207,13 @@ test('bifurcación del grupo: los paneles llevan a /marketing y /web de verdad',
 // El morph del glifo es progresivo (Samuel: "no que solo cambie el frame"): cada celda del
 // ícono entra con su propio desfase. Se comprueba que las celdas "c-in" del glifo NO fijo
 // tienen retardos distintos entre sí y que al hover pasan a opacidad 1.
-test('glifo M/W: morph progresivo celda por celda al hover del panel', async ({ page }) => {
+test('glifo C/W: morph progresivo celda por celda al hover del panel', async ({ page }) => {
   await page.goto('/');
   const panel = page.locator('.grupo-cap--web');
   await panel.scrollIntoViewIfNeeded();
+  // retícula 7×9 (2026-09-22): 63 celdas por glifo, C para Creative y W para Web
+  await expect(panel.locator('.division-glyph i')).toHaveCount(63);
+  await expect(page.locator('.grupo-cap--marketing .division-glyph i')).toHaveCount(63);
   const celdasIn = panel.locator('.division-glyph i.c-in');
   await expect(celdasIn.first()).toBeAttached();
   const delays = await celdasIn.evaluateAll((els) => els.map((el) => getComputedStyle(el).transitionDelay));

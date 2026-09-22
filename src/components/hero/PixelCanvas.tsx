@@ -1,37 +1,38 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { WORDMARK_BITMAP, WORDMARK_COLS, WORDMARK_ROWS } from '@/lib/wordmark-bitmap';
 
-// Firma viva (spec 2026-07-14): el wordmark se ensambla desde píxeles y NO muere —
-// queda como campo interactivo que repele al cursor (resorte amortiguado de vuelta),
-// parpadea en violeta, respira con una onda lenta y glitchea una banda de vez en cuando.
-// Vanilla sobre canvas 2D; un solo loop rAF que se pausa fuera de viewport.
-// Sin JS, con reduced-motion o si algo falla: el h1 real queda visible.
-// El h1 se oculta con opacity (no visibility) para seguir en el árbol de accesibilidad.
+// Firma viva (spec 2026-07-14): el wordmark se ensambla desde píxeles y NO muere — queda
+// como campo interactivo que repele al cursor (resorte amortiguado de vuelta) y cuyos
+// píxeles destellan de color por su cuenta. Vanilla sobre canvas 2D; un solo loop rAF que
+// se pausa fuera de viewport. Sin JS, con reduced-motion o si algo falla: el h1 real queda
+// visible. El h1 se oculta con opacity (no visibility) para seguir en el árbol de a11y.
 //
-// Rendimiento (Samuel, 2026-09-22: "a veces se siente trabado por la animación"): el
-// muestreo es por cobertura de celda (letras limpias, la S incluida), el buffer va a DPR
-// ≤ 1.5 y el reposo se pinta por lotes de alpha con un solo cambio de color por frame.
-// La onda, el glitch y el destello siguen siendo autónomos (no dependen del mouse); el
-// mouse solo añade la repulsión y su costo es el mismo que el de un frame en reposo.
+// 2026-09-22 (Samuel): las letras ya NO se muestrean de la fuente — son un bitmap propio
+// (`lib/wordmark-bitmap.ts`): a celdas gruesas, rasterizar Clash Display dejaba esquinas
+// perdidas en la P y la I y una S que parecía un 8. Con el bitmap cada letra está dibujada
+// a mano, sin píxeles perdidos, con ~220 partículas (antes 370–700). La única animación
+// autónoma es el destello de color (violeta y/o ámbar según el entorno: --wm-flick y
+// --wm-flick-2); la onda y el glitch se quitaron ("como que salta la palabra"). Intro y
+// resorte más rápidos ("más frenético"). Buffer a DPR ≤ 1,5 y dibujo por lotes de alpha.
 
-const INTRO_MS = 1400;
-const SPRING = 90; // rigidez del resorte hacia el destino (1/s²)
-const DAMP = 11; // amortiguación de la velocidad (1/s)
+const INTRO_MS = 900;
+const SPRING = 170; // rigidez del resorte hacia el destino (1/s²)
+const DAMP = 15; // amortiguación de la velocidad (1/s)
 const REPEL_R = 120; // radio de repulsión del cursor (px)
-const REPEL_F = 3200; // fuerza de repulsión (px/s²)
-const FLICK_P = 0.0004; // prob. por partícula/frame de parpadear a violeta
-const WAVE_EVERY_MS = 6500; // cada cuánto respira el wordmark
-const WAVE_SPEED = 800; // px/s del frente de onda
-const GLITCH_MIN_MS = 8000;
-const GLITCH_VAR_MS = 6000;
-const GLITCH_DUR_MS = 130;
+const REPEL_F = 3600; // fuerza de repulsión (px/s²)
+// destellos por partícula y segundo: ~0.17 × 224 celdas ≈ 38/s, y como cada uno dura
+// 180–440 ms, hay ~12 encendidas a la vez (5 % del wordmark) — vivo y visible en los dos
+// colores sin volverse ruido
+const FLICK_RATE = 0.17;
+const FLICK_MIN_MS = 180;
+const FLICK_VAR_MS = 260;
 
 // textura estática en 3 niveles (no continua): así el reposo se pinta en 3 pasadas con UN
-// globalAlpha cada una, en vez de cambiar alpha y color por partícula (2·N cambios de estado
-// por frame era lo que pesaba con el mouse encima, no la física)
+// globalAlpha cada una, en vez de cambiar alpha y color por partícula
 const ALPHAS = [0.86, 0.93, 1] as const;
-const DPR_MAX = 1.5; // 2 → 1.5: 44 % menos píxeles por frame; los cuadrados siguen nítidos
+const DPR_MAX = 1.5;
 
 interface Particle {
   tx: number; // destino
@@ -42,17 +43,11 @@ interface Particle {
   vy: number;
   delay: number; // stagger del intro (0–0.35)
   alpha: number; // textura estática (uno de ALPHAS)
-  flickUntil: number; // acc (ms) hasta el que se pinta violeta
+  flickUntil: number; // acc (ms) hasta el que se pinta de color
+  flickColor: number; // índice en la paleta de destello
 }
 
-interface PixelCanvasProps {
-  /** Divisor del tamaño de celda respecto al font-size del h1: 22 = densidad original de
-   * /web; 16 = celdas más grandes → ~la mitad de partículas. La home del grupo usa 16
-   * (Samuel, 2026-09-21: "que cargue rápido, que no genere negativos"). */
-  divisor?: number;
-}
-
-export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
+export default function PixelCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -70,7 +65,7 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
       h1.style.opacity = '1';
       canvas.classList.add('hidden');
     };
-    // watchdog — si fuentes/canvas fallan, el wordmark aparece igual
+    // watchdog — si algo falla, el wordmark real aparece igual
     const watchdog = setTimeout(show, 4000);
 
     const cleanups: (() => void)[] = [];
@@ -81,12 +76,13 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
         const ctx = canvas.getContext('2d');
         if (!ctx) throw new Error('no ctx');
 
-        // colores desde los tokens (única fuente de verdad: tokens.css). El destello toma
-        // --wm-flick si el entorno lo define (Creative → ámbar, ver globals.css); si no,
-        // el violeta de marca de siempre.
+        // colores desde los tokens (única fuente de verdad: tokens.css). Destellos:
+        // --wm-flick (y --wm-flick-2 si el entorno lo define — el grupo lleva violeta Y
+        // ámbar, ver globals.css); si no hay nada, el violeta de marca.
         const rootCss = getComputedStyle(document.documentElement);
-        const cPixel = rootCss.getPropertyValue('--wm-flick').trim() || rootCss.getPropertyValue('--color-pixel').trim() || '#7c5cff';
-        const cInk = rootCss.getPropertyValue('--color-ink').trim() || '#f2f3f7';
+        const leer = (v: string) => rootCss.getPropertyValue(v).trim();
+        const flickColors = [leer('--wm-flick') || leer('--color-pixel') || '#7c5cff', leer('--wm-flick-2')].filter(Boolean);
+        const cInk = leer('--color-ink') || '#1c1533';
 
         let parts: Particle[] = [];
         let cell = 8;
@@ -94,7 +90,8 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
         let h = 0;
         let dirty = true; // fuerza un repintado (p. ej. tras resize, que limpia el canvas)
 
-        // Muestrea el texto real y (re)construye las partículas. `settled` = sin intro.
+        // Coloca el bitmap centrado en la caja del h1 y (re)construye las partículas.
+        // `settled` = sin intro.
         const build = (settled: boolean) => {
           const r = wrap.getBoundingClientRect();
           w = r.width;
@@ -108,61 +105,18 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
           canvas.style.height = `${h}px`;
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-          const cs = getComputedStyle(h1);
-          const off = document.createElement('canvas');
-          off.width = Math.ceil(w);
-          off.height = Math.ceil(h);
-          const ow = off.width;
-          const oh = off.height;
-          const octx = off.getContext('2d');
-          if (!octx) throw new Error('no octx');
-          octx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
-          if ('letterSpacing' in octx) (octx as CanvasRenderingContext2D).letterSpacing = cs.letterSpacing;
-          octx.textBaseline = 'middle';
-          const text = h1.textContent?.trim() ?? 'PIXIES';
-          octx.fillText(text, 0, oh / 2);
+          // la celda es la mayor que hace caber el bitmap entero en la caja del h1
+          cell = Math.max(3, Math.floor(Math.min(w / WORDMARK_COLS, h / WORDMARK_ROWS)));
+          const ox = Math.round((w - cell * WORDMARK_COLS) / 2);
+          const oy = Math.round((h - cell * WORDMARK_ROWS) / 2);
 
-          // celda adaptativa: acota el nº de partículas a un rango similar en toda pantalla.
-          // /22 mantiene los huecos entre letras: con celdas más gruesas, PIXIES se fusiona
-          // (con /16 en la home del grupo sigue legible y pesa la mitad en partículas)
-          cell = Math.max(5, Math.round(parseFloat(cs.fontSize) / divisor));
-
-          // Retícula centrada sobre la caja de tinta real del texto (no sobre el origen del
-          // canvas): las letras quedan simétricas y ninguna columna se pierde en el borde.
-          const m = octx.measureText(text);
-          const inkL = Math.max(0, Math.floor(-m.actualBoundingBoxLeft));
-          const inkR = Math.min(ow, Math.ceil(m.actualBoundingBoxRight));
-          const inkT = Math.max(0, Math.floor(oh / 2 - m.actualBoundingBoxAscent));
-          const inkB = Math.min(oh, Math.ceil(oh / 2 + m.actualBoundingBoxDescent));
-          const cols = Math.max(1, Math.ceil((inkR - inkL) / cell));
-          const rows = Math.max(1, Math.ceil((inkB - inkT) / cell));
-          const ox = inkL + (inkR - inkL - cols * cell) / 2;
-          const oy = inkT + (inkB - inkT - rows * cell) / 2;
-
-          // Muestreo por COBERTURA: la celda se enciende si ≥ 50 % de su área tiene tinta.
-          // Antes se leía un solo píxel (la esquina de la celda): con celdas gruesas eso
-          // producía bordes dentados y asimétricos — la S, la única letra curva, salía
-          // "rota" (Samuel, 2026-09-22: "mejora la S"). Cuesta w·h lecturas UNA vez por build.
-          const img = octx.getImageData(0, 0, ow, oh).data;
           parts = [];
-          for (let rI = 0; rI < rows; rI++)
-            for (let cI = 0; cI < cols; cI++) {
+          for (let rI = 0; rI < WORDMARK_ROWS; rI++) {
+            const fila = WORDMARK_BITMAP[rI]!;
+            for (let cI = 0; cI < WORDMARK_COLS; cI++) {
+              if (fila[cI] !== '#') continue;
               const x0 = ox + cI * cell;
               const y0 = oy + rI * cell;
-              const xa = Math.max(0, Math.floor(x0));
-              const xb = Math.min(ow, Math.ceil(x0 + cell));
-              const ya = Math.max(0, Math.floor(y0));
-              const yb = Math.min(oh, Math.ceil(y0 + cell));
-              let ink = 0;
-              let area = 0;
-              for (let y = ya; y < yb; y++) {
-                let i = (y * ow + xa) * 4 + 3;
-                for (let x = xa; x < xb; x++, i += 4) {
-                  ink += img[i]!;
-                  area += 255;
-                }
-              }
-              if (area === 0 || ink / area < 0.5) continue;
               parts.push({
                 tx: x0,
                 ty: y0,
@@ -173,14 +127,16 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
                 delay: Math.random() * 0.35,
                 alpha: ALPHAS[(Math.random() * ALPHAS.length) | 0]!,
                 flickUntil: 0,
+                flickColor: 0,
               });
             }
+          }
           // ordenadas por nivel de alpha: el reposo se pinta por lotes (ver frame)
           parts.sort((a, b) => a.alpha - b.alpha);
           dirty = true;
         };
         build(false);
-        if (parts.length === 0) throw new Error('texto sin píxeles muestreados');
+        if (parts.length === 0) throw new Error('bitmap sin celdas');
         // build OK: el canvas ya puede pintar; desarmamos el watchdog aquí y no al final
         // del intro, porque rAF no corre en pestañas en background y el intro puede
         // quedar legítimamente pausado más de 4s (se reanuda al volver la pestaña).
@@ -192,10 +148,6 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
         let last = 0;
         let intro = true;
         let mouse = { x: -9999, y: -9999 };
-        let waveAt = INTRO_MS + 2500; // primera respiración poco después del intro
-        let glitchAt = INTRO_MS + GLITCH_MIN_MS + Math.random() * GLITCH_VAR_MS;
-        let glitchY0 = 0;
-        let glitchDx = 0;
         const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
         const frame = (now: number) => {
@@ -203,27 +155,6 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
           const dt = last ? Math.min((now - last) / 1000, 0.05) : 0.016;
           last = now;
           acc += dt * 1000;
-
-          // onda de respiración: frente gaussiano que recorre el texto
-          let waveX = -1e9;
-          if (acc >= waveAt) {
-            waveX = ((acc - waveAt) / 1000) * WAVE_SPEED - 100;
-            if (waveX > w + 100) {
-              waveAt = acc + WAVE_EVERY_MS;
-              waveX = -1e9;
-            }
-          }
-
-          // glitch: banda horizontal desplazada un instante
-          if (acc >= glitchAt) {
-            if (glitchDx === 0) {
-              glitchY0 = Math.random() * (h - cell * 3);
-              glitchDx = (Math.random() < 0.5 ? -1 : 1) * cell * 0.9;
-            } else if (acc > glitchAt + GLITCH_DUR_MS) {
-              glitchDx = 0;
-              glitchAt = acc + GLITCH_MIN_MS + Math.random() * GLITCH_VAR_MS;
-            }
-          }
 
           if (intro) {
             ctx.clearRect(0, 0, w, h);
@@ -234,7 +165,7 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
               if (raw < 1) done = false;
               const k = easeOut(raw);
               ctx.globalAlpha = p.alpha;
-              ctx.fillStyle = p.delay > 0.28 && raw < 1 ? cPixel : cInk;
+              ctx.fillStyle = p.delay > 0.28 && raw < 1 ? flickColors[p.delay > 0.32 && flickColors.length > 1 ? 1 : 0]! : cInk;
               ctx.fillRect(p.x + (p.tx - p.x) * k, p.y + (p.ty - p.y) * k, cell - 1, cell - 1);
             }
             if (done) {
@@ -245,15 +176,19 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
               }
             }
           } else {
-            // en reposo total (sin onda/glitch/shimmer, sin cursor cerca, partículas
-            // quietas) el frame anterior sigue siendo correcto: no se repinta (ahorro
-            // de CPU/batería en móvil; el rAF sigue para que los timers avancen)
-            let alive = dirty || waveX > -1e9 || glitchDx !== 0;
+            // en reposo total (sin destellos, sin cursor cerca, partículas quietas) el
+            // frame anterior sigue siendo correcto: no se repinta (ahorro de CPU/batería;
+            // el rAF sigue para que los destellos se sorteen)
+            let alive = dirty;
             dirty = false;
             const mouseNear = mouse.x > -REPEL_R && mouse.x < w + REPEL_R && mouse.y > -REPEL_R && mouse.y < h + REPEL_R;
+            const pFlick = FLICK_RATE * dt;
             for (const p of parts) {
-              // shimmer violeta ocasional (se sortea también en reposo para que despierte)
-              if (p.flickUntil < acc && Math.random() < FLICK_P) p.flickUntil = acc + 250 + Math.random() * 350;
+              // destello de color: la ÚNICA animación autónoma del wordmark
+              if (p.flickUntil < acc && Math.random() < pFlick) {
+                p.flickUntil = acc + FLICK_MIN_MS + Math.random() * FLICK_VAR_MS;
+                p.flickColor = (Math.random() * flickColors.length) | 0;
+              }
               if (p.flickUntil + 100 > acc || Math.abs(p.vx) + Math.abs(p.vy) > 0.5 || Math.abs(p.x - p.tx) + Math.abs(p.y - p.ty) > 0.5)
                 alive = true;
             }
@@ -281,9 +216,7 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
             }
             // 2) dibujo por lotes: las partículas están ordenadas por alpha (build), así que
             //    cada nivel es un tramo contiguo → un globalAlpha por tramo, un fillStyle en
-            //    total; los destellos (pocos) van en una pasada final en el color de acento.
-            const glitchOn = glitchDx !== 0;
-            const waveOn = waveX > -1e9;
+            //    total; los destellos (pocos) van en una pasada final con su color.
             const cw = cell - 1;
             ctx.clearRect(0, 0, w, h);
             ctx.fillStyle = cInk;
@@ -293,28 +226,14 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
               for (; i < parts.length && parts[i]!.alpha === level; i++) {
                 const p = parts[i]!;
                 if (p.flickUntil > acc) continue;
-                let ox = 0;
-                let oy = 0;
-                if (waveOn) {
-                  const dw = Math.abs(p.tx - waveX);
-                  if (dw < 160) oy = -Math.exp(-(dw * dw) / 6400) * cell * 0.55;
-                }
-                if (glitchOn && p.ty >= glitchY0 && p.ty <= glitchY0 + cell * 3) ox = glitchDx;
-                ctx.fillRect(p.x + ox, p.y + oy, cw, cw);
+                ctx.fillRect(p.x, p.y, cw, cw);
               }
             }
-            ctx.fillStyle = cPixel;
             for (const p of parts) {
               if (p.flickUntil <= acc) continue;
               ctx.globalAlpha = p.alpha;
-              let ox = 0;
-              let oy = 0;
-              if (waveOn) {
-                const dw = Math.abs(p.tx - waveX);
-                if (dw < 160) oy = -Math.exp(-(dw * dw) / 6400) * cell * 0.55;
-              }
-              if (glitchOn && p.ty >= glitchY0 && p.ty <= glitchY0 + cell * 3) ox = glitchDx;
-              ctx.fillRect(p.x + ox, p.y + oy, cw, cw);
+              ctx.fillStyle = flickColors[p.flickColor]!;
+              ctx.fillRect(p.x, p.y, cw, cw);
             }
           }
           ctx.globalAlpha = 1;
@@ -340,15 +259,12 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
         io.observe(canvas);
         cleanups.push(() => io.disconnect());
 
-        // cursor/touch relativo al canvas; escuchamos en toda la sección del hero.
-        // Las partículas viven en el espacio de dibujo (0..w, 0..h) fijado en build();
-        // el canvas se MUESTRA a rect.width×rect.height, que puede diferir de w×h (reflow
-        // de la fuente al cargar, escalado de pantalla, barra de URL móvil). Sin reescalar,
-        // la repulsión se corre proporcional a x: bien en las primeras letras, desfasada en
-        // las últimas. Mapear pantalla→dibujo lo corrige (factor 1 cuando coinciden).
-        // El rect del canvas se cachea y se refresca al hacer scroll/resize (y en cada build):
-        // leerlo en CADA pointermove (hasta 120/s) forzaba un reflow por evento — Lighthouse
-        // lo marcaba como "forced reflow" y era parte del "trabado" con el mouse encima.
+        // cursor/touch relativo al canvas; escuchamos en toda la sección del hero. Las
+        // partículas viven en el espacio de dibujo (0..w, 0..h) fijado en build(); el canvas
+        // se MUESTRA a rect.width×rect.height, que puede diferir (reflow de fuente, escalado,
+        // barra de URL móvil): mapear pantalla→dibujo corrige la repulsión.
+        // El rect se cachea y se refresca en scroll/resize/build: leerlo en CADA pointermove
+        // (hasta 120/s) forzaba un reflow por evento.
         let rect = canvas.getBoundingClientRect();
         const refreshRect = () => {
           rect = canvas.getBoundingClientRect();
@@ -378,10 +294,9 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
           hero.removeEventListener('pointerleave', onLeave);
         });
 
-        // Reconstruir cuando el ANCHO real del contenedor cambia: no solo por resize de
-        // ventana, también por reflow de la fuente al cargar tarde (la causa de que el
-        // buffer y el tamaño mostrado se desincronicen y la repulsión se corriera). Se
-        // ignora el cambio de solo-alto (la URL bar en móvil) para no thrashear el intro.
+        // Reconstruir cuando el ANCHO real del contenedor cambia (resize o reflow de la
+        // fuente al cargar tarde). Se ignora el cambio de solo-alto (la URL bar en móvil)
+        // para no thrashear el intro.
         let lastW = Math.round(w);
         let timer = 0;
         const ro = new ResizeObserver(() => {
@@ -414,7 +329,7 @@ export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
       for (const fn of cleanups) fn();
       h1.style.opacity = '1';
     };
-  }, [divisor]);
+  }, []);
 
   return <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 hidden" aria-hidden="true" />;
 }

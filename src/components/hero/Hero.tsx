@@ -43,20 +43,20 @@ export default function Hero() {
 
         {/* el texto decorado con puntos medios se oculta a lectores; sr-only lleva el texto limpio */}
         {/* stagger corto: Casey scrollea a los ~1.5s; el contenido no puede llegar tarde */}
-        <p className="hero-in mt-3 text-center font-mono text-lg text-data sm:text-left sm:text-xl" style={{ '--d': '0.5s' } as React.CSSProperties}>
+        <p className="hero-in mt-3 text-center font-mono text-lg text-data sm:text-left sm:text-xl" style={{ '--d': '0.35s' } as React.CSSProperties}>
           <span aria-hidden="true">/{t.hero.subtitle.toLowerCase().replaceAll(' ', '·')}</span>
           <span className="sr-only">{t.hero.subtitle}</span>
         </p>
 
         {/* grupo-y-marketing (2026-09-21): la firma M/W del grupo también aquí (W fija en cursor:
             esta es la división Web). Misma pieza que en / y /marketing — cohesión entre las 3 rutas. */}
-        <div className="hero-in flex w-full justify-center sm:justify-start" style={{ '--d': '0.6s' } as React.CSSProperties}>
+        <div className="hero-in flex w-full justify-center sm:justify-start" style={{ '--d': '0.42s' } as React.CSSProperties}>
           <HeroFirma activa="web" compacta />
         </div>
 
         <div
           className="hero-in mt-8 flex flex-col items-center gap-4 sm:mt-8 sm:flex-row sm:justify-start sm:gap-6"
-          style={{ '--d': '0.7s' } as React.CSSProperties}
+          style={{ '--d': '0.5s' } as React.CSSProperties}
         >
           <a href="#contacto" data-desde="hero" className="hero-cta press">
             <span>{t.hero.cta}</span>
