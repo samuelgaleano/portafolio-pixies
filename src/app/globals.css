@@ -1122,250 +1122,6 @@ footer:hover .footer-wordmark {
   transform: translateX(4px);
 }
 
-/* flotador: mueve el botón solito para llamar la atención (Samuel r6: más tráfico al
-   ingeniero). El float va en el WRAPPER y el tilt 3D en el link → no chocan de transform. */
-.eng-portal-float {
-  display: inline-block;
-  /* nudge sutil del botón (Samuel r20): en desktop un poco arriba y hacia el centro (izquierda) */
-  --engx: 0px;
-  --engy: 0px;
-  animation: eng-float 4s ease-in-out infinite;
-}
-@media (min-width: 640px) {
-  .eng-portal-float {
-    --engx: -13%;
-    --engy: -11%;
-  }
-}
-@keyframes eng-float {
-  0%,
-  100% {
-    transform: translate(var(--engx), var(--engy));
-  }
-  50% {
-    transform: translate(var(--engx), calc(var(--engy) - 6px));
-  }
-}
-/* El portal del ingeniero (Samuel, 2026-09-22 · 2ª ronda): "hazlo un poco más pequeño y NO
-   sobrepuesto, sino un poco más abajo". Antes se anclaba en absoluto al vértice del wordmark
-   y se solapaba con la "S" (ronda r21); ahora queda en el flujo, debajo del wordmark y
-   alineado a la derecha del bloque, sin tapar nada. */
-@media (min-width: 640px) {
-  .eng-dock {
-    display: flex;
-    justify-content: flex-end;
-    flex-shrink: 0;
-  }
-  /* sin nudge: la tarjeta ya no compensa ningún anclaje (el bob vertical sutil sigue) */
-  .eng-dock .eng-portal-float {
-    --engx: 0px;
-    --engy: 0px;
-  }
-  /* versión reducida: ~30 % menos de caja que la anclada */
-  .eng-dock .eng-portal {
-    width: 236px;
-    gap: 0.6rem;
-    padding: 1rem 1rem 1.5rem;
-  }
-  .eng-dock .eng-portal__avatar {
-    --av: 104px;
-  }
-}
-/* panel CUADRADO vertical (Samuel r17): la foto arriba (malla que se dispersa), texto debajo,
-   flecha en la esquina. Crece hacia arriba desde el CTA (el hero lo alinea con items-end). */
-.eng-portal {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.85rem;
-  width: 268px;
-  max-width: 100%;
-  overflow: hidden;
-  border-radius: var(--radius-m);
-  border: 1.5px solid color-mix(in srgb, var(--color-pixel) 45%, var(--color-line));
-  background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 88%, var(--color-pixel)) 0%, var(--color-surface) 62%);
-  padding: 1.4rem 1.4rem 2.4rem;
-  transform-style: preserve-3d;
-  /* sombra base estática; el pulso vive en .eng-portal-float::after (ver abajo) */
-  box-shadow: 0 18px 42px -28px color-mix(in srgb, var(--color-pixel) 55%, transparent);
-  transition:
-    transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
-    border-color 0.3s;
-}
-/* "animado": pulso de glow continuo. Antes animaba box-shadow en el propio panel (repintado
-   del panel y su sombra en CADA frame, para siempre — 2026-09-22). Ahora la sombra fuerte
-   vive en un pseudo detrás del panel y solo se anima su opacidad (compositor). */
-.eng-portal-float {
-  position: relative;
-  isolation: isolate;
-}
-.eng-portal-float::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: var(--radius-m);
-  box-shadow: 0 24px 56px -24px color-mix(in srgb, var(--color-pixel) 88%, transparent);
-  animation: eng-glow 3.2s ease-in-out infinite;
-  will-change: opacity;
-}
-@keyframes eng-glow {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-/* "3D": al hover se inclina en perspectiva y se eleva */
-.eng-portal:hover {
-  transform: translateY(-4px) perspective(760px) rotateX(6deg) rotateY(-3deg);
-  border-color: color-mix(in srgb, var(--color-pixel) 72%, var(--color-line));
-}
-/* en móvil el panel cuadrado se centra bajo el CTA (que ocupa todo el ancho) */
-@media (max-width: 639px) {
-  .eng-portal {
-    margin-inline: auto;
-  }
-}
-/* avatar (Samuel r17): en REPOSO la foto entera y limpia; al pasar/seleccionar la foto se apaga
-   y una malla 8×8 de teselas se DISPERSA en píxeles encima (eco de la retícula del wordmark). */
-.eng-portal__avatar {
-  --av: 144px; /* única fuente del tamaño: lo usan la caja y la malla de teselas */
-  position: relative;
-  box-sizing: content-box;
-  width: var(--av);
-  height: var(--av);
-  flex-shrink: 0;
-  overflow: hidden;
-  border-radius: 14px;
-  border: 2px solid color-mix(in srgb, var(--color-pixel) 55%, var(--color-line));
-  box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--color-pixel) 70%, transparent);
-  /* el marco se apaga EN EL MISMO INSTANTE que la foto (mismo timing que .eng-portal__photo
-     de abajo): con un retraso mayor quedaba un recuadro vacío y sólido mientras las teselas
-     ya habían caído — visualmente peor que dejarlo notarse desde el principio */
-  transition: border-color 0.35s ease 0.08s, box-shadow 0.35s ease 0.08s;
-}
-.eng-portal__photo {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: opacity 0.35s ease 0.08s;
-  /* silueta ilustrada (no foto): un balanceo mínimo la mantiene viva en reposo */
-  animation: eng-avatar-drift 6s ease-in-out infinite;
-  transform-origin: 50% 85%;
-}
-@keyframes eng-avatar-drift {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg) scale(1);
-  }
-  50% {
-    transform: translateY(-3px) rotate(-0.6deg) scale(1.012);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .eng-portal__photo {
-    animation: none;
-  }
-}
-.eng-portal__tiles {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-}
-.eng-portal__tiles i {
-  background-image: url('/samuel/samuel-avatar.webp');
-  /* el sprite se escala con el avatar (--av), no con un px fijo */
-  background-size: var(--av) var(--av);
-  background-repeat: no-repeat;
-  opacity: 0;
-}
-.eng-portal:hover .eng-portal__photo,
-.eng-portal:focus-visible .eng-portal__photo {
-  opacity: 0;
-}
-/* el marco (borde + sombra) se apaga con la foto, y se deja de recortar para que las
-   teselas puedan caer y desvanecerse más allá del cuadro sin cortarse en seco */
-.eng-portal:hover .eng-portal__avatar,
-.eng-portal:focus-visible .eng-portal__avatar {
-  overflow: visible;
-  border-color: transparent;
-  box-shadow: none;
-}
-/* al seleccionar: las teselas aparecen notables, CAEN (--fall, gravedad) rotando, luego se desvanecen */
-.eng-portal:hover .eng-portal__tiles i,
-.eng-portal:focus-visible .eng-portal__tiles i {
-  animation: eng-fall 0.85s cubic-bezier(0.4, 0, 0.75, 0.9) var(--d) both;
-}
-@keyframes eng-fall {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0) rotate(0) scale(1);
-  }
-  14% {
-    opacity: 1;
-    transform: translate(0, -2px) rotate(calc(var(--rot) * 0.15)) scale(1.06);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(var(--sx), var(--fall)) rotate(var(--rot)) scale(0.42);
-  }
-}
-.eng-portal__body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.08rem;
-  min-width: 0;
-}
-.eng-portal__kicker {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.02em;
-  color: var(--color-dim);
-}
-.eng-portal__name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.4rem;
-  line-height: 1.05;
-  color: var(--color-ink);
-}
-.eng-portal__role {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--color-pixel-soft);
-}
-/* flecha grande en la esquina inferior derecha: afordancia clara de botón */
-.eng-portal__go {
-  position: absolute;
-  right: 1.2rem;
-  bottom: 1.1rem;
-  font-family: var(--font-mono);
-  font-size: 1.6rem;
-  line-height: 1;
-  color: var(--color-pixel);
-  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-.eng-portal:hover .eng-portal__go {
-  transform: translateX(5px);
-}
-.eng-portal__role > span {
-  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-.eng-portal:hover .eng-portal__role > span {
-  transform: translateX(4px);
-}
-
 /* ── Logo del header: la "i" se desarma en píxeles (Samuel 2026-09-09) ──────────
    Ciclo de 10s en loop: 7s quieta, ~3s de "estallido" en fragmentos y vuelta a la letra.
    Puro CSS (sin JS) — mismo lenguaje visual que el wordmark del hero y el shatter del
@@ -1473,7 +1229,6 @@ footer:hover .footer-wordmark {
     opacity: 0;
   }
 }
-
 /* ── Problema→Solución INTERACTIVO (Samuel r21): tarjeta que muestra el PROBLEMA (general y
    concreto) y al pasar el cursor / enfocar / tocar se VOLTEA (flip 3D) revelando la SOLUCIÓN
    que lo resuelve + CTA al demo. Reusable (ERP y POS). El grid-stack de las dos caras auto-
@@ -1749,7 +1504,6 @@ footer:hover .footer-wordmark {
     animation: none;
   }
 }
-
 /* ── Desplegable de tarjeta (síntesis premium, 2026-07-18) ──────────────────────
    El truco grid-rows 0fr→1fr anima altura en ambos sentidos sin medir en JS. */
 .collapse-toggle {
@@ -3282,18 +3036,22 @@ main {
 }
 
 /* ── Hero del GRUPO (2026-09-22) ───────────────────────────────────────────────────────
-   Samuel: "los botones, justo debajo del logo, para que no sea tan saturado ni encima; y
-   un poquito más pequeños". Antes iban a los flancos del wordmark en una rejilla de tres
-   columnas; ahora la columna es una sola y los accesos bajan a su propia fila, compactos y
-   en horizontal (Creative izquierda, Web derecha: la gramática espacial vive dentro de la
-   fila). El eslogan pasa a frase-deseo, con un tono visual por debajo del H2. */
+   La marca al CENTRO y los dos accesos como recuadros en los COSTADOS — los espacios que
+   quedaban vacíos a los lados del wordmark. En móvil la marca va primero y los accesos
+   debajo, apilados. El eslogan es una frase-deseo, con un tono por debajo del H2. */
 .grupo-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding-top: calc(var(--nav-h) + 1.25rem);
+  padding-bottom: 2.5rem;
+}
+.grupo-hero__marca {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding-top: calc(var(--nav-h) + 1.25rem);
-  padding-bottom: 2.5rem;
 }
 /* wordmark más arriba y "Design Group" más chico */
 .grupo-hero .text-wordmark {
@@ -3315,24 +3073,17 @@ main {
   text-wrap: balance;
 }
 
-/* los dos accesos, en una fila bajo el logo */
-.grupo-hero__accesos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.6rem;
-  margin-top: 1.6rem;
-}
+/* los dos accesos: recuadros compactos */
 .acceso {
   --tinte: var(--color-pixel);
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.8rem;
-  border-radius: var(--radius-s);
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-m);
   border: 1px solid var(--color-line);
-  background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 78%, transparent);
   text-align: left;
   transition:
     transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
@@ -3346,54 +3097,68 @@ main {
   .acceso:hover,
   .acceso:focus-visible {
     border-color: color-mix(in srgb, var(--tinte) 60%, var(--color-line));
-    box-shadow: 0 16px 30px -24px color-mix(in srgb, var(--tinte) 90%, transparent);
+    box-shadow: 0 18px 34px -26px color-mix(in srgb, var(--tinte) 90%, transparent);
   }
   /* la gramática espacial también aquí: Creative se corre a la IZQUIERDA, Web a la DERECHA */
   .acceso--creative:hover,
   .acceso--creative:focus-visible {
-    transform: translateX(-3px);
+    transform: translateX(-4px);
   }
   .acceso--web:hover,
   .acceso--web:focus-visible {
-    transform: translateX(3px);
+    transform: translateX(4px);
   }
 }
 .acceso__glyph {
-  --cell: 5px;
+  --cell: 6px;
   --gap: 1px;
 }
 .acceso__texto {
   display: grid;
-  gap: 0.05rem;
+  gap: 0.1rem;
   min-width: 0;
 }
 .acceso__nombre {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 1rem;
   color: var(--color-ink);
   line-height: 1.05;
 }
 .acceso__que {
-  font-size: 0.72rem;
-  line-height: 1.2;
+  font-size: 0.76rem;
+  line-height: 1.25;
   color: var(--color-dim);
 }
 .acceso__ir {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: color-mix(in srgb, var(--tinte) 72%, var(--color-ink));
   transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .acceso:hover .acceso__ir {
   transform: translateX(2px);
 }
-@media (max-width: 560px) {
-  .grupo-hero__accesos {
-    width: 100%;
-    flex-direction: column;
+/* escritorio: tres columnas — acceso · marca · acceso */
+@media (min-width: 1000px) {
+  .grupo-hero {
+    grid-template-columns: minmax(190px, 0.9fr) minmax(0, 3.2fr) minmax(190px, 0.9fr);
+    gap: 2rem;
   }
-  .acceso__que {
-    font-size: 0.7rem;
+}
+@media (max-width: 999px) {
+  /* móvil y tablet: la marca primero, los accesos debajo en una fila */
+  .grupo-hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .grupo-hero__marca {
+    grid-column: 1 / -1;
+    margin-bottom: 0.5rem;
+  }
+}
+@media (max-width: 560px) {
+  .grupo-hero {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -3448,7 +3213,7 @@ main {
 .hero-fila__texto {
   min-width: 0;
 }
-@media (min-width: 640px) {
+@media (min-width: 900px) {
   .hero-fila {
     flex-direction: row;
     align-items: flex-end;
@@ -3458,6 +3223,12 @@ main {
   .hero-fila__texto {
     align-self: flex-end;
   }
+  /* el bloque de apoyo (respaldo de ingeniería en /web, los frentes en /marketing) ocupa
+     el mismo ancho en las dos rutas: los heros comparten estructura */
+  .hero-fila__apoyo {
+    width: 17rem;
+    flex-shrink: 0;
+  }
 }
 
 /* la fila del hero de Creative se parte en dos columnas a partir de 900px */
@@ -3465,4 +3236,74 @@ main {
   .hero-fila--creative {
     align-items: flex-end;
   }
+}
+
+/* ── /web: respaldo de ingeniería (2026-09-22) ─────────────────────────────────────────
+   Reemplaza la tarjeta con el retrato grande del ingeniero. Samuel: "que se vea como algo
+   que respalda el trabajo, no que la persona sea lo importante; el foco son los productos".
+   Por eso manda la frase de respaldo y el nombre va abajo, chico, como una firma. Ocupa el
+   mismo lugar que los tres frentes en /marketing. */
+.respaldo {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem 1.1rem 1.05rem;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--color-line);
+  border-left: 3px solid var(--color-pixel);
+  background: color-mix(in srgb, var(--color-surface) 78%, transparent);
+}
+.respaldo__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-pixel-soft);
+}
+.respaldo__linea {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+.respaldo__quien {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.15rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-line);
+  transition: color 0.25s ease;
+}
+.respaldo__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--color-pixel) 40%, var(--color-line));
+  object-fit: cover;
+  object-position: top;
+}
+.respaldo__texto {
+  display: grid;
+  min-width: 0;
+}
+.respaldo__nombre {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-ink);
+  line-height: 1.1;
+}
+.respaldo__rol {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--color-dim);
+}
+.respaldo__ir {
+  font-size: 0.85rem;
+  color: var(--color-pixel-soft);
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.respaldo__quien:hover .respaldo__ir,
+.respaldo__quien:focus-visible .respaldo__ir {
+  transform: translateX(3px);
 }

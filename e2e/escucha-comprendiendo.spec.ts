@@ -8,7 +8,10 @@ import { test, expect } from '@playwright/test';
 test('home: la tarjeta de la app es un teaser entero clicable que lleva a su página propia', async ({ page }) => {
   // grupo-y-marketing (2026-09): "Aplicaciones by Pixies" vive dentro del portafolio, que
   // se movió de / a /web.
-  await page.goto('/web#productos');
+  // Sin el ancla `#productos` a propósito: entrar por hash dispara el `scroll-behavior:
+  // smooth` del sitio y ese desplazamiento sigue corriendo mientras se calcula el punto del
+  // clic. Lo que se prueba aquí es que la tarjeta entera sea oprimible, no el salto al ancla.
+  await page.goto('/web');
   const seccion = page.locator('#productos');
   await expect(seccion.getByRole('heading', { name: 'Aplicaciones by Pixies' })).toBeVisible();
   await expect(seccion.getByText('escuchacomprendiendo.ai')).toBeVisible();
@@ -16,8 +19,28 @@ test('home: la tarjeta de la app es un teaser entero clicable que lleva a su pá
   await expect(seccion.getByRole('tab')).toHaveCount(0);
   await expect(seccion.locator('input[type="file"]')).toHaveCount(0);
 
-  // la tarjeta entera es un link estirado (mismo patrón que ProjectCard) → navega a la app
-  await seccion.getByRole('link', { name: /escuchacomprendiendo\.ai — probar en vivo o descargar/ }).click();
+  // la tarjeta entera es un link estirado (mismo patrón que ProjectCard) → navega a la app.
+  // Antes de oprimir hay que esperar a que la tarjeta DEJE DE MOVERSE: la página se sigue
+  // acomodando un buen rato (swap de fuentes y reveals), y un punto calculado antes de que
+  // pare cae fuera de la tarjeta — falló 2 de 6 veces hasta que se comprobó con
+  // elementFromPoint. Con la espera: 8 de 8 (2026-09-22).
+  const tarjeta = seccion.getByRole('link', { name: /escuchacomprendiendo\.ai — probar en vivo o descargar/ });
+  await tarjeta.scrollIntoViewIfNeeded();
+  let anterior = '';
+  let quietas = 0;
+  await expect
+    .poll(
+      async () => {
+        const caja = await tarjeta.boundingBox();
+        const actual = caja ? `${Math.round(caja.x)},${Math.round(caja.y)}` : '';
+        quietas = actual !== '' && actual === anterior ? quietas + 1 : 0;
+        anterior = actual;
+        return quietas;
+      },
+      { timeout: 20_000, intervals: [120] }
+    )
+    .toBeGreaterThanOrEqual(4);
+  await tarjeta.click();
   await expect(page).toHaveURL(/\/aplicaciones\/escuchacomprendiendo-ai$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('escuchacomprendiendo.ai');
 });

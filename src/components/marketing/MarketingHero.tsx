@@ -44,7 +44,7 @@ export default function MarketingHero() {
         {/* UNA fila bajo el tagline (Samuel, 2026-09-22): "de los botones hacia abajo todo
             está pegado a la izquierda y a la derecha no hay nada". Izquierda: accesos, tesis
             y CTA. Derecha: los tres frentes, apilados. En móvil se apila todo. */}
-        <div className="hero-fila hero-fila--creative">
+        <div className="hero-fila">
           <div className="hero-fila__texto">
             <div className="hero-in flex justify-center sm:justify-start" style={{ '--d': '0.48s' } as React.CSSProperties}>
               <HeroFirma activa="creative" compacta />
@@ -71,17 +71,20 @@ export default function MarketingHero() {
             </div>
           </div>
 
-          {/* Tres frentes (2026-09-22): áreas y especialidad, en voz de empresa y sin nombres.
-              A la derecha, para que ese lado deje de estar vacío. El tercero lleva el violeta
-              de Web: la ingeniería es el respaldo técnico del grupo. */}
-          <ul className="hero-frentes hero-in" style={{ '--d': '0.62s' } as React.CSSProperties} aria-label="Áreas que maneja el equipo">
-            {marketing.frentes.map((f) => (
-              <li key={f.area} className={`hero-frente hero-frente--${f.lado}`}>
-                <span className="hero-frente__area">{f.area}</span>
-                <span className="hero-frente__quien">{f.quien}</span>
-              </li>
-            ))}
-          </ul>
+          {/* Bloque de apoyo: mismo lugar que el respaldo de ingeniería en /web (estructura
+              estándar de división). Aquí son los tres frentes — áreas y especialidad, en voz
+              de empresa y sin nombres. El tercero lleva el violeta de Web: la ingeniería es
+              el respaldo técnico del grupo. */}
+          <div className="hero-in hero-fila__apoyo" style={{ '--d': '0.62s' } as React.CSSProperties}>
+            <ul className="hero-frentes" aria-label="Áreas que maneja el equipo">
+              {marketing.frentes.map((f) => (
+                <li key={f.area} className={`hero-frente hero-frente--${f.lado}`}>
+                  <span className="hero-frente__area">{f.area}</span>
+                  <span className="hero-frente__quien">{f.quien}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </section>

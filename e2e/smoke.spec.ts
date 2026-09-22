@@ -24,7 +24,7 @@ test('home renderiza: wordmark animado del grupo, bifurcación y proyecto de pun
   expect(flick[1]).toBeTruthy();
   expect(flick[0]).not.toBe(flick[1]);
   expect(await page.evaluate(() => document.documentElement.dataset.division)).toBe('grupo');
-  // los dos accesos laterales del primer frame: Creative a la IZQUIERDA, Web a la DERECHA
+  // los dos accesos, como recuadros en los COSTADOS: Creative a la IZQUIERDA, Web a la DERECHA
   const creative = page.locator('.acceso--creative');
   const web = page.locator('.acceso--web');
   await expect(creative).toHaveAttribute('href', '/marketing');
@@ -91,15 +91,37 @@ test('/web renderiza: hero, 7 categorías, proyectos reales y el tour de datos',
   await expect(page.locator('#datos').getByRole('link', { name: /Leer el informe completo/ })).toBeVisible();
 });
 
-test('portal del hero: el acceso al ingeniero enlaza a /samuel', async ({ page }) => {
-  // grupo-y-marketing (2026-09-21): el portal del ingeniero es identidad de la división Web
-  // (vive en el Hero de /web); la landing del grupo (/) tiene su propio GrupoHero sin portal.
+test('respaldo de ingeniería: manda el producto, la persona va como firma', async ({ page }) => {
+  // Samuel (2026-09-22): el bloque del ingeniero pasa de retrato protagonista a RESPALDO —
+  // primero lo que sostiene los productos, el nombre abajo y chico. Sigue enlazando a /samuel.
   await page.goto('/web');
-  // responsive: hay dos instancias del portal (una anclada en desktop, otra en la fila CTA para
-  // móvil); ambas enlazan a /samuel. Verificamos la primera del DOM (la de desktop).
-  const portal = page.locator('.eng-portal').first();
-  await expect(portal).toHaveAttribute('href', '/samuel');
-  await expect(portal).toContainText('Samuel Galeano');
+  const respaldo = page.locator('.respaldo');
+  await expect(respaldo.locator('.respaldo__eyebrow')).toHaveText(/respaldo de ingeniería/i);
+  await expect(respaldo.locator('.respaldo__linea')).toContainText('ingeniero de sistemas');
+  const quien = respaldo.locator('.respaldo__quien');
+  await expect(quien).toHaveAttribute('href', '/samuel');
+  await expect(quien).toContainText('Samuel Galeano');
+  // el nombre es MÁS CHICO que la frase de respaldo: el foco está en el producto
+  const [frase, nombre] = await Promise.all([
+    respaldo.locator('.respaldo__linea').evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
+    respaldo.locator('.respaldo__nombre').evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
+  ]);
+  expect(nombre).toBeLessThan(frase);
+});
+
+test('los heros de las dos divisiones comparten estructura', async ({ page }) => {
+  // Samuel (2026-09-22): "que web y creative tengan la misma estructura inicial, botones y
+  // animaciones; que cambien colores, formas y contenido, no la estructura".
+  for (const ruta of ['/web', '/marketing']) {
+    await page.goto(ruta);
+    const hero = page.locator('#inicio');
+    await expect(hero.locator('#wordmark')).toHaveText('PIXIES');
+    await expect(hero.locator('.hero-titulo__nombre')).toBeVisible();
+    await expect(hero.locator('.hero-titulo__kicker')).toBeVisible();
+    await expect(hero.locator('.hero-firma--compacta')).toBeVisible();
+    await expect(hero.locator('.hero-fila__texto a[href="#contacto"]')).toHaveCount(1);
+    await expect(hero.locator('.hero-fila__apoyo')).toBeVisible();
+  }
 });
 
 test('/samuel y un post renderizan (highlight de código incluido)', async ({ page }) => {

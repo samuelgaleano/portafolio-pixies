@@ -19,17 +19,29 @@ export const es = {
     cta: 'Trabajemos juntos',
     ctaShort: 'Hablemos',
   },
+  // Hero de /web. Misma ESTRUCTURA que el de /marketing (Samuel, 2026-09-22: "que web y
+  // creative tengan la misma estructura inicial, botones y animaciones; que cambien colores,
+  // formas y contenido, no la estructura"): wordmark → nombre de la división + kicker →
+  // tagline → fila [firma C/W + tesis + CTA | bloque de apoyo].
   hero: {
     title: 'PIXIES',
     subtitle: 'Digital Web Design',
+    kicker: 'una empresa de Pixies Design Group',
+    tagline: 'Web design · Data · AI · Digital solutions',
+    tesis: 'Páginas, ERP, datos, IA y ciberseguridad que puedes abrir y usar, no solo ver en capturas.',
     cta: 'Quiero trabajar con Pixies',
+    ctaProyectos: 'Ver los proyectos →',
     chipsLabel: 'Qué construimos',
     photoRole: 'Ingeniero de Sistemas',
     scroll: 'Proyectos que ya corren',
-    // portal disruptivo del hero → /samuel (reemplaza la firma-cita)
-    portalKicker: 'el ingenio detrás de los proyectos',
-    portalName: 'Samuel Galeano',
-    portalRole: 'Ingeniero de Sistemas',
+    // Respaldo de ingeniería (2026-09-22): el bloque de apoyo del hero. Antes era una tarjeta
+    // con la foto grande del ingeniero; Samuel pidió que el foco fueran los PRODUCTOS y que la
+    // persona quedara como respaldo, no como protagonista. Por eso encabeza la ingeniería y el
+    // nombre va en segundo plano, en una línea chica.
+    respaldoEyebrow: 'respaldo de ingeniería',
+    respaldoLinea: 'Cada producto de aquí lo construye y lo mantiene un ingeniero de sistemas.',
+    respaldoQuien: 'Samuel Galeano',
+    respaldoRol: 'Ingeniero de Sistemas',
   },
   signature: {
     // firma interactiva del hero → /samuel: la cita que revela al ingeniero
