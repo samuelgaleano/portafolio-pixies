@@ -143,8 +143,11 @@ test('catálogo oprimible: la tarjeta entera y la fila del menú llevan a su des
   const fila = page.locator('.catalogo-item').filter({ hasText: 'sistema para mi operación' }).first();
   await expect(fila).toHaveAttribute('href', '#erp');
   await expect(fila.locator('.catalogo-item__evidencia')).toContainText('Demo en vivo');
-  // elementFromPoint usa coordenadas de VIEWPORT: sin esto el punto cae fuera y devuelve null
-  await fila.scrollIntoViewIfNeeded();
+  // elementFromPoint usa coordenadas de VIEWPORT: hay que dejar la fila EN EL CENTRO (si
+  // no, el punto cae fuera del viewport o debajo del header fijo y devuelve el logo). El
+  // sitio tiene `scroll-behavior: smooth`, así que el salto va en 'instant': con el suave,
+  // la caja se leía antes de terminar el desplazamiento.
+  await fila.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
   const caja = await fila.boundingBox();
   const recibeFila = await page.evaluate(
     ([x, y]: number[]) => document.elementFromPoint(x, y)?.closest('a')?.getAttribute('href') ?? null,
