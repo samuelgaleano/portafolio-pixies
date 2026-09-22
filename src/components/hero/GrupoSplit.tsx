@@ -13,7 +13,7 @@ export default function GrupoSplit() {
 
   return (
     <section className="border-y border-line" aria-labelledby="grupo-split-h">
-      <div className="mx-auto w-full max-w-[1200px] px-4 py-20 sm:px-6">
+      <div className="mx-auto w-full max-w-[1200px] px-4 pt-10 pb-16 sm:px-6 sm:pt-12 sm:pb-20">
         <h2 id="grupo-split-h" className="sr-only">
           Elige tu división
         </h2>

@@ -33,7 +33,14 @@ interface Particle {
   flickUntil: number; // acc (ms) hasta el que se pinta violeta
 }
 
-export default function PixelCanvas() {
+interface PixelCanvasProps {
+  /** Divisor del tamaño de celda respecto al font-size del h1: 22 = densidad original de
+   * /web; 16 = celdas más grandes → ~la mitad de partículas. La home del grupo usa 16
+   * (Samuel, 2026-09-21: "que cargue rápido, que no genere negativos"). */
+  divisor?: number;
+}
+
+export default function PixelCanvas({ divisor = 22 }: PixelCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -62,9 +69,11 @@ export default function PixelCanvas() {
         const ctx = canvas.getContext('2d');
         if (!ctx) throw new Error('no ctx');
 
-        // colores desde los tokens (única fuente de verdad: tokens.css)
+        // colores desde los tokens (única fuente de verdad: tokens.css). El destello toma
+        // --wm-flick si el entorno lo define (Creative → ámbar, ver globals.css); si no,
+        // el violeta de marca de siempre.
         const rootCss = getComputedStyle(document.documentElement);
-        const cPixel = rootCss.getPropertyValue('--color-pixel').trim() || '#7c5cff';
+        const cPixel = rootCss.getPropertyValue('--wm-flick').trim() || rootCss.getPropertyValue('--color-pixel').trim() || '#7c5cff';
         const cInk = rootCss.getPropertyValue('--color-ink').trim() || '#f2f3f7';
 
         let parts: Particle[] = [];
@@ -100,7 +109,8 @@ export default function PixelCanvas() {
 
           // celda adaptativa: acota el nº de partículas a un rango similar en toda pantalla.
           // /22 mantiene los huecos entre letras: con celdas más gruesas, PIXIES se fusiona
-          cell = Math.max(5, Math.round(parseFloat(cs.fontSize) / 22));
+          // (con /16 en la home del grupo sigue legible y pesa la mitad en partículas)
+          cell = Math.max(5, Math.round(parseFloat(cs.fontSize) / divisor));
           const img = octx.getImageData(0, 0, off.width, off.height).data;
           parts = [];
           for (let y = 0; y < off.height; y += cell)
@@ -310,7 +320,7 @@ export default function PixelCanvas() {
       for (const fn of cleanups) fn();
       h1.style.opacity = '1';
     };
-  }, []);
+  }, [divisor]);
 
   return <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 hidden" aria-hidden="true" />;
 }

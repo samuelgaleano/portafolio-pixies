@@ -5,18 +5,25 @@ import { test, expect } from '@playwright/test';
 // grupo-y-marketing (2026-09): el portafolio se movió de `/` a `/web` — este test antes
 // vivía en `/` y verificaba las 7 categorías ahí; ahora `/` es la landing del grupo
 // (hero + bifurcación) y `/web` es quien tiene el portafolio completo.
-test('home renderiza: wordmark bitmap del grupo + bifurcación', async ({ page }) => {
+test('home renderiza: wordmark animado del grupo, bifurcación y proyecto de punta a punta', async ({ page }) => {
   await page.goto('/');
-  // el wordmark del mockup, renderizado en servidor: 35×7 celdas y un h1 accesible "PIXIES"
-  const wm = page.locator('[data-wordmark-bitmap]');
-  await expect(wm.locator('.wm-px')).toHaveCount(35 * 7);
-  await expect(wm.locator('.wm-px--a').first()).toBeAttached();
-  await expect(page.getByRole('heading', { level: 1, name: 'PIXIES' })).toBeAttached();
-  // en Grupo la banda es tinta neutra: --acento no es el violeta ni el ámbar
+  // la home es el GRUPO: título del grupo y Organization con las dos divisiones colgando
+  await expect(page).toHaveTitle(/^Pixies Design Group/);
+  const ld = await page.locator('script[type="application/ld+json"]').first().textContent();
+  expect(ld).toContain('"name":"Pixies Design Group"');
+  expect(ld).toContain('"subOrganization"');
+  // el mismo PIXIES animado de /web (PixelCanvas, menos partículas) y el h1 accesible
+  await expect(page.locator('#wordmark')).toHaveText('PIXIES');
+  await expect(page.locator('#wordmark + canvas')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.dataset.division)).toBe('grupo');
-  // los dos "capítulos" de la bifurcación llevan a su división real (hay 2 pares: hero-firma y paneles)
-  await expect(page.getByRole('link', { name: 'Ver Pixies Creative' }).last()).toHaveAttribute('href', '/marketing');
-  await expect(page.getByRole('link', { name: 'Ver Pixies Digital Web Design' }).last()).toHaveAttribute('href', '/web');
+  // la selección de división es la bifurcación (sin tarjetas chicas en el hero de la home)
+  await expect(page.locator('.hero-firma')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Ver Pixies Creative' })).toHaveAttribute('href', '/marketing');
+  await expect(page.getByRole('link', { name: 'Ver Pixies Digital Web Design' })).toHaveAttribute('href', '/web');
+  // justo debajo: los 8 pasos de un proyecto completo, con los dos casos reales
+  await expect(page.locator('#proceso .paso')).toHaveCount(8);
+  await expect(page.locator('#proceso').getByText('Xiaomi CarTech')).toBeVisible();
+  await expect(page.locator('#proceso').getByText('Mamba Records')).toBeVisible();
 });
 
 // Header del grupo (mockup → producción): marca del grupo + selector "ver como" con las dos
@@ -168,13 +175,12 @@ test('/marketing: LeadForm propio funciona igual que el de /web', async ({ page 
 // La bifurcación de la home es el único camino de navegación entre las 3 rutas del
 // grupo: si se rompe, cada división queda aislada de las otras dos.
 test('bifurcación del grupo: los paneles llevan a /marketing y /web de verdad', async ({ page }) => {
-  // hay dos pares de enlaces con este nombre (hero-firma arriba, paneles abajo): se prueban los paneles
   await page.goto('/');
-  await page.getByRole('link', { name: 'Ver Pixies Creative' }).last().click();
+  await page.getByRole('link', { name: 'Ver Pixies Creative' }).click();
   await expect(page).toHaveURL(/\/marketing$/);
 
   await page.goto('/');
-  await page.getByRole('link', { name: 'Ver Pixies Digital Web Design' }).last().click();
+  await page.getByRole('link', { name: 'Ver Pixies Digital Web Design' }).click();
   await expect(page).toHaveURL(/\/web$/);
 });
 

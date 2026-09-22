@@ -51,7 +51,7 @@ export default function Hero() {
         {/* grupo-y-marketing (2026-09-21): la firma M/W del grupo también aquí (W fija en cursor:
             esta es la división Web). Misma pieza que en / y /marketing — cohesión entre las 3 rutas. */}
         <div className="hero-in flex w-full justify-center sm:justify-start" style={{ '--d': '1.0s' } as React.CSSProperties}>
-          <HeroFirma activa="web" />
+          <HeroFirma activa="web" compacta />
         </div>
 
         <div

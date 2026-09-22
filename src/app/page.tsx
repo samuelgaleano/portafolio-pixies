@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import SchemaOrg from '@/components/seo/SchemaOrg';
 import GrupoHero from '@/components/hero/GrupoHero';
 import GrupoSplit from '@/components/hero/GrupoSplit';
+import ProcesoUnificado from '@/components/grupo/ProcesoUnificado';
 import LeadForm from '@/components/leads/LeadForm';
 import GradientText from '@/components/ui/GradientText';
 import Atmosphere from '@/components/fx/Atmosphere';
@@ -15,6 +16,7 @@ import { t } from '@/i18n';
 // contenido completo y su propio contacto.
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
+  openGraph: { type: 'website', title: 'Pixies Design Group', description: t.meta.description },
 };
 
 export default function HomePage() {
@@ -24,6 +26,8 @@ export default function HomePage() {
       <GrupoHero />
 
       <GrupoSplit />
+
+      <ProcesoUnificado />
 
       <section id="contacto" className="relative overflow-hidden border-t border-line">
         <Atmosphere animate={false} />

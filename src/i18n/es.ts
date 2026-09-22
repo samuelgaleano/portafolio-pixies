@@ -2,10 +2,12 @@
 // y resolver por locale en index.ts. Hoy solo español.
 // Los textos de contenido (proyectos, categorías) viven en src/data/ — eso es content-as-data, no UI.
 export const es = {
+  // Meta por defecto = la home del GRUPO (grupo-y-marketing, 2026-09-21). Cada ruta de división
+  // (/web, /marketing) y cada página interior define la suya; esta solo la hereda `/`.
   meta: {
-    title: 'Pixies · Digital Web Design',
+    title: 'Pixies Design Group · Web, datos, IA y creatividad',
     description:
-      'Pixies Digital Web Design: desarrollo web, software a medida, integraciones de IA y analítica de datos. Design Group by Samuel Galeano, Ingeniero de Sistemas.',
+      'Dos divisiones bajo un mismo proceso: Pixies Digital Web Design (web, datos, IA) y Pixies Creative (advertising, branding, contenido). Bogotá, alcance global.',
   },
   nav: {
     mainLabel: 'Principal',
@@ -299,6 +301,32 @@ export const es = {
       href: '/web',
     },
     union: 'Las dos divisiones comparten el mismo flujo de trabajo: se contratan juntas o por separado.',
+  },
+  // Un proyecto de punta a punta (home, justo debajo de la bifurcación). Samuel (2026-09-21):
+  // "que el cliente vea todo lo que hace Pixies Design Group sin tener que escoger Creative o
+  // Web": pasos cortos, segmentados por color de forma IMPLÍCITA (ámbar = Creative, violeta =
+  // Web, ambos = medición). Los ejemplos son casos reales y solo los pasos que recorrieron de
+  // verdad — nada de atribuirle a Xiaomi CarTech una marca que no se le hizo.
+  proceso: {
+    eyebrow: '/de-punta-a-punta',
+    title: 'Así se ve un proyecto completo',
+    intro: 'Dos equipos, un mismo flujo. Cada paso lleva el color del equipo que lo ejecuta; nadie tiene que elegir división para empezar.',
+    ejemplos: [
+      { nombre: 'Mamba Records', recorrido: 'pasos 01 a 03: marca, estrategia y sistema de contenido (7 documentos aprobados).' },
+      { nombre: 'Xiaomi CarTech', recorrido: 'pasos 03 a 07: campaña en Meta, landing de venta directa y medición servidor a servidor.' },
+    ],
+    nota: 'Las cifras de cada caso se muestran solo donde existen y están confirmadas.',
+    pasos: [
+      { n: '01', lado: 'creative', title: 'Marca', desc: 'Identidad, sistema visual y tono.' },
+      { n: '02', lado: 'creative', title: 'Estrategia digital', desc: 'Público, canales y mensaje.' },
+      { n: '03', lado: 'creative', title: 'Piezas y campaña', desc: 'Key visual, creatividades y pauta sobre margen comprobado.' },
+      { n: '04', lado: 'web', title: 'Arquitectura web', desc: 'Estructura, contenidos y SEO desde el plano.' },
+      { n: '05', lado: 'web', title: 'Construcción', desc: 'Diseño e implementación: la landing, el ERP o el sistema.' },
+      { n: '06', lado: 'web', title: 'Despliegue y pruebas', desc: 'Dominio, rendimiento y control de calidad.' },
+      { n: '07', lado: 'ambas', title: 'Medición', desc: 'Métricas del sitio y de la pauta; costo por lead calificado.' },
+      { n: '08', lado: 'ambas', title: 'Optimización', desc: 'Se itera sobre datos, no sobre gustos.' },
+    ],
+    cta: 'Cuéntanos tu caso',
   },
   // Contenido de /marketing (grupo-y-marketing, 2026-09). Fuente:
   // Pixies\marketing\empresa\portafolio\SECCION-MARKETING.md + servicios\*.md + casos\*.md

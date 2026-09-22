@@ -10,9 +10,15 @@ const resolvedUrl =
   (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`) ||
   'http://localhost:3000';
 
+// grupo-y-marketing (2026-09-21): el dominio es el GRUPO. `name` es la organización madre
+// (OG siteName y Organization en JSON-LD); las dos divisiones cuelgan como subOrganization.
 export const site = {
-  name: 'Pixies Digital Web Design',
+  name: 'Pixies Design Group',
   url: resolvedUrl,
+  divisiones: [
+    { name: 'Pixies Digital Web Design', path: '/web' },
+    { name: 'Pixies Creative', path: '/marketing' },
+  ],
   whatsapp: '+573012679392',
   email: 'samuel.galeano.alvis@gmail.com',
   social: {
