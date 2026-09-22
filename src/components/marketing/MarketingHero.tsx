@@ -41,40 +41,47 @@ export default function MarketingHero() {
           {marketing.tagline}
         </p>
 
-        <div className="hero-in mt-5 flex w-full justify-center sm:justify-start" style={{ '--d': '0.48s' } as React.CSSProperties}>
-          <HeroFirma activa="creative" compacta />
-        </div>
+        {/* UNA fila bajo el tagline (Samuel, 2026-09-22): "de los botones hacia abajo todo
+            está pegado a la izquierda y a la derecha no hay nada". Izquierda: accesos, tesis
+            y CTA. Derecha: los tres frentes, apilados. En móvil se apila todo. */}
+        <div className="hero-fila hero-fila--creative">
+          <div className="hero-fila__texto">
+            <div className="hero-in flex justify-center sm:justify-start" style={{ '--d': '0.48s' } as React.CSSProperties}>
+              <HeroFirma activa="creative" compacta />
+            </div>
 
-        {/* hero-in (CSS) y no data-reveal: era el LCP de /marketing y quedaba oculto hasta que
-            hidrataba el observer (+4 s en móvil según Lighthouse, 2026-09-22) */}
-        <p className="hero-in mt-6 max-w-[34ch] text-center text-[1.1rem] leading-snug text-ink sm:text-left sm:text-xl" style={{ '--d': '0.55s' } as React.CSSProperties}>
-          {marketing.tesis}
-        </p>
+            {/* hero-in (CSS) y no data-reveal: era el LCP de /marketing y quedaba oculto hasta
+                que hidrataba el observer (+4 s en móvil según Lighthouse, 2026-09-22) */}
+            <p className="hero-in mt-5 max-w-[32ch] text-center text-[1.1rem] leading-snug text-ink sm:text-left sm:text-xl" style={{ '--d': '0.55s' } as React.CSSProperties}>
+              {marketing.tesis}
+            </p>
 
-        {/* Tres frentes con dueño (2026-09-22): quién responde por campañas y redes (Isabela),
-            marca (Edison) y crecimiento/datos (Samuel), antes de pedir nada. El tercero lleva el
-            violeta de Web: Samuel es el respaldo técnico del grupo. */}
-        <ul className="hero-frentes hero-in" style={{ '--d': '0.62s' } as React.CSSProperties} aria-label="Quién lidera cada frente">
-          {marketing.frentes.map((f) => (
-            <li key={f.area} className={`hero-frente hero-frente--${f.lado}`}>
-              <span className="hero-frente__area">{f.area}</span>
-              <span className="hero-frente__quien">{f.quien}</span>
-            </li>
-          ))}
-        </ul>
+            <div className="hero-in mt-6 flex flex-wrap items-center justify-center gap-3 sm:justify-start" style={{ '--d': '0.68s' } as React.CSSProperties}>
+              <Link
+                href="#contacto"
+                data-desde="marketing-hero"
+                className="inline-flex min-h-12 items-center rounded-(--radius-s) press px-6 font-semibold"
+                style={{ background: 'var(--color-marketing)', color: 'var(--color-ink)' }}
+              >
+                {marketing.cta}
+              </Link>
+              <a href="#areas" className="link-draw font-mono text-sm text-dim">
+                {marketing.ctaAreas}
+              </a>
+            </div>
+          </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <Link
-            href="#contacto"
-            data-desde="marketing-hero"
-            className="inline-flex min-h-12 items-center rounded-(--radius-s) press px-6 font-semibold"
-            style={{ background: 'var(--color-marketing)', color: 'var(--color-ink)' }}
-          >
-            {marketing.cta}
-          </Link>
-          <a href="#areas" className="link-draw font-mono text-sm text-dim">
-            {marketing.ctaAreas}
-          </a>
+          {/* Tres frentes (2026-09-22): áreas y especialidad, en voz de empresa y sin nombres.
+              A la derecha, para que ese lado deje de estar vacío. El tercero lleva el violeta
+              de Web: la ingeniería es el respaldo técnico del grupo. */}
+          <ul className="hero-frentes hero-in" style={{ '--d': '0.62s' } as React.CSSProperties} aria-label="Áreas que maneja el equipo">
+            {marketing.frentes.map((f) => (
+              <li key={f.area} className={`hero-frente hero-frente--${f.lado}`}>
+                <span className="hero-frente__area">{f.area}</span>
+                <span className="hero-frente__quien">{f.quien}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

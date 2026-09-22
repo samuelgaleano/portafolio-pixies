@@ -32,6 +32,19 @@ describe('wordmark-bitmap — PIXIES en píxeles, dibujado a mano', () => {
     expect(WORDMARK_PIXELES).toBeLessThanOrEqual(480);
   });
 
+  test('la S no es un 5: el remate de arriba es un ARCO, no una barra plana de ancho completo', () => {
+    // lo que define a un 5 es la barra superior plana que arranca en la columna 0 y llega al
+    // final. En la S las esquinas van cortadas y la fila 0 es más angosta que la 1.
+    const s = WORDMARK_BITMAP.map((f) => f.slice(-9));
+    const ancho = (fila: string) => fila.split('#').length - 1;
+    expect(s[0]!.startsWith('.')).toBe(true);
+    expect(s[0]!.endsWith('.')).toBe(true);
+    expect(ancho(s[0]!)).toBeLessThan(ancho(s[1]!));
+    // y abajo remata igual (un 5 no cierra arriba ni tiene simetría con el arco inferior)
+    expect(s[14]).toBe(s[0]);
+    expect(s[13]).toBe(s[1]);
+  });
+
   test('la S no es un 8: filas centrales abiertas en lados opuestos', () => {
     // la S es la última letra: sus 9 columnas finales
     const s = WORDMARK_BITMAP.map((f) => f.slice(-9));

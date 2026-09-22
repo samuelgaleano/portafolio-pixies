@@ -20,9 +20,10 @@ export const DIVISIONES: Record<Division, DivisionInfo> = {
   grupo: { id: 'grupo', sufijo: 'design group', etiqueta: 'Grupo', href: '/', ctaHeader: 'Hablemos de tu proyecto' },
 };
 
-/** Orden del selector del header: Creative a la izquierda, Web a la derecha, Grupo al centro-derecha
- * (misma gramática espacial que la bifurcación: Marketing/Creative ancla izquierda, Web derecha). */
-export const ORDEN_SELECTOR: Division[] = ['creative', 'web', 'grupo'];
+/** Orden del selector del header (Samuel, 2026-09-22): **el grupo va en la MITAD**, Creative a la
+ * izquierda y Web a la derecha — la misma gramática espacial del resto del sitio, ahora también
+ * en el selector (antes el grupo cerraba a la derecha y Web quedaba al centro). */
+export const ORDEN_SELECTOR: Division[] = ['creative', 'grupo', 'web'];
 
 export function divisionDeRuta(pathname: string | null | undefined): Division {
   // usePathname() no trae hash ni query, pero location.pathname tampoco; por si llega una

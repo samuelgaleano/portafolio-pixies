@@ -35,41 +35,44 @@ export default function Hero() {
           </h1>
           <PixelCanvas />
         </div>
-        {/* desktop: el portal va DEBAJO del wordmark, alineado a la derecha y sin taparlo
-            (Samuel, 2026-09-22); en móvil sigue en la fila CTA, intacto */}
-        <div className="eng-dock hidden w-full sm:block">
-          <EngineerPortal />
-        </div>
 
-        {/* el texto decorado con puntos medios se oculta a lectores; sr-only lleva el texto limpio */}
-        {/* stagger corto: Casey scrollea a los ~1.5s; el contenido no puede llegar tarde */}
-        <p className="hero-in mt-3 text-center font-mono text-lg text-data sm:text-left sm:text-xl" style={{ '--d': '0.35s' } as React.CSSProperties}>
-          <span aria-hidden="true">/{t.hero.subtitle.toLowerCase().replaceAll(' ', '·')}</span>
-          <span className="sr-only">{t.hero.subtitle}</span>
-        </p>
+        {/* UNA sola fila bajo el wordmark (Samuel, 2026-09-22): antes el portal del ingeniero
+            y la firma C/W ocupaban cada uno su propia franja horizontal con el resto vacío.
+            Ahora el bloque de texto + accesos + CTA va a la izquierda y el portal a la
+            derecha: la franja se llena y nada queda solo. En móvil se apila. */}
+        <div className="hero-fila">
+          <div className="hero-fila__texto">
+            {/* el texto decorado con puntos medios se oculta a lectores; sr-only lleva el texto limpio */}
+            <p className="hero-in text-center font-mono text-lg text-data sm:text-left sm:text-xl" style={{ '--d': '0.35s' } as React.CSSProperties}>
+              <span aria-hidden="true">/{t.hero.subtitle.toLowerCase().replaceAll(' ', '·')}</span>
+              <span className="sr-only">{t.hero.subtitle}</span>
+            </p>
 
-        {/* grupo-y-marketing (2026-09-21): la firma M/W del grupo también aquí (W fija en cursor:
-            esta es la división Web). Misma pieza que en / y /marketing — cohesión entre las 3 rutas. */}
-        <div className="hero-in flex w-full justify-center sm:justify-start" style={{ '--d': '0.42s' } as React.CSSProperties}>
-          <HeroFirma activa="web" compacta />
-        </div>
+            {/* la firma C/W del grupo también aquí (W fija en cursor: esta es la división Web).
+                Misma pieza que en / y /marketing — cohesión entre las 3 rutas. */}
+            <div className="hero-in mt-3 flex justify-center sm:justify-start" style={{ '--d': '0.42s' } as React.CSSProperties}>
+              <HeroFirma activa="web" compacta />
+            </div>
 
-        <div
-          className="hero-in mt-8 flex flex-col items-center gap-4 sm:mt-8 sm:flex-row sm:justify-start sm:gap-6"
-          style={{ '--d': '0.5s' } as React.CSSProperties}
-        >
-          <a href="#contacto" data-desde="hero" className="hero-cta press">
-            <span>{t.hero.cta}</span>
-            <span className="hero-cta__arrow" aria-hidden="true">
-              →
-            </span>
-          </a>
+            <div className="hero-in mt-6 flex justify-center sm:justify-start" style={{ '--d': '0.5s' } as React.CSSProperties}>
+              <a href="#contacto" data-desde="hero" className="hero-cta press">
+                <span>{t.hero.cta}</span>
+                <span className="hero-cta__arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </div>
+          </div>
 
-          {/* botón disruptivo → /samuel: en MÓVIL va aquí (fila CTA); en desktop se muestra
-              encajado en la "S" del wordmark (arriba). El wipe lo dispara el interceptor global. */}
-          <div className="sm:hidden">
+          {/* desktop: el portal comparte fila con el bloque de texto, a la derecha */}
+          <div className="eng-dock hidden sm:block">
             <EngineerPortal />
           </div>
+        </div>
+
+        {/* móvil: el portal cierra el hero (en desktop va en la fila de arriba) */}
+        <div className="mt-7 self-center sm:hidden">
+          <EngineerPortal />
         </div>
       </div>
     </section>

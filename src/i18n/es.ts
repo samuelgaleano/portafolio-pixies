@@ -264,7 +264,10 @@ export const es = {
     title: 'PIXIES',
     subtitle: 'Design Group',
     kicker: 'Bogotá · alcance global',
-    tesis: 'Soluciones que funcionan. Y que además se ven bien.',
+    // Frase-DESEO (Samuel, 2026-09-22): no dice lo que hacemos nosotros, dice lo que el
+    // cliente quiere que pase. Conserva la idea aprobada (funciona + se ve bien) pero
+    // puesta en su empresa, y va en un tono visual menos relevante que el H2.
+    tesis: 'Que tu empresa se vea tan bien como funciona.',
     cta: '¿Qué necesitas? Cuéntanos y te contactamos',
     ctaSecundario: 'Ver cómo trabajamos',
     accesos: {

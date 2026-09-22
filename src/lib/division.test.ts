@@ -37,3 +37,9 @@ describe('DIVISIONES — cada división tiene destino y CTA propios', () => {
     expect(divisionDeRuta(DIVISIONES.grupo.href)).toBe('grupo');
   });
 });
+
+describe('ORDEN_SELECTOR — el grupo va en la mitad (Samuel, 2026-09-22)', () => {
+  test('Creative a la izquierda, Grupo al centro, Web a la derecha', () => {
+    expect(ORDEN_SELECTOR).toEqual(['creative', 'grupo', 'web']);
+  });
+});

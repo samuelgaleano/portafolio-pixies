@@ -65,26 +65,29 @@ const E = [
   '########',
   '########',
 ];
-// S: arco arriba, hombro, trazo izquierdo (3 filas), diagonal central (3), trazo derecho
-// (3), hombro y arco abajo. Se distingue de un 8 porque las filas 3–5 están abiertas a la
-// derecha y las 9–11 a la izquierda (un 8 tendría ambos lados cerrados en todas).
+// S: arco arriba con las ESQUINAS CORTADAS, hombro, trazo izquierdo (3 filas), banda
+// diagonal central (3), trazo derecho (3), hombro y arco abajo simétrico.
+// - No es un 8: las filas 3–5 están abiertas a la derecha y las 9–11 a la izquierda.
+// - No es un 5 (Samuel, 2026-09-22: "la ese se ve como si fuera un cinco"): el remate de
+//   arriba ya no es una barra PLANA de ancho completo — eso es justo lo que define al 5 —
+//   sino un arco que se angosta en la primera fila, con el mismo remate curvo abajo.
 // prettier-ignore
 const S = [
+  '..#####..',
   '.#######.',
-  '#########',
   '###...###',
   '###......',
   '###......',
   '###......',
-  '.######..',
+  '.#####...',
   '.#######.',
-  '..#######',
+  '...#####.',
   '......###',
   '......###',
   '......###',
   '###...###',
-  '#########',
   '.#######.',
+  '..#####..',
 ];
 
 const AIRE = 3;
