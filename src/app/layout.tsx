@@ -17,10 +17,14 @@ import './globals.css';
 // Fija data-division en <html> ANTES de hidratar (mismo patrón que un script de tema): el
 // header, el CTA y la banda del wordmark leen --acento desde el primer pintado, sin flash de
 // tinta neutra → color. Debe coincidir con divisionDeRuta() en src/lib/division.ts.
+// `data-hacia` acompaña a `data-division`: es el LADO de la división (Creative vive a la
+// izquierda, Web a la derecha), y de él cuelga el movimiento de cámara de la transición.
 const DIVISION_SCRIPT =
-  "(function(){var p=location.pathname;document.documentElement.dataset.division=" +
+  "(function(){var p=location.pathname,d=" +
   "p==='/marketing'||p.indexOf('/marketing/')===0?'creative':" +
-  "/^\\/(web|demos|proyectos|aplicaciones|samuel)(\\/|$)/.test(p)?'web':'grupo'})();";
+  "/^\\/(web|demos|proyectos|aplicaciones|samuel)(\\/|$)/.test(p)?'web':'grupo';" +
+  "var e=document.documentElement;e.dataset.division=d;" +
+  "e.dataset.hacia=d==='creative'?'izq':d==='web'?'der':'centro'})();";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),

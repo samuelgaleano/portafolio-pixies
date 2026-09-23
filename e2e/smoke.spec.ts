@@ -49,9 +49,9 @@ test('home renderiza: wordmark animado del grupo, bifurcación y proyecto de pun
     '/web#erp',
     '/web#datos',
   ]);
-  // los casos reales que recorrieron la ruta siguen citados (sin inventar tramos)
-  await expect(page.locator('.ruta-casos')).toContainText('Xiaomi CarTech');
-  await expect(page.locator('.ruta-casos')).toContainText('Mamba Records');
+  // cada paso dice QUÉ SE CREA ahí (Samuel, 2026-09-22: entregables, no casos con nombre)
+  await expect(page.locator('#proceso .ruta__crea')).toHaveCount(6);
+  await expect(page.locator('#proceso .ruta__crea').first()).toHaveText('Se crea la marca');
   // y el cierre del bucle de conocimiento enlaza a la app propia
   await expect(page.locator('.ruta-cierre a[href="/aplicaciones/escuchacomprendiendo-ai"]')).toBeVisible();
 });
@@ -96,8 +96,10 @@ test('respaldo de ingeniería: manda el producto, la persona va como firma', asy
   // primero lo que sostiene los productos, el nombre abajo y chico. Sigue enlazando a /samuel.
   await page.goto('/web');
   const respaldo = page.locator('.respaldo');
-  await expect(respaldo.locator('.respaldo__eyebrow')).toHaveText(/respaldo de ingeniería/i);
-  await expect(respaldo.locator('.respaldo__linea')).toContainText('ingeniero de sistemas');
+  // habla del EQUIPO, no de una persona (Samuel, 2026-09-22)
+  await expect(respaldo.locator('.respaldo__eyebrow')).toHaveText(/ingeniería y desarrollo/i);
+  await expect(respaldo.locator('.respaldo__linea')).toContainText('El equipo de ingeniería y desarrollo');
+  await expect(respaldo.locator('.respaldo__lidera')).toHaveText(/lo lidera/i);
   const quien = respaldo.locator('.respaldo__quien');
   await expect(quien).toHaveAttribute('href', '/samuel');
   await expect(quien).toContainText('Samuel Galeano');
@@ -116,8 +118,8 @@ test('los heros de las dos divisiones comparten estructura', async ({ page }) =>
     await page.goto(ruta);
     const hero = page.locator('#inicio');
     await expect(hero.locator('#wordmark')).toHaveText('PIXIES');
-    await expect(hero.locator('.hero-titulo__nombre')).toBeVisible();
-    await expect(hero.locator('.hero-titulo__kicker')).toBeVisible();
+    // el nombre de la división: Creative en display, Web en registro de código
+    await expect(hero.locator('.hero-titulo__nombre, .hero-titulo--codigo__nombre')).toBeVisible();
     await expect(hero.locator('.hero-firma--compacta')).toBeVisible();
     await expect(hero.locator('.hero-fila__texto a[href="#contacto"]')).toHaveCount(1);
     await expect(hero.locator('.hero-fila__apoyo')).toBeVisible();

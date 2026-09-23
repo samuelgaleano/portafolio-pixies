@@ -18,7 +18,9 @@ export default function GrupoSplit() {
           Elige tu división
         </h2>
 
-        <p className="mb-10 max-w-[34ch] font-display text-h2 font-semibold text-ink">
+        {/* más pequeña que un titular de sección (Samuel, 2026-09-22): es una frase de
+            enlace, no un encabezado; y dice que los dos frentes se unifican */}
+        <p className="mb-8 max-w-[44ch] font-display text-[clamp(1.15rem,2.2vw,1.9rem)] font-semibold leading-tight text-ink">
           {split.bridgePre}
           <a href={split.marketing.href} className="grupo-bridge grupo-bridge--marketing">
             {split.bridgeMk}

@@ -34,7 +34,6 @@ export default function MarketingHero() {
         <h1 className="hero-in hero-titulo mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-1" style={{ '--d': '0.35s' } as React.CSSProperties}>
           <span className="sr-only">Pixies </span>
           <span className="hero-titulo__nombre">Creative</span>
-          <span className="hero-titulo__kicker text-[color:var(--color-marketing-texto)]">{marketing.kicker}</span>
         </h1>
         {/* tagline literal de Samuel (2026-09-21) */}
         <p className="hero-in mt-2 text-center font-mono text-sm text-dim sm:text-left sm:text-base" style={{ '--d': '0.42s' } as React.CSSProperties}>

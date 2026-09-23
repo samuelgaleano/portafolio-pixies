@@ -26,7 +26,6 @@ export const es = {
   hero: {
     title: 'PIXIES',
     subtitle: 'Digital Web Design',
-    kicker: 'una empresa de Pixies Design Group',
     tagline: 'Web design · Data · AI · Digital solutions',
     tesis: 'Páginas, ERP, datos, IA y ciberseguridad que puedes abrir y usar, no solo ver en capturas.',
     cta: 'Quiero trabajar con Pixies',
@@ -34,12 +33,12 @@ export const es = {
     chipsLabel: 'Qué construimos',
     photoRole: 'Ingeniero de Sistemas',
     scroll: 'Proyectos que ya corren',
-    // Respaldo de ingeniería (2026-09-22): el bloque de apoyo del hero. Antes era una tarjeta
-    // con la foto grande del ingeniero; Samuel pidió que el foco fueran los PRODUCTOS y que la
-    // persona quedara como respaldo, no como protagonista. Por eso encabeza la ingeniería y el
-    // nombre va en segundo plano, en una línea chica.
-    respaldoEyebrow: 'respaldo de ingeniería',
-    respaldoLinea: 'Cada producto de aquí lo construye y lo mantiene un ingeniero de sistemas.',
+    // Bloque de apoyo del hero (2026-09-22, 2ª pasada): tiene que leerse como un EQUIPO, no
+    // como una persona — "el grupo de ingeniería y desarrollo está a cargo de esto" — y solo
+    // después decir quién lo lidera. Nada de "cada producto lo construye un ingeniero".
+    respaldoEyebrow: 'ingeniería y desarrollo',
+    respaldoLinea: 'El equipo de ingeniería y desarrollo del grupo construye y sostiene cada producto.',
+    respaldoLidera: 'Lo lidera',
     respaldoQuien: 'Samuel Galeano',
     respaldoRol: 'Ingeniero de Sistemas',
   },
@@ -281,7 +280,16 @@ export const es = {
     // puesta en su empresa, y va en un tono visual menos relevante que el H2.
     tesis: 'Que tu empresa se vea tan bien como funciona.',
     cta: '¿Qué necesitas? Cuéntanos y te contactamos',
-    ctaSecundario: 'Ver cómo trabajamos',
+    // Selector de sección (2026-09-22): reemplaza el enlace "Ver cómo trabajamos" por un
+    // segmentado diminuto que salta a cada sección de la home.
+    secciones: {
+      label: 'Ir a una sección',
+      items: [
+        { id: 'grupo-split-h', etiqueta: 'Las dos divisiones' },
+        { id: 'proceso', etiqueta: 'La ruta' },
+        { id: 'contacto', etiqueta: 'Contacto' },
+      ],
+    },
     accesos: {
       creative: { etiqueta: 'Creative', que: 'Campañas, marca y contenido', ir: 'Entrar' },
       web: { etiqueta: 'Web', que: 'Sitios, sistemas, datos e IA', ir: 'Entrar' },
@@ -293,11 +301,13 @@ export const es = {
   // pasa a llamarse "Pixies Creative". Cifras: las mismas que ya usa `portfolio`/`statement`.
   // Voz empresarial: sin "armé", sin "mido", sin "uso" — el grupo habla como empresa.
   split: {
-    bridgePre: 'Dos equipos bajo un mismo grupo: uno para que te ',
+    // Frase puente (Samuel, 2026-09-22): más corta y en clave de UNIFICACIÓN — no son dos
+    // caminos que se eligen, es un mismo equipo que arma la mezcla según lo que haga falta.
+    bridgePre: 'Que te ',
     bridgeMk: 'encuentren',
-    bridgeMid: ' y otro para que te ',
+    bridgeMid: ' y que te ',
     bridgeWeb: 'compren',
-    bridgePost: '.',
+    bridgePost: '. Los dos frentes trabajan juntos y se arma la mezcla que necesites.',
     marketing: {
       capNum: 'Capítulo uno',
       title: 'Pixies Creative',
@@ -340,17 +350,12 @@ export const es = {
     title: 'De la idea a los números',
     intro: 'Seis pasos. Oprime cualquiera y mira lo que ya hicimos ahí.',
     pasos: [
-      { n: '01', lado: 'creative', title: 'Marca', desc: 'Identidad, sistema visual y tono.', href: '/marketing#servicios', destino: 'Ver marca' },
-      { n: '02', lado: 'creative', title: 'Estrategia', desc: 'Público, canales y mensaje.', href: '/marketing#areas', destino: 'Ver dónde aplica' },
-      { n: '03', lado: 'creative', title: 'Campaña', desc: 'Piezas, parrilla y pauta.', href: '/marketing#casos', destino: 'Ver casos' },
-      { n: '04', lado: 'web', title: 'Web', desc: 'Arquitectura, diseño y construcción del sitio.', href: '/web#landing', destino: 'Ver sitios' },
-      { n: '05', lado: 'web', title: 'Sistemas', desc: 'ERP, automatización e IA para operar.', href: '/web#erp', destino: 'Ver el ERP' },
-      { n: '06', lado: 'ambas', title: 'Datos', desc: 'Medición, análisis y la siguiente decisión.', href: '/web#datos', destino: 'Ver el análisis' },
-    ],
-    casosLabel: 'Ya la recorrieron',
-    casos: [
-      { nombre: 'Mamba Records', tramo: 'pasos 01–03' },
-      { nombre: 'Xiaomi CarTech', tramo: 'pasos 03–06' },
+      { n: '01', lado: 'creative', title: 'Marca', desc: 'Identidad, sistema visual y tono.', crea: 'Se crea la marca', href: '/marketing#servicios', destino: 'Ver marca' },
+      { n: '02', lado: 'creative', title: 'Estrategia', desc: 'Público, canales y mensaje.', crea: 'Se crea la estrategia', href: '/marketing#areas', destino: 'Ver dónde aplica' },
+      { n: '03', lado: 'creative', title: 'Campaña', desc: 'Piezas, parrilla y pauta.', crea: 'Se crean las piezas', href: '/marketing#casos', destino: 'Ver casos' },
+      { n: '04', lado: 'web', title: 'Web', desc: 'Arquitectura, diseño y construcción del sitio.', crea: 'Se construye el sitio', href: '/web#landing', destino: 'Ver sitios' },
+      { n: '05', lado: 'web', title: 'Sistemas', desc: 'ERP, automatización e IA para operar.', crea: 'Se monta el sistema', href: '/web#erp', destino: 'Ver el ERP' },
+      { n: '06', lado: 'ambas', title: 'Datos', desc: 'Medición, análisis y la siguiente decisión.', crea: 'Se mide y se decide', href: '/web#datos', destino: 'Ver el análisis' },
     ],
     cierreTitle: 'Y lo que aprendemos vuelve a entrar',
     cierreBody:
@@ -370,7 +375,6 @@ export const es = {
     metaTitle: 'Pixies Creative · Advertising, branding y contenido con margen comprobado',
     metaDescription:
       'Publicidad, marca y contenido medidos contra el margen real de cada producto, no contra los likes. Estrategia creativa, campañas, social media y pauta por datos para empresas y marcas personales jóvenes.',
-    kicker: 'una empresa de Pixies Design Group',
     title: 'Pixies Creative',
     tagline: 'Advertising · Branding · Campaigns · Content · Social Media · Creative Strategy',
     tesis:

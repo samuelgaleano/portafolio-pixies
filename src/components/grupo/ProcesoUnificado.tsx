@@ -35,22 +35,13 @@ export default function ProcesoUnificado() {
                 </span>
                 <h3 className="ruta__title">{p.title}</h3>
                 <p className="ruta__desc">{p.desc}</p>
+                {/* qué sale de este paso: el entregable, no un caso con nombre propio */}
+                <span className="ruta__crea">{p.crea}</span>
                 <span className="ruta__destino">{p.destino} →</span>
               </Link>
             </li>
           ))}
         </ol>
-
-        {/* quién recorrió esta ruta de verdad: casos reales, y solo los pasos que cada uno
-            hizo (Samuel, 2026-09-21: "un ejemplo de punta a punta, sin inventar") */}
-        <p data-reveal className="ruta-casos">
-          <span className="ruta-casos__label">{proceso.casosLabel}</span>
-          {proceso.casos.map((c) => (
-            <span key={c.nombre} className="ruta-casos__item">
-              <b>{c.nombre}</b> <span>{c.tramo}</span>
-            </span>
-          ))}
-        </p>
 
         <div data-reveal className="ruta-cierre">
           <div>

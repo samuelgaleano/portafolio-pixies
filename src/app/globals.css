@@ -118,6 +118,10 @@
     --pt-wipe: 120%;
   }
 }
+/* El movimiento de cámara vive SOLO en el barrido (.hilo-transicion), que es `fixed` y por
+   tanto no agranda el documento. Se probó a deslizar también `.page-enter` hacia el lado de
+   la división y eso metía 2–4 px de scroll horizontal en móvil en todas las rutas de Web y
+   Creative (lo cazó el e2e de responsive) — el gesto no vale una barra de scroll. */
 @media (prefers-reduced-motion: reduce) {
   .page-enter {
     -webkit-mask: none;
@@ -2025,18 +2029,7 @@ main {
   gap: 0.6rem;
   min-width: 0;
 }
-.selector-div__pre {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-dim);
-  white-space: nowrap;
-}
 @media (max-width: 639px) {
-  .selector-div__pre {
-    display: none;
-  }
   .selector-div .seg {
     flex: 1;
   }
@@ -2138,6 +2131,11 @@ main {
 
 /* Barrido de unificación: al cambiar de división, el color de destino cruza la pantalla
    (izquierda→derecha cubre, luego descubre desde la derecha). No tapa el contenido. */
+/* MOVIMIENTO DE CÁMARA (Samuel, 2026-09-22): al entrar a una división la transición se
+   siente como una cámara que se desplaza hacia su lado. Creative vive a la IZQUIERDA y Web
+   a la DERECHA, así que el barrido entra por el lado contrario y sale por el suyo, llevando
+   el color del destino; y la página nueva entra deslizándose desde ese mismo lado
+   (`.page-enter`, más abajo). `data-hacia` lo pone el script inline y DivisionSync. */
 .hilo-transicion {
   position: fixed;
   inset: 0;
@@ -2147,6 +2145,29 @@ main {
   opacity: 0.14;
   transform-origin: left center;
   animation: hilo-barrido 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+/* hacia Creative: la cámara viaja a la IZQUIERDA (el barrido entra por la derecha) */
+:root[data-hacia='izq'] .hilo-transicion {
+  animation-name: hilo-camara-izq;
+}
+:root[data-hacia='der'] .hilo-transicion {
+  animation-name: hilo-camara-der;
+}
+@keyframes hilo-camara-izq {
+  0% {
+    transform: translateX(105%) skewX(-6deg);
+  }
+  100% {
+    transform: translateX(-105%) skewX(-6deg);
+  }
+}
+@keyframes hilo-camara-der {
+  0% {
+    transform: translateX(-105%) skewX(6deg);
+  }
+  100% {
+    transform: translateX(105%) skewX(6deg);
+  }
 }
 @keyframes hilo-barrido {
   0% {
@@ -2406,27 +2427,20 @@ main {
    no solo en la dirección del reveal (ver [data-reveal="left|right"] arriba). */
 .grupo-split {
   display: grid;
-  gap: 1.5rem;
-  /* aire lateral para que el panel pueda desplazarse 6px hacia su lado sin que el
+  gap: 1.25rem;
+  /* aire lateral para que el panel pueda desplazarse unos px hacia su lado sin que el
      overflow-x-hidden del contenedor lo recorte */
   padding-inline: 8px;
   margin-inline: -8px;
-  transition: grid-template-columns 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 /* Samuel (2026-09-21): "Creative al lado izquierdo; al pasar por encima, transición hacia la
    izquierda con colores amarillos; Web exactamente igual, morado, hacia la derecha". El panel
-   activo gana ancho hacia su lado (la retícula se reparte 1.12/0.88), se desplaza 6px en esa
-   dirección y una luz del color de la división entra desde su borde exterior (::before). */
-@media (min-width: 860px) and (hover: hover) {
-  .grupo-split:has(.grupo-cap--marketing:hover),
-  .grupo-split:has(.grupo-cap--marketing:focus-within) {
-    grid-template-columns: 1.12fr 0.88fr;
-  }
-  .grupo-split:has(.grupo-cap--web:hover),
-  .grupo-split:has(.grupo-cap--web:focus-within) {
-    grid-template-columns: 0.88fr 1.12fr;
-  }
-}
+   activo se desplaza hacia su lado y una luz de su color entra desde el borde exterior.
+   2026-09-22: el panel activo ganaba ANCHO (la retícula pasaba a 1.12/0.88) y eso movía la
+   frontera entre los dos paneles: con el cursor cerca del blanco del medio, la frontera se
+   corría bajo el puntero, cambiaba el panel en hover y la animación entraba en BUCLE. La
+   retícula ya no se toca — el efecto vive solo en transform, luz y sombra, que no alteran el
+   layout y por tanto no pueden realimentarse. */
 @media (min-width: 860px) {
   .grupo-split {
     grid-template-columns: 1fr 1fr;
@@ -2436,11 +2450,11 @@ main {
 .grupo-cap {
   position: relative;
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
   align-content: start;
   overflow: hidden;
   border-radius: var(--radius-m);
-  padding: clamp(1.5rem, 3vw, 2.25rem);
+  padding: clamp(1.25rem, 2.2vw, 1.75rem);
   text-decoration: none;
   transition:
     box-shadow 0.3s ease,
@@ -3036,26 +3050,46 @@ main {
 }
 
 /* ── Hero del GRUPO (2026-09-22) ───────────────────────────────────────────────────────
-   La marca al CENTRO y los dos accesos como recuadros en los COSTADOS — los espacios que
-   quedaban vacíos a los lados del wordmark. En móvil la marca va primero y los accesos
-   debajo, apilados. El eslogan es una frase-deseo, con un tono por debajo del H2. */
+   Samuel marcó en su captura dos CUADRADOS en los márgenes laterales, simétricos y a la
+   altura de "Design Group". Por eso el hero es una rejilla de dos filas: el wordmark ocupa
+   la primera a todo lo ancho, y debajo va la fila [Creative · marca · Web]. Los accesos
+   dejan de ser barras horizontales: son cuadrados con el glifo de protagonista. */
 .grupo-hero {
   display: grid;
   grid-template-columns: 1fr;
-  align-items: center;
-  gap: 1rem;
+  grid-template-areas:
+    'wordmark'
+    'texto'
+    'izq'
+    'der';
+  justify-items: center;
+  gap: 0.75rem;
   padding-top: calc(var(--nav-h) + 1.25rem);
   padding-bottom: 2.5rem;
 }
-.grupo-hero__marca {
+.grupo-hero__wordmark {
+  grid-area: wordmark;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.grupo-hero__texto {
+  grid-area: texto;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  width: 100%;
 }
-/* wordmark más arriba y "Design Group" más chico */
+.acceso--creative {
+  grid-area: izq;
+}
+.acceso--web {
+  grid-area: der;
+}
+/* el wordmark, un poco más grande (Samuel, 2026-09-22) */
 .grupo-hero .text-wordmark {
-  font-size: clamp(3.4rem, 19vw, 13.5rem);
+  font-size: clamp(3.6rem, 21vw, 15rem);
 }
 .grupo-hero .hero-titulo__nombre {
   font-size: clamp(1.6rem, 3.4vw, 2.6rem);
@@ -3073,92 +3107,125 @@ main {
   text-wrap: balance;
 }
 
-/* los dos accesos: recuadros compactos */
+/* los dos accesos: CUADRADOS, con el glifo mandando */
 .acceso {
   --tinte: var(--color-pixel);
+  position: relative;
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0.85rem 1rem;
+  align-content: center;
+  justify-items: center;
+  gap: 0.5rem;
+  width: min(100%, 17rem);
+  aspect-ratio: 1 / 1;
+  padding: 1.25rem;
+  overflow: hidden;
   border-radius: var(--radius-m);
-  border: 1px solid var(--color-line);
-  background: color-mix(in srgb, var(--color-surface) 78%, transparent);
-  text-align: left;
+  border: 1.5px solid var(--color-line);
+  background: var(--color-surface);
+  text-align: center;
   transition:
-    transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
     border-color 0.3s ease,
     box-shadow 0.3s ease;
 }
 .acceso--creative {
   --tinte: var(--color-marketing);
 }
+/* lavado del color de la división detrás del glifo, como en las tarjetas de /web */
+.acceso::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 45% at 50% 32%, color-mix(in srgb, var(--tinte) 16%, transparent), transparent 70%);
+  pointer-events: none;
+}
+.acceso > * {
+  position: relative;
+  z-index: 1;
+}
 @media (hover: hover) {
   .acceso:hover,
   .acceso:focus-visible {
     border-color: color-mix(in srgb, var(--tinte) 60%, var(--color-line));
-    box-shadow: 0 18px 34px -26px color-mix(in srgb, var(--tinte) 90%, transparent);
+    box-shadow: 0 22px 42px -28px color-mix(in srgb, var(--tinte) 90%, transparent);
   }
-  /* la gramática espacial también aquí: Creative se corre a la IZQUIERDA, Web a la DERECHA */
+  /* la gramática espacial: Creative se corre a la IZQUIERDA, Web a la DERECHA */
   .acceso--creative:hover,
   .acceso--creative:focus-visible {
-    transform: translateX(-4px);
+    transform: translateX(-5px);
   }
   .acceso--web:hover,
   .acceso--web:focus-visible {
-    transform: translateX(4px);
+    transform: translateX(5px);
   }
 }
 .acceso__glyph {
-  --cell: 6px;
-  --gap: 1px;
-}
-.acceso__texto {
-  display: grid;
-  gap: 0.1rem;
-  min-width: 0;
+  --cell: clamp(9px, 1.1vw, 13px);
+  --gap: 2px;
+  margin-bottom: 0.35rem;
 }
 .acceso__nombre {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.12rem;
   color: var(--color-ink);
   line-height: 1.05;
 }
 .acceso__que {
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   line-height: 1.25;
   color: var(--color-dim);
+  max-width: 20ch;
 }
 .acceso__ir {
-  font-size: 0.9rem;
+  margin-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: color-mix(in srgb, var(--tinte) 72%, var(--color-ink));
   transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .acceso:hover .acceso__ir {
   transform: translateX(2px);
 }
-/* escritorio: tres columnas — acceso · marca · acceso */
+/* escritorio: la fila de tres — cuadrado · marca · cuadrado */
 @media (min-width: 1000px) {
   .grupo-hero {
-    grid-template-columns: minmax(190px, 0.9fr) minmax(0, 3.2fr) minmax(190px, 0.9fr);
-    gap: 2rem;
+    grid-template-columns: minmax(180px, 1fr) minmax(0, 2.4fr) minmax(180px, 1fr);
+    grid-template-areas:
+      'wordmark wordmark wordmark'
+      'izq texto der';
+    align-items: start;
+    gap: 1.5rem 2rem;
+  }
+  .acceso {
+    width: 100%;
+    max-width: 19rem;
+  }
+  .acceso--creative {
+    justify-self: start;
+  }
+  .acceso--web {
+    justify-self: end;
   }
 }
 @media (max-width: 999px) {
-  /* móvil y tablet: la marca primero, los accesos debajo en una fila */
+  /* tablet y móvil: la marca primero y los dos cuadrados debajo, lado a lado */
   .grupo-hero {
     grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'wordmark wordmark'
+      'texto texto'
+      'izq der';
     gap: 0.75rem;
   }
-  .grupo-hero__marca {
-    grid-column: 1 / -1;
-    margin-bottom: 0.5rem;
+  .grupo-hero__texto {
+    margin-bottom: 0.75rem;
   }
-}
-@media (max-width: 560px) {
-  .grupo-hero {
-    grid-template-columns: 1fr;
+  .acceso {
+    aspect-ratio: auto;
+    min-height: 11rem;
   }
 }
 
@@ -3172,30 +3239,18 @@ main {
   }
 }
 
-/* casos reales que recorrieron la ruta (una línea, bajo los pasos) */
-.ruta-casos {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.35rem 1.1rem;
-  margin-top: 1.25rem;
-  font-size: 0.85rem;
-  color: var(--color-dim);
-}
-.ruta-casos__label {
+/* Qué se crea en cada paso: una etiqueta destacada dentro de la tarjeta, con el color del
+   equipo (Samuel, 2026-09-22: pasos más disruptivos y entregables en vez de casos). */
+.ruta__crea {
+  justify-self: start;
+  margin-top: 0.15rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-s);
+  background: color-mix(in srgb, var(--paso-color) 20%, transparent);
   font-family: var(--font-mono);
   font-size: 0.66rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.ruta-casos__item b {
-  font-family: var(--font-display);
-  font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--color-ink);
-}
-.ruta-casos__item span {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
 }
 
 
@@ -3238,15 +3293,15 @@ main {
   }
 }
 
-/* ── /web: respaldo de ingeniería (2026-09-22) ─────────────────────────────────────────
-   Reemplaza la tarjeta con el retrato grande del ingeniero. Samuel: "que se vea como algo
-   que respalda el trabajo, no que la persona sea lo importante; el foco son los productos".
-   Por eso manda la frase de respaldo y el nombre va abajo, chico, como una firma. Ocupa el
-   mismo lugar que los tres frentes en /marketing. */
+/* ── /web: el equipo de ingeniería y desarrollo (2026-09-22) ───────────────────────────
+   Samuel: "que se lea como un GRUPO, no como una persona; y ya sobre ese grupo, quién lo
+   lidera". Encabeza el equipo; el liderazgo va abajo, con la foto un poco más grande y la
+   misma animación de antes: al pasar el cursor la foto se apaga y las teselas se dispersan.
+   Ocupa el mismo lugar que los tres frentes en /marketing. */
 .respaldo {
   display: grid;
-  gap: 0.55rem;
-  padding: 1rem 1.1rem 1.05rem;
+  gap: 0.6rem;
+  padding: 1.05rem 1.15rem 1.1rem;
   border-radius: var(--radius-m);
   border: 1px solid var(--color-line);
   border-left: 3px solid var(--color-pixel);
@@ -3260,7 +3315,7 @@ main {
   color: var(--color-pixel-soft);
 }
 .respaldo__linea {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   line-height: 1.35;
   color: var(--color-ink);
 }
@@ -3268,28 +3323,92 @@ main {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.6rem;
-  margin-top: 0.15rem;
-  padding-top: 0.6rem;
+  gap: 0.7rem;
+  margin-top: 0.2rem;
+  padding-top: 0.7rem;
   border-top: 1px solid var(--color-line);
-  transition: color 0.25s ease;
 }
+/* la foto: --av manda el tamaño y las teselas se posicionan como fracción de él */
 .respaldo__avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  border: 1px solid color-mix(in srgb, var(--color-pixel) 40%, var(--color-line));
+  --av: 54px;
+  position: relative;
+  display: block;
+  width: var(--av);
+  height: var(--av);
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1.5px solid color-mix(in srgb, var(--color-pixel) 40%, var(--color-line));
+  transition: border-color 0.3s ease;
+}
+.respaldo__foto {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: top;
+  transition: opacity 0.25s ease;
+}
+.respaldo__teselas {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+}
+.respaldo__teselas i {
+  background-image: url('/samuel/samuel-avatar.webp');
+  background-size: var(--av) var(--av);
+  background-repeat: no-repeat;
+  opacity: 0;
+}
+/* al pasar el cursor por el bloque: la foto se apaga y las teselas caen dispersándose */
+.respaldo__quien:hover .respaldo__foto,
+.respaldo__quien:focus-visible .respaldo__foto {
+  opacity: 0;
+}
+.respaldo__quien:hover .respaldo__avatar,
+.respaldo__quien:focus-visible .respaldo__avatar {
+  overflow: visible;
+  border-color: transparent;
+}
+.respaldo__quien:hover .respaldo__teselas i,
+.respaldo__quien:focus-visible .respaldo__teselas i {
+  animation: respaldo-caida 0.8s cubic-bezier(0.4, 0, 0.75, 0.9) var(--d) both;
+}
+@keyframes respaldo-caida {
+  0% {
+    opacity: 0.95;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--sx), var(--fall), var(--sz)) rotateX(var(--rx)) rotateY(var(--ry)) rotate(var(--rot));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .respaldo__quien:hover .respaldo__teselas i,
+  .respaldo__quien:focus-visible .respaldo__teselas i {
+    animation: none;
+  }
+  .respaldo__quien:hover .respaldo__foto {
+    opacity: 1;
+  }
 }
 .respaldo__texto {
   display: grid;
   min-width: 0;
 }
+.respaldo__lidera {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
 .respaldo__nombre {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--color-ink);
   line-height: 1.1;
 }
@@ -3299,11 +3418,75 @@ main {
   color: var(--color-dim);
 }
 .respaldo__ir {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--color-pixel-soft);
   transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .respaldo__quien:hover .respaldo__ir,
 .respaldo__quien:focus-visible .respaldo__ir {
   transform: translateX(3px);
+}
+
+/* el título de /web en registro de COMENTARIO DE CÓDIGO: más chico que el de Creative
+   porque es mucho más largo, y con el `//` delante (Samuel, 2026-09-22) */
+.hero-titulo--codigo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: clamp(1.15rem, 2.4vw, 2rem);
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--color-ink);
+}
+.hero-titulo--codigo__marca {
+  color: var(--color-pixel-soft);
+  opacity: 0.8;
+}
+.hero-titulo--codigo__nombre {
+  letter-spacing: -0.01em;
+}
+
+/* ── Selector de sección de la home (2026-09-22) ───────────────────────────────────────
+   Samuel: "un selector de sección súper pequeño, seccionado, solo para seleccionar y
+   dirigir ahí". Mismo lenguaje que el segmentado del header, en miniatura y sin estado:
+   son anclas puras. */
+.sel-seccion {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+}
+.sel-seccion__opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  color: var(--color-dim);
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+.sel-seccion__punto {
+  width: 5px;
+  height: 5px;
+  background: var(--color-line);
+  transition: background 0.25s ease;
+}
+.sel-seccion__opt:hover,
+.sel-seccion__opt:focus-visible {
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+.sel-seccion__opt:hover .sel-seccion__punto,
+.sel-seccion__opt:focus-visible .sel-seccion__punto {
+  background: var(--acento);
 }

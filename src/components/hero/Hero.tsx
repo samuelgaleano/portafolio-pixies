@@ -42,10 +42,15 @@ export default function Hero() {
           <PixelCanvas />
         </div>
 
-        <h1 className="hero-in hero-titulo mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-1" style={{ '--d': '0.35s' } as React.CSSProperties}>
+        {/* "Digital Web Design" es mucho más largo que "Creative": va más chico y en registro
+            de COMENTARIO DE CÓDIGO (mono, con el // delante), que es el lenguaje de esta
+            división (Samuel, 2026-09-22). El kicker "una empresa de…" se quitó. */}
+        <h1 className="hero-in hero-titulo--codigo mt-4" style={{ '--d': '0.35s' } as React.CSSProperties}>
           <span className="sr-only">Pixies </span>
-          <span className="hero-titulo__nombre">{t.hero.subtitle}</span>
-          <span className="hero-titulo__kicker text-[color:var(--color-pixel-soft)]">{t.hero.kicker}</span>
+          <span aria-hidden="true" className="hero-titulo--codigo__marca">
+            {'//'}
+          </span>
+          <span className="hero-titulo--codigo__nombre">{t.hero.subtitle}</span>
         </h1>
         <p className="hero-in mt-2 text-center font-mono text-sm text-dim sm:text-left sm:text-base" style={{ '--d': '0.42s' } as React.CSSProperties}>
           {t.hero.tagline}

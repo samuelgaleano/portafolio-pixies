@@ -15,7 +15,6 @@ export default function DivisionSelector() {
 
   return (
     <div className="selector-div" role="navigation" aria-label="Ver como">
-      <span className="selector-div__pre">ver como</span>
       <div className="seg" style={{ '--i': i } as React.CSSProperties}>
         <span className="seg__ind" aria-hidden="true" />
         {ORDEN_SELECTOR.map((d) => (
