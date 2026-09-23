@@ -4,6 +4,7 @@ import GrupoHero from '@/components/hero/GrupoHero';
 import GrupoSplit from '@/components/hero/GrupoSplit';
 import ProcesoUnificado from '@/components/grupo/ProcesoUnificado';
 import LeadForm from '@/components/leads/LeadForm';
+import ExpansionDivision from '@/components/fx/ExpansionDivision';
 import GradientText from '@/components/ui/GradientText';
 import Atmosphere from '@/components/fx/Atmosphere';
 import { t } from '@/i18n';
@@ -23,6 +24,9 @@ export default function HomePage() {
   return (
     <>
       <SchemaOrg type="organization" />
+      {/* la expansión de color al elegir división: sólo hace falta aquí, que es donde
+          viven los cuatro elementos con `data-expandir` */}
+      <ExpansionDivision />
       <GrupoHero />
 
       <GrupoSplit />

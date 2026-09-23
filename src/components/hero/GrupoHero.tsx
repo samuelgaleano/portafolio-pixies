@@ -38,7 +38,13 @@ export default function GrupoHero() {
         </div>
 
         {/* IZQUIERDA: Creative */}
-        <Link href="/marketing" data-glyph-host className="acceso acceso--creative hero-in" style={{ '--d': '0.55s' } as React.CSSProperties}>
+        <Link
+          href="/marketing"
+          data-glyph-host
+          data-expandir="creative"
+          className="acceso acceso--creative hero-in"
+          style={{ '--d': '0.55s' } as React.CSSProperties}
+        >
           <DivisionGlyph letra="C" variant="marketing" className="acceso__glyph" />
           <span className="acceso__nombre">{accesos.creative.etiqueta}</span>
           <span className="acceso__que">{accesos.creative.que}</span>
@@ -61,7 +67,7 @@ export default function GrupoHero() {
           </p>
 
           <div className="hero-in mt-5 flex flex-col items-center gap-3" style={{ '--d': '0.5s' } as React.CSSProperties}>
-            <a href="#contacto" data-desde="grupo-hero" className="hero-cta press">
+            <a href="#contacto" data-desde="grupo-hero" className="hero-cta hero-cta--suave press">
               <span>{grupoHero.cta}</span>
               <span className="hero-cta__arrow" aria-hidden="true">
                 →
@@ -72,7 +78,13 @@ export default function GrupoHero() {
         </div>
 
         {/* DERECHA: Web */}
-        <Link href="/web" data-glyph-host className="acceso acceso--web hero-in" style={{ '--d': '0.55s' } as React.CSSProperties}>
+        <Link
+          href="/web"
+          data-glyph-host
+          data-expandir="web"
+          className="acceso acceso--web hero-in"
+          style={{ '--d': '0.55s' } as React.CSSProperties}
+        >
           <DivisionGlyph letra="W" variant="web" className="acceso__glyph" />
           <span className="acceso__nombre">{accesos.web.etiqueta}</span>
           <span className="acceso__que">{accesos.web.que}</span>

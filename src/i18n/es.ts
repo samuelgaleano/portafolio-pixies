@@ -279,7 +279,9 @@ export const es = {
     // cliente quiere que pase. Conserva la idea aprobada (funciona + se ve bien) pero
     // puesta en su empresa, y va en un tono visual menos relevante que el H2.
     tesis: 'Que tu empresa se vea tan bien como funciona.',
-    cta: '¿Qué necesitas? Cuéntanos y te contactamos',
+    // 2026-09-22 (Samuel): más corto y menos protagonista. El botón grande de conversión ya
+    // está en el header y al final de la página; aquí basta con una invitación breve.
+    cta: 'Hablemos',
     // Selector de sección (2026-09-22): reemplaza el enlace "Ver cómo trabajamos" por un
     // segmentado diminuto que salta a cada sección de la home.
     secciones: {

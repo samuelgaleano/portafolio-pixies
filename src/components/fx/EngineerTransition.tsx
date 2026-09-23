@@ -33,19 +33,34 @@ export default function EngineerTransition() {
     capa.style.pointerEvents = 'auto';
     capa.classList.remove('is-out');
     capa.classList.add('is-in');
+    // RED DE SEGURIDAD (2026-09-22): el 22/09 se borró por accidente `.sig-transition.is-in`
+    // de globals.css y, sin animación, `animationend` no llegó nunca: `router.push` no se
+    // ejecutaba y TODOS los enlaces a /samuel dejaron de navegar — en silencio, porque nada
+    // lanzaba un error. El plazo garantiza que la navegación ocurre aunque el CSS falte.
+    let cubierto = false;
     const alCubrir = () => {
+      if (cubierto) return;
+      cubierto = true;
+      clearTimeout(plazo);
       capa.removeEventListener('animationend', alCubrir);
       router.push('/samuel');
       capa.classList.remove('is-in');
       capa.classList.add('is-out');
+      let destapado = false;
       const alDestapar = () => {
+        if (destapado) return;
+        destapado = true;
+        clearTimeout(plazoSalida);
         capa.removeEventListener('animationend', alDestapar);
         capa.classList.remove('is-out');
         capa.style.pointerEvents = 'none';
         leaving.current = false;
       };
+      const plazoSalida = setTimeout(alDestapar, 900);
       capa.addEventListener('animationend', alDestapar);
     };
+    // se declara DESPUÉS de alCubrir (que lo limpia): para cuando alguien lo llame, ya existe
+    const plazo = setTimeout(alCubrir, 900);
     capa.addEventListener('animationend', alCubrir);
   };
 

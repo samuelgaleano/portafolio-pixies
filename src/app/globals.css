@@ -2169,6 +2169,24 @@ main {
     transform: translateX(105%) skewX(6deg);
   }
 }
+/* Expansión del botón al elegir división (Samuel, 2026-09-22: "si se oprime, la animación
+   es que se expande el botón con el color de la sección escogida y ya llegamos a esa
+   sección"). El círculo nace en el botón que se oprimió y crece hasta cubrir la pantalla;
+   la navegación ocurre tapada y al destapar ya estamos en la división. Todo el movimiento
+   lo escribe ExpansionDivision con la API de animaciones (clip-path), así que aquí sólo
+   vive la caja. Mientras dura, el barrido de cámara se silencia para no sumar dos efectos. */
+.expansion-div {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  pointer-events: none;
+  opacity: 0;
+  background: var(--expansion-color, var(--color-pixel));
+}
+:root[data-expandiendo] .hilo-transicion {
+  display: none;
+}
+
 @keyframes hilo-barrido {
   0% {
     transform: scaleX(0);
@@ -2425,6 +2443,60 @@ main {
 /* Los dos "capítulos" de la bifurcación: Marketing en superficie plana ámbar (ancla
    IZQUIERDA), Web en tinta oscura (ancla DERECHA) — la gramática espacial en estructura,
    no solo en la dirección del reveal (ver [data-reveal="left|right"] arriba). */
+/* Las dos palabras enlazadas de la frase puente ("encuentren" → Creative, "compren" → Web).
+   Se escribieron con clase y SIN regla: hasta el 2026-09-22 se veían como texto plano y
+   nadie podía saber que llevaban a algún sitio (lo destapó css-huerfanas.test.ts). Ahora
+   cada una lleva el color de su división subrayado como marcador — es el primer sitio de la
+   página donde aparece el par amarillo/violeta, justo encima de los dos capítulos. */
+.grupo-bridge {
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(var(--tinte), var(--tinte));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 0.14em;
+  padding-inline: 0.06em;
+  transition:
+    background-size 0.28s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.28s ease;
+}
+.grupo-bridge--marketing {
+  --tinte: var(--color-marketing);
+}
+.grupo-bridge--web {
+  --tinte: var(--color-pixel);
+}
+@media (hover: hover) {
+  .grupo-bridge:hover {
+    background-size: 100% 0.85em;
+  }
+  .grupo-bridge--web:hover {
+    color: #fff;
+  }
+}
+.grupo-bridge:focus-visible {
+  outline: 2px solid var(--tinte);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Fondo de la sección teñido con el color de la división que tiene el cursor encima
+   (Samuel, 2026-09-22). Sólo cambia `background-color`: no toca la retícula, así que no
+   puede realimentarse como el ancho variable que hacía el bucle en el canalón del medio. */
+.grupo-eleccion {
+  transition: background-color 0.45s ease;
+}
+@media (hover: hover) {
+  .grupo-eleccion:has(.grupo-cap--marketing:hover),
+  .grupo-eleccion:has(.grupo-cap--marketing:focus-within) {
+    background-color: color-mix(in srgb, var(--color-marketing) 26%, var(--color-void));
+  }
+  .grupo-eleccion:has(.grupo-cap--web:hover),
+  .grupo-eleccion:has(.grupo-cap--web:focus-within) {
+    background-color: color-mix(in srgb, var(--color-pixel) 13%, var(--color-void));
+  }
+}
+
 .grupo-split {
   display: grid;
   gap: 1.25rem;
@@ -3107,6 +3179,25 @@ main {
   text-wrap: balance;
 }
 
+/* CTA suave del hero del grupo (Samuel, 2026-09-22: "hacerlo más pequeño, texto más corto
+   y que no sea tan relevante en el inicio"). Deja de ser el bloque rojo de conversión y pasa
+   a un botón de contorno: sigue siendo el único botón del centro, pero ya no le gana al
+   wordmark ni a los dos accesos. La conversión fuerte vive en el header y en #contacto. */
+.hero-cta--suave {
+  background: transparent;
+  color: var(--color-ink);
+  border: 1.5px solid color-mix(in srgb, var(--color-ink) 22%, transparent);
+  padding: 0.55rem 1.1rem;
+  font-size: 0.92rem;
+  box-shadow: none;
+}
+.hero-cta--suave:hover {
+  filter: none;
+  border-color: color-mix(in srgb, var(--color-ink) 45%, transparent);
+  background: color-mix(in srgb, var(--color-ink) 5%, transparent);
+  box-shadow: none;
+}
+
 /* los dos accesos: CUADRADOS, con el glifo mandando */
 .acceso {
   --tinte: var(--color-pixel);
@@ -3114,10 +3205,12 @@ main {
   display: grid;
   align-content: center;
   justify-items: center;
-  gap: 0.5rem;
-  width: min(100%, 17rem);
+  gap: 0.45rem;
+  /* 2026-09-22 (Samuel): un poco más pequeños. Los cuadrados competían con el wordmark y
+     con el bloque de marca; achicándolos el centro vuelve a mandar y la fila respira. */
+  width: min(100%, 14rem);
   aspect-ratio: 1 / 1;
-  padding: 1.25rem;
+  padding: 1rem;
   overflow: hidden;
   border-radius: var(--radius-m);
   border: 1.5px solid var(--color-line);
@@ -3160,22 +3253,22 @@ main {
   }
 }
 .acceso__glyph {
-  --cell: clamp(9px, 1.1vw, 13px);
+  --cell: clamp(7px, 0.9vw, 11px);
   --gap: 2px;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
 }
 .acceso__nombre {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.12rem;
+  font-size: 1rem;
   color: var(--color-ink);
   line-height: 1.05;
 }
 .acceso__que {
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   line-height: 1.25;
   color: var(--color-dim);
-  max-width: 20ch;
+  max-width: 19ch;
 }
 .acceso__ir {
   margin-top: 0.15rem;
@@ -3192,7 +3285,9 @@ main {
 /* escritorio: la fila de tres — cuadrado · marca · cuadrado */
 @media (min-width: 1000px) {
   .grupo-hero {
-    grid-template-columns: minmax(180px, 1fr) minmax(0, 2.4fr) minmax(180px, 1fr);
+    /* las columnas laterales ceden ancho al centro: con los cuadrados más chicos, la marca
+       y su CTA vuelven a ser el peso del hero */
+    grid-template-columns: minmax(150px, 1fr) minmax(0, 2.4fr) minmax(150px, 1fr);
     grid-template-areas:
       'wordmark wordmark wordmark'
       'izq texto der';
@@ -3201,13 +3296,15 @@ main {
   }
   .acceso {
     width: 100%;
-    max-width: 19rem;
+    max-width: 15rem;
   }
-  .acceso--creative {
-    justify-self: start;
-  }
+  /* CENTRADOS en su columna, no pegados al borde de la pantalla: con los cuadrados más
+     chicos, anclarlos al extremo dejaba un hueco enorme contra el bloque de marca y el
+     conjunto se leía descosido (Samuel, 2026-09-22: "que todo se vea más armónico"). Así
+     el margen exterior y el interior quedan parecidos y la fila respira pareja. */
+  .acceso--creative,
   .acceso--web {
-    justify-self: end;
+    justify-self: center;
   }
 }
 @media (max-width: 999px) {
@@ -3225,7 +3322,7 @@ main {
   }
   .acceso {
     aspect-ratio: auto;
-    min-height: 11rem;
+    min-height: 9.5rem;
   }
 }
 
@@ -3489,4 +3586,229 @@ main {
 .sel-seccion__opt:hover .sel-seccion__punto,
 .sel-seccion__opt:focus-visible .sel-seccion__punto {
   background: var(--acento);
+}
+
+/* == RESTAURADO 2026-09-22 ============================================================
+   Estas reglas se perdieron en el commit b13e34b al borrar CSS por marcadores de
+   comentario en vez de por bloques balanceados. Consecuencias que llegaron a produccion:
+     - .sig-transition.is-in/.is-out + keyframes: sin animacion no se dispara
+       `animationend`, asi que EngineerTransition nunca llamaba a router.push y TODOS los
+       enlaces a /samuel quedaron muertos (header, pie y el bloque de respaldo).
+     - .catalogo-menu/.catalogo-item*: el catalogo de /web quedo sin estilos.
+     - .cubo__icono/__ayuda/__pedir: los servicios de Creative perdieron icono y CTA.
+     - .parallax y .stagger-in: el JS escribia las variables y el CSS ya no las usaba.
+   Recuperadas verbatim de 10e4e84. El test css-huerfanas.test.ts impide que se repita.
+   ==================================================================================== */
+/* ── Catálogo de /web: menú de accesos directos (2026-09-22) ───────────────────────────
+   Reemplaza los tiles con previa en imagen: ícono en píxeles + título en las palabras del
+   cliente + evidencia concreta. Tres columnas en escritorio, una en móvil; toda la fila es
+   oprimible y el ícono toma el violeta al pasar. */
+.catalogo-menu {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (max-width: 1000px) {
+  .catalogo-menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .catalogo-menu {
+    grid-template-columns: 1fr;
+  }
+}
+
+.catalogo-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  transition:
+    transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+@media (hover: hover) {
+  .catalogo-item:hover,
+  .catalogo-item:focus-visible {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--color-pixel) 55%, var(--color-line));
+    box-shadow: 0 16px 32px -26px color-mix(in srgb, var(--color-pixel) 90%, transparent);
+  }
+}
+
+.catalogo-item__icono {
+  display: grid;
+  grid-template-columns: repeat(5, 4px);
+  grid-auto-rows: 4px;
+  gap: 1px;
+}
+
+.catalogo-item__icono i {
+  background: transparent;
+}
+
+.catalogo-item__icono i.on {
+  background: var(--color-dim);
+  transition: background 0.25s ease;
+}
+
+.catalogo-item:hover .catalogo-item__icono i.on,
+.catalogo-item:focus-visible .catalogo-item__icono i.on {
+  background: var(--color-pixel);
+}
+
+.catalogo-item__texto {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.catalogo-item__titulo {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1.15;
+  color: var(--color-ink);
+}
+
+.catalogo-item__evidencia {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  color: var(--color-dim);
+}
+
+.catalogo-item__flecha {
+  color: var(--color-dim);
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.25s ease;
+}
+
+.catalogo-item:hover .catalogo-item__flecha {
+  transform: translateX(3px);
+  color: var(--color-pixel);
+}
+
+/* OBLIGATORIO para `.cubo__pedir::after`: el enlace estirado se posiciona contra el cubo.
+   Sin esto, `inset: 0` se resuelve contra un ancestro lejano y la capa invisible del enlace
+   se extiende por media página — tapando, entre otras cosas, el botón de enviar del
+   formulario de contacto (lo cazó e2e/smoke.spec.ts el 2026-09-22 al restaurar este bloque:
+   en 10e4e84 esta regla vivía en un SEGUNDO bloque `.cubo`, separado del principal). */
+.cubo {
+  position: relative;
+}
+.cubo__icono {
+  display: grid;
+  grid-template-columns: repeat(5, 5px);
+  grid-auto-rows: 5px;
+  gap: 1px;
+}
+
+.cubo__icono i {
+  background: transparent;
+}
+
+.cubo__icono i.on {
+  background: var(--acento-texto);
+  transition: background 0.3s ease;
+}
+
+.cubo:hover .cubo__icono i.on {
+  background: var(--color-ink);
+}
+
+.cubo__ayuda {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.25;
+  color: var(--color-ink);
+  margin-top: -0.25rem;
+}
+
+.cubo__pedir {
+  justify-self: start;
+  margin-top: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--acento-texto);
+  transition: color 0.25s ease;
+}
+
+/* enlace estirado: cubre el cubo entero (el texto sigue seleccionable porque el <a> va al
+   final del flujo y solo su ::after se estira) */
+.cubo__pedir::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-m);
+}
+
+.cubo:hover .cubo__pedir,
+.cubo:focus-within .cubo__pedir {
+  color: var(--color-ink);
+}
+
+.cubo:focus-within {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
+}
+
+.parallax {
+  /* --par lo escribe Parallax; sin JS queda en 0% y la capa no se mueve */
+  transform: translate3d(0, var(--par, 0%), 0);
+  will-change: transform;
+}
+
+.stagger-in > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+.stagger-in.is-in > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* barrido al ingeniero: cubre de izquierda a derecha y destapa hacia la derecha */
+.sig-transition.is-in {
+  animation: sig-cubrir 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.sig-transition.is-out {
+  animation: sig-destapar 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.08s forwards;
+}
+
+@keyframes sig-cubrir {
+  from {
+    transform: translateX(-103%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes sig-destapar {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(103%);
+  }
 }

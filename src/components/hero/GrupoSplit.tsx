@@ -12,7 +12,7 @@ export default function GrupoSplit() {
   const { split } = t;
 
   return (
-    <section className="border-y border-line" aria-labelledby="grupo-split-h">
+    <section className="grupo-eleccion border-y border-line" aria-labelledby="grupo-split-h">
       <div className="mx-auto w-full max-w-[1200px] px-4 pt-10 pb-16 sm:px-6 sm:pt-12 sm:pb-20">
         <h2 id="grupo-split-h" className="sr-only">
           Elige tu división
@@ -43,6 +43,7 @@ export default function GrupoSplit() {
             href={split.marketing.href}
             data-desde="grupo-split-marketing"
             data-glyph-host
+            data-expandir="creative"
             data-reveal="left"
             className="grupo-cap grupo-cap--marketing"
             aria-label="Ver Pixies Creative"
@@ -70,6 +71,7 @@ export default function GrupoSplit() {
             href={split.web.href}
             data-desde="grupo-split-web"
             data-glyph-host
+            data-expandir="web"
             data-reveal="right"
             className="grupo-cap grupo-cap--web"
             aria-label="Ver Pixies Digital Web Design"
