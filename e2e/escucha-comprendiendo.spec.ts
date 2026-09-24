@@ -6,43 +6,34 @@ import { test, expect } from '@playwright/test';
 // ejemplo curado todavía no está listo, así que esa página va directa a la demo en vivo y
 // NO muestra una pestaña "Ejemplo real" que prometa contenido inexistente.
 
-test('home: la tarjeta de la app es un teaser entero clicable que lleva a su página propia', async ({ page }) => {
-  // 2026-09-23: la sección ya no vive dentro del portafolio — está arriba, justo bajo el
-  // hero de /web, con la misma ancla `#productos`.
-  // Sin el ancla `#productos` a propósito: entrar por hash dispara el `scroll-behavior:
-  // smooth` del sitio y ese desplazamiento sigue corriendo mientras se calcula el punto del
-  // clic. Lo que se prueba aquí es que la tarjeta entera sea oprimible, no el salto al ancla.
+test('/web: la ficha de la app es una ficha de tienda con descarga y prueba', async ({ page }) => {
+  // 2026-09-23: la sección vive arriba, justo bajo el hero de /web y bajo el catálogo, con la
+  // misma ancla `#productos`. Y la tarjeta dejó de ser un enlace estirado: ahora es una FICHA
+  // tipo tienda, con su propio botón de descarga y otro de probar — que es lo que Samuel pidió
+  // ("un recuadro tipo App Store, enfocado a las descargas").
   await page.goto('/web');
   const seccion = page.locator('#productos');
   await expect(seccion.getByRole('heading', { name: 'Aplicaciones' })).toBeVisible();
   await expect(seccion.getByText('by Pixies')).toBeVisible();
-  await expect(seccion.locator('.app-card__nombre')).toHaveText('escuchacomprendiendo.IA');
-  // la home NO despliega el demo: ni pestañas ni dropzone acá
+
+  // identidad de tienda: nombre, quién la hace y la ficha técnica
+  await expect(seccion.locator('.app-ficha__nombre')).toHaveText('escuchacomprendiendo.IA');
+  await expect(seccion.locator('.app-ficha__dev')).toHaveText('Pixies Design Group');
+  await expect(seccion.locator('.app-ficha__meta dd').first()).toHaveText('1.0.1');
+  // NO hay estrellas ni contador de descargas: no los tenemos y no se inventan
+  await expect(seccion.locator('.app-ficha__meta dd')).toHaveCount(3);
+
+  // la sección no despliega el demo: eso vive en la página de la app
   await expect(seccion.getByRole('tab')).toHaveCount(0);
   await expect(seccion.locator('input[type="file"]')).toHaveCount(0);
 
-  // la tarjeta entera es un link estirado (mismo patrón que ProjectCard) → navega a la app.
-  // Antes de oprimir hay que esperar a que la tarjeta DEJE DE MOVERSE: la página se sigue
-  // acomodando un buen rato (swap de fuentes y reveals), y un punto calculado antes de que
-  // pare cae fuera de la tarjeta — falló 2 de 6 veces hasta que se comprobó con
-  // elementFromPoint. Con la espera: 8 de 8 (2026-09-22).
-  const tarjeta = seccion.getByRole('link', { name: /escuchacomprendiendo\.IA — probar en vivo o descargar/ });
-  await tarjeta.scrollIntoViewIfNeeded();
-  let anterior = '';
-  let quietas = 0;
-  await expect
-    .poll(
-      async () => {
-        const caja = await tarjeta.boundingBox();
-        const actual = caja ? `${Math.round(caja.x)},${Math.round(caja.y)}` : '';
-        quietas = actual !== '' && actual === anterior ? quietas + 1 : 0;
-        anterior = actual;
-        return quietas;
-      },
-      { timeout: 20_000, intervals: [120] }
-    )
-    .toBeGreaterThanOrEqual(4);
-  await tarjeta.click();
+  // los dos botones llevan a la app
+  const botones = seccion.locator('.app-ficha__btn');
+  await expect(botones).toHaveCount(2);
+  for (const b of await botones.all()) {
+    await expect(b).toHaveAttribute('href', '/aplicaciones/escuchacomprendiendo-ai');
+  }
+  await botones.first().click();
   await expect(page).toHaveURL(/\/aplicaciones\/escuchacomprendiendo-ai$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('escuchacomprendiendo.IA');
 });

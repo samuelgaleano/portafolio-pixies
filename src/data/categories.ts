@@ -30,8 +30,8 @@ export interface Category {
 export const categories: Category[] = [
   {
     id: 'landing',
-    corto: 'Quiero una página que venda',
-    evidencia: '3 sitios en producción',
+    corto: 'Una landing page que venda',
+    evidencia: 'Landing page · 3 en producción',
     icono: ['11111','10001','11111','00100','01110'],
     heroLabel: 'landing pages',
     title: 'Landing Pages',
@@ -41,8 +41,8 @@ export const categories: Category[] = [
   },
   {
     id: 'erp',
-    corto: 'Quiero un sistema para mi operación',
-    evidencia: 'Demo en vivo · 45 módulos',
+    corto: 'Un ERP que organice mi pyme',
+    evidencia: 'ERP · 45 módulos, con demo en vivo',
     icono: ['11011','11011','00000','11011','11011'],
     heroLabel: 'erp a medida',
     title: 'Sistema ERP',
@@ -53,8 +53,8 @@ export const categories: Category[] = [
   },
   {
     id: 'catalogo',
-    corto: 'Quiero vender por internet',
-    evidencia: '2 tiendas con inventario real',
+    corto: 'Un e-commerce que venda',
+    evidencia: 'E-commerce · 2 vendiendo hoy',
     icono: ['01110','11111','10101','11111','01010'],
     heroLabel: 'e-commerce',
     title: 'Catálogo / E-commerce',
@@ -64,8 +64,8 @@ export const categories: Category[] = [
   },
   {
     id: 'empresarial',
-    corto: 'Quiero conectar lo que ya uso',
-    evidencia: '2 integraciones en red local',
+    corto: 'Conectar los sistemas que ya uso',
+    evidencia: 'Integraciones · 2 en red local',
     icono: ['10001','01110','00100','01110','10001'],
     heroLabel: 'integraciones',
     title: 'Soluciones integrales empresariales',
@@ -75,8 +75,8 @@ export const categories: Category[] = [
   },
   {
     id: 'datos',
-    corto: 'Quiero entender mis datos',
-    evidencia: 'Informe completo y código R',
+    corto: 'Un análisis que explique mis datos',
+    evidencia: 'Analítica · informe y código abiertos',
     icono: ['00001','00101','01101','11101','11111'],
     heroLabel: 'datos',
     title: 'Analítica e ingeniería de datos',
@@ -87,8 +87,8 @@ export const categories: Category[] = [
   },
   {
     id: 'ia',
-    corto: 'Quiero automatizar con IA',
-    evidencia: 'Agente real, paso a paso',
+    corto: 'Un agente de IA que haga el trabajo',
+    evidencia: 'IA · un agente real, paso a paso',
     icono: ['00100','01110','11111','01110','00100'],
     heroLabel: 'ia',
     title: 'Implementaciones de IA',
@@ -99,8 +99,8 @@ export const categories: Category[] = [
   },
   {
     id: 'productos',
-    corto: 'Quiero probar algo ya hecho',
-    evidencia: 'App propia, gratis en el navegador',
+    corto: 'Una app lista para usar hoy',
+    evidencia: 'Apps propias · gratis en el navegador',
     icono: ['11111','10001','10101','10001','11111'],
     heroLabel: 'apps by pixies',
     title: 'Aplicaciones by Pixies',

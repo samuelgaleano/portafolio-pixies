@@ -48,12 +48,27 @@ export default function ProductDemoExhibit() {
         </button>
       </div>
 
-      <div className="mt-5 rounded-(--radius-m) border border-line bg-surface p-5 md:p-6">
-        {tab === 'curada' ? (
-          <EscuchaCuratedTour onTryLive={() => setTab('vivo')} />
-        ) : (
-          <EscuchaLiveDemo onFallbackToCurated={() => setTab('curada')} />
-        )}
+      {/* La demo vive DENTRO de una ventana desde el primer segundo (Samuel, 2026-09-23: "que
+          visualmente sea como la aplicación, para evitar que la gente se aburra"). Antes la
+          caja era un panel neutro y la carcasa solo aparecía al terminar de procesar: se
+          perdía la pista de que esto es una app de escritorio hasta el final. */}
+      <div className="mt-5 app-marco">
+        <div className="app-marco__barra">
+          <span className="app-marco__semaforo" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+          <span className="app-marco__titulo">{t.escucha.shellTitulo}</span>
+          <span className="app-marco__etiqueta">{t.escucha.shellDemo}</span>
+        </div>
+        <div className="app-marco__lienzo">
+          {tab === 'curada' ? (
+            <EscuchaCuratedTour onTryLive={() => setTab('vivo')} />
+          ) : (
+            <EscuchaLiveDemo onFallbackToCurated={() => setTab('curada')} />
+          )}
+        </div>
       </div>
 
       <EscuchaAccessForm />

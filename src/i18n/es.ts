@@ -36,11 +36,15 @@ export const es = {
     // Bloque de apoyo del hero (2026-09-22, 2ª pasada): tiene que leerse como un EQUIPO, no
     // como una persona — "el grupo de ingeniería y desarrollo está a cargo de esto" — y solo
     // después decir quién lo lidera. Nada de "cada producto lo construye un ingeniero".
+    // 2026-09-23 (Samuel): el bloque tenía que sonar más profesional y dejar claro que él
+    // DIRIGE el área y al equipo, no que es un ingeniero más. El cargo pasa de "Ingeniero de
+    // Sistemas" a arquitecto: es quien decide la arquitectura y responde por la entrega.
     respaldoEyebrow: 'ingeniería y desarrollo',
-    respaldoLinea: 'El equipo de ingeniería y desarrollo del grupo construye y sostiene cada producto.',
-    respaldoLidera: 'Lo lidera',
+    respaldoLinea:
+      'Un área propia de ingeniería diseña la arquitectura, construye y mantiene en producción cada solución que entregamos. Nada se subcontrata y nada se abandona al entregarlo.',
+    respaldoLidera: 'Dirige el área',
     respaldoQuien: 'Samuel Galeano',
-    respaldoRol: 'Ingeniero de Sistemas',
+    respaldoRol: 'Arquitecto de Datos y Soluciones',
   },
   signature: {
     // firma interactiva del hero → /samuel: la cita que revela al ingeniero
@@ -53,11 +57,14 @@ export const es = {
     aria: 'Conoce a Samuel Galeano, el ingeniero detrás de Pixies',
   },
   portfolio: {
-    eyebrow: '/portafolio',
-    title: 'Proyectos que ya corren',
+    // 2026-09-23 (Samuel): "que se note más como productos o soluciones, que se entienda que
+    // es un catálogo de lo que ya se tiene". Deja de ser un portafolio de proyectos pasados y
+    // se presenta como lo que es: un catálogo de soluciones que ya están funcionando.
+    eyebrow: '/catalogo',
+    title: 'Catálogo de soluciones',
     // Samuel (2026-09-22): "optimizar el tiempo de scroll para suplir la necesidad lo más
     // rápido posible" — la entrada manda a elegir en el menú de abajo, no describe el sitio.
-    intro: 'Elige lo que necesitas y salta directo: todo lo de abajo está en producción o tiene demo en vivo.',
+    intro: 'Elige la solución que necesitas y salta directo. Cada una existe: está en producción o tiene demo en vivo.',
     navLabel: 'Categorías del portafolio',
     statusLive: '● En producción',
     statusCode: '‹/› Código',
@@ -115,11 +122,30 @@ export const es = {
     eyebrow: '/aplicaciones',
     titulo: 'Aplicaciones',
     by: 'by Pixies',
+    // etiquetas de la ficha tipo tienda
+    btnDescargar: 'Descargar',
+    btnProbar: 'Probar en el navegador',
+    vistaPie: 'Así se ve al procesar un audio: el grafo de lo que dijiste, dentro de la app.',
+    metaVersion: 'Versión',
+    metaFormato: 'Formato',
+    metaPrecio: 'Precio',
     intro: 'Software propio, no encargos. Se prueba gratis en el navegador y se descarga para trabajar en tu computador.',
+    // 2026-09-23 (Samuel): los tres textos anteriores eran "textos vacíos" — decían cosas
+    // genéricas de cualquier app. Ahora cada uno habla de ESTA aplicación y de lo que hace,
+    // y juntos cuentan el argumento: de dónde viene, contra qué compite y qué te llevas.
     notas: [
-      { titulo: 'Se prueban antes de pedir nada', cuerpo: 'La demo corre aquí mismo, con tu propio audio y sin registro.' },
-      { titulo: 'La versión completa es de escritorio', cuerpo: 'Se descarga para Windows y trabaja contra tus archivos, en tu máquina.' },
-      { titulo: 'Nacen de un problema real', cuerpo: 'Se construyeron para usarlas a diario dentro de Pixies; por eso están en producción y no en una presentación.' },
+      {
+        titulo: 'Nació de perder contexto en reuniones',
+        cuerpo: 'Reuniones y notas de voz que nadie vuelve a escuchar, decisiones que se pierden y un mes después nadie recuerda por qué se hizo así. La app se construyó para eso, primero para nosotros.',
+      },
+      {
+        titulo: 'Obsidian y Whisper Flow, pero un paso más allá',
+        cuerpo: 'Obsidian enlaza notas que tú escribes; Whisper Flow transcribe lo que dices. Esta las junta y añade lo que falta: un motor propio que estructura el audio, arma los enlaces solo y marca qué tan sostenida está cada afirmación.',
+      },
+      {
+        titulo: 'Lo que dijiste queda listo para otra IA',
+        cuerpo: 'El resultado no es un resumen para leer: es contexto citado y conectado, acumulado por proyecto, que le puedes dar a un asistente sin que se invente la mitad.',
+      },
     ],
   },
   escucha: {
@@ -168,22 +194,14 @@ export const es = {
     // Entrada de la página de la app (Samuel, 2026-09-23): "cuando se entra, una explicación
     // muy concreta de lo que hace, y justo abajo ya la demo". Tres puntos, ni uno más.
     introQue: 'Qué hace, en concreto',
+    // 2026-09-23 (Samuel): "los pasos 01, 02, 03 están bien, pero redúcelos mucho más" — la
+    // gente se aburre antes de llegar a probar. De tres párrafos a tres líneas.
     introPuntos: [
-      {
-        titulo: 'No se queda en transcribir',
-        cuerpo: 'Un transcriptor te devuelve el texto. Aquí ese texto se parte en piezas —conceptos, decisiones, tareas, riesgos y lo que quedó en duda— cada una con el segundo exacto en que se dijo.',
-      },
-      {
-        titulo: 'Las conecta entre sí',
-        cuerpo: 'Arma el grafo de lo que dijiste: qué tiene que ver con qué. En la app de escritorio ese grafo crece con cada audio y se acumula por proyecto: es el segundo cerebro.',
-      },
-      {
-        titulo: 'Dice de qué se fía',
-        cuerpo: 'Marca lo que se afirmó, lo que solo se deduce y lo que quedó en el aire, en vez de presentarlo todo con la misma seguridad. Es lo que evita que el resumen te invente certezas.',
-      },
+      { titulo: 'No se queda en transcribir', cuerpo: 'Parte lo dicho en decisiones, tareas, riesgos y dudas, con el segundo exacto.' },
+      { titulo: 'Las conecta entre sí', cuerpo: 'Arma el grafo de lo que dijiste, y en escritorio crece con cada audio del proyecto.' },
+      { titulo: 'Dice de qué se fía', cuerpo: 'Marca lo deducido y lo dudoso en vez de darlo todo por cierto.' },
     ],
-    introObsidian:
-      'Piénsalo como Obsidian con esteroides, combinado con un transcriptor: las notas enlazadas del primero, el audio del segundo, y un motor propio de IA que arma los enlaces por ti y prepara el contexto para dárselo a otra IA sin que alucine.',
+    introObsidian: 'Obsidian y Whisper Flow, un paso más allá: notas enlazadas, audio y un motor propio que arma los enlaces por ti.',
     // Desplegable de condiciones: la demo procesa MENOS que la app descargada y hay que
     // decirlo, no esconderlo (regla de la casa: no prometemos lo que no controlamos).
     condicionesTitulo: 'Condiciones de esta demo',
@@ -407,7 +425,10 @@ export const es = {
   // lleva a la sección donde está ese trabajo de verdad. Con flechas entre pasos.
   proceso: {
     eyebrow: '/la-ruta',
-    title: 'De la idea a los números',
+    // 2026-09-23 (Samuel): "De la idea a los números" era tibio. El título tiene que decir el
+    // recorrido completo y por qué importa recorrerlo entero, sin prometer un resultado que
+    // depende del mercado.
+    title: 'Todo lo que hay entre una idea y un cliente',
     intro: 'Seis pasos. Oprime cualquiera y mira lo que ya hicimos ahí.',
     pasos: [
       { n: '01', lado: 'creative', title: 'Marca', desc: 'Identidad, sistema visual y tono.', crea: 'Se crea la marca', href: '/marketing#servicios', destino: 'Ver marca' },
@@ -417,6 +438,26 @@ export const es = {
       { n: '05', lado: 'web', title: 'Sistemas', desc: 'ERP, automatización e IA para operar.', crea: 'Se monta el sistema', href: '/web#erp', destino: 'Ver el ERP' },
       { n: '06', lado: 'ambas', title: 'Datos', desc: 'Medición, análisis y la siguiente decisión.', crea: 'Se mide y se decide', href: '/web#datos', destino: 'Ver el análisis' },
     ],
+    // Roadmap de EJEMPLO con un cliente real (Samuel, 2026-09-23): los seis pasos dicen el
+    // método; este recorrido dice cómo se vivió de verdad, uno por uno. Specifinance es el
+    // caso completo — empezó sin marca y terminó con sitio, captación y panel propio. Los
+    // datos salen de src/data/projects.ts (diagnóstico multipaso, mini-CRM con sesión
+    // firmada): nada inventado, y sin cifras de resultado que dependen del mercado.
+    casoEyebrow: 'un caso, paso a paso',
+    casoTitle: 'Cómo se ve esto en un cliente real',
+    casoIntro:
+      'Specifinance, una boutique de dirección financiera. Llegó sin marca definida y hoy tiene un sitio que capta solo y un panel donde le hace seguimiento a cada interesado. Estos fueron los pasos, en orden.',
+    casoPasos: [
+      { n: '01', lado: 'creative', title: 'Marca e identidad', desc: 'Nombre, sistema visual y tono para una boutique que dirige finanzas, no que lleva contabilidad.', crea: 'Identidad completa' },
+      { n: '02', lado: 'creative', title: 'Público objetivo', desc: 'A quién se le habla: empresas que ya facturan y no saben dónde se les va la plata.', crea: 'Perfil de cliente' },
+      { n: '03', lado: 'creative', title: 'Estrategia de atracción', desc: 'Con qué promesa entran, por qué canales y qué tienen que ver antes de escribir.', crea: 'Plan de captación' },
+      { n: '04', lado: 'web', title: 'El sitio', desc: 'Se construye con esa identidad y ese mensaje, no con una plantilla que después se decora.', crea: 'Sitio en producción' },
+      { n: '05', lado: 'web', title: 'Diagnóstico que capta', desc: 'Dentro del sitio, un cuestionario por pasos que no se siente formulario y deja registrado a quien lo llena.', crea: 'Leads que entran solos' },
+      { n: '06', lado: 'web', title: 'Panel propio', desc: 'Los interesados caen en un mini-CRM con sesión firmada, sin depender de herramientas de terceros ni pagar por ellas.', crea: 'Seguimiento sin terceros' },
+      { n: '07', lado: 'creative', title: 'Campaña en LinkedIn', desc: 'Con el sitio ya captando, la búsqueda sale a buscar: LinkedIn y bases de datos propias apuntando a ese perfil.', crea: 'Demanda que llega' },
+    ],
+    casoCta: 'Ver el sitio de Specifinance →',
+    casoHref: '/web#landing',
     cierreTitle: 'Y lo que aprendemos vuelve a entrar',
     cierreBody:
       'Reuniones, entrevistas y notas de voz se convierten en contexto citado con escuchacomprendiendo.IA, nuestra propia aplicación. Ese conocimiento alimenta la siguiente campaña y el siguiente sistema.',

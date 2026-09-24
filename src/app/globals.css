@@ -3213,7 +3213,10 @@ main {
   padding: 1rem;
   overflow: hidden;
   border-radius: var(--radius-m);
-  border: 1.5px solid var(--color-line);
+  /* Borde del color de la división (Samuel, 2026-09-23): la tarjeta es blanca sobre un fondo
+     casi blanco, así que sin borde de color los dos accesos se desdibujaban contra la página.
+     Amarillo para Creative, violeta para Web — el mismo par que ya usan los capítulos. */
+  border: 2px solid color-mix(in srgb, var(--tinte) 62%, var(--color-line));
   background: var(--color-surface);
   text-align: center;
   transition:
@@ -3239,7 +3242,7 @@ main {
 @media (hover: hover) {
   .acceso:hover,
   .acceso:focus-visible {
-    border-color: color-mix(in srgb, var(--tinte) 60%, var(--color-line));
+    border-color: var(--tinte);
     box-shadow: 0 22px 42px -28px color-mix(in srgb, var(--tinte) 90%, transparent);
   }
   /* la gramática espacial: Creative se corre a la IZQUIERDA, Web a la DERECHA */
@@ -3298,13 +3301,16 @@ main {
     width: 100%;
     max-width: 15rem;
   }
-  /* CENTRADOS en su columna, no pegados al borde de la pantalla: con los cuadrados más
-     chicos, anclarlos al extremo dejaba un hueco enorme contra el bloque de marca y el
-     conjunto se leía descosido (Samuel, 2026-09-22: "que todo se vea más armónico"). Así
-     el margen exterior y el interior quedan parecidos y la fila respira pareja. */
-  .acceso--creative,
+  /* ANCLADOS AL FILO DEL WORDMARK (Samuel, 2026-09-23: Creative "un poco más a la derecha,
+     justo cuando comienza la P"; Web "un poco más a la izquierda, justo donde acaba la ese").
+     Medido en producción a 1440: el borde interior de cada columna lateral cae en 326 y 1114,
+     y el wordmark va de 324 a 1116 — o sea que el límite de la columna ES el filo de la P y
+     el de la S. Por eso basta con anclar cada cuadrado a ese lado en vez de centrarlo. */
+  .acceso--creative {
+    justify-self: end;
+  }
   .acceso--web {
-    justify-self: center;
+    justify-self: start;
   }
 }
 @media (max-width: 999px) {
@@ -3625,8 +3631,10 @@ main {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.85rem;
-  padding: 0.85rem 1rem;
+  /* 2026-09-23 (Samuel): "los botones un poquito más pequeños" — el catálogo es un menú para
+     saltar, no una rejilla de tarjetas; cuanto menos ocupe, antes se ve entero. */
+  gap: 0.7rem;
+  padding: 0.62rem 0.8rem;
   border-radius: var(--radius-m);
   border: 1px solid var(--color-line);
   background: var(--color-surface);
@@ -3855,15 +3863,15 @@ main {
 }
 @media (min-width: 900px) {
   .apps-seccion__grid {
-    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 27rem) minmax(0, 1fr);
     gap: 3rem;
-    align-items: center;
+    align-items: start;
   }
 }
 .apps-seccion__notas {
   display: grid;
-  gap: 1.1rem;
-  align-content: center;
+  gap: 1.4rem;
+  align-content: start;
 }
 .apps-seccion__nota {
   display: grid;
@@ -4318,4 +4326,425 @@ main {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--color-pixel-soft);
+}
+
+/* == Caso paso a paso bajo la ruta (2026-09-23) =======================================
+   Los seis pasos de arriba son el metodo y cada uno es un boton. Esto es un RELATO: un
+   cliente real, en orden, con lo que salio de cada paso. Por eso es una linea de tiempo
+   continua — se lee de corrido, no se navega. El color sigue diciendo que equipo lo hizo.
+   ==================================================================================== */
+.caso-ruta {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--color-line);
+}
+.caso-ruta__head {
+  max-width: 62ch;
+}
+.caso-ruta__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+.caso-ruta__title {
+  margin-top: 0.3rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  line-height: 1.08;
+  color: var(--color-ink);
+}
+.caso-ruta__intro {
+  margin-top: 0.7rem;
+  color: var(--color-dim);
+}
+.caso-ruta__pasos {
+  display: grid;
+  gap: 0;
+  margin-top: 2rem;
+}
+@media (min-width: 900px) {
+  .caso-ruta__pasos {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+}
+
+/* cada paso: el riel con la marca arriba (escritorio) o a la izquierda (movil) */
+.caso-paso {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.28rem;
+  padding: 1.25rem 0 1.5rem 1.6rem;
+  --lado-color: var(--color-pixel);
+}
+.caso-paso--creative {
+  --lado-color: var(--color-marketing);
+}
+.caso-paso--web {
+  --lado-color: var(--color-pixel);
+}
+/* el riel: linea continua que une los pasos */
+.caso-paso::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-line);
+}
+.caso-paso:first-child::before {
+  top: 1.4rem;
+}
+.caso-paso:last-child::before {
+  bottom: auto;
+  height: 1.4rem;
+}
+.caso-paso__marca {
+  position: absolute;
+  left: 0;
+  top: 1.25rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--lado-color);
+  box-shadow: 0 0 0 3px var(--color-void);
+}
+@media (min-width: 900px) {
+  .caso-paso {
+    padding: 2rem 0.9rem 0 0;
+  }
+  .caso-paso::before {
+    left: 0;
+    right: 0;
+    top: 5px;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+  }
+  .caso-paso:first-child::before {
+    left: 6px;
+    top: 5px;
+  }
+  .caso-paso:last-child::before {
+    right: auto;
+    width: 6px;
+    height: 2px;
+  }
+  .caso-paso__marca {
+    top: 0;
+    left: 0;
+  }
+  /* las descripciones tienen largos distintos: sin esto, la etiqueta de entregable de cada
+     paso queda a una altura diferente y la fila se lee desalineada. Con el 1fr en la fila
+     de la descripcion, todas las etiquetas caen al mismo pie. */
+  .caso-paso {
+    grid-template-rows: auto auto 1fr auto;
+  }
+}
+.caso-paso__num {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--color-dim);
+}
+.caso-paso__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1.15;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+.caso-paso__desc {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--color-dim);
+}
+.caso-paso__crea {
+  justify-self: start;
+  margin-top: 0.35rem;
+  padding: 0.16rem 0.45rem;
+  border-radius: var(--radius-s);
+  background: color-mix(in srgb, var(--lado-color) 22%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  line-height: 1.3;
+  color: var(--color-ink);
+}
+.caso-ruta__cta {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-pixel-soft);
+}
+
+/* == Ficha de aplicacion en formato TIENDA (2026-09-23) ===============================
+   Samuel: "un recuadro tipo App Store, que se pueda escoger, de manera visual, enfocado a
+   las descargas". Gramatica de tienda: icono + nombre + desarrollador, boton de descarga
+   arriba, vista previa, etiquetas y ficha tecnica. Sin estrellas ni contador de descargas:
+   no los tenemos y no se inventan. ==================================================== */
+.app-ficha {
+  display: grid;
+  align-content: start;
+  gap: 0.9rem;
+  padding: 1.35rem;
+  border-radius: var(--radius-m);
+  border: 1.5px solid var(--color-line);
+  background: var(--color-surface);
+  box-shadow: 0 24px 50px -40px color-mix(in srgb, var(--color-ink) 65%, transparent);
+}
+.app-ficha__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.9rem;
+}
+.app-ficha__placa {
+  display: grid;
+  place-items: center;
+  width: 74px;
+  height: 74px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #2c2059, #171029);
+  box-shadow: 0 10px 22px -12px rgba(23, 16, 41, 0.8);
+}
+.app-ficha__logo {
+  width: 74px;
+  height: 74px;
+}
+.app-ficha__id {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.app-ficha__nombre {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.12rem;
+  line-height: 1.1;
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
+}
+.app-ficha__dev {
+  font-size: 0.8rem;
+  color: var(--color-pixel-soft);
+}
+.app-ficha__cat {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--color-dim);
+}
+.app-ficha__hook {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--color-dim);
+}
+.app-ficha__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.app-ficha__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.4rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--color-pixel);
+  padding: 0 1.05rem;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--color-pixel-soft);
+  transition:
+    filter 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+.app-ficha__btn--primario {
+  background: var(--color-pixel);
+  color: #fff;
+}
+.app-ficha__btn--primario:hover {
+  filter: brightness(1.08);
+}
+.app-ficha__btn:not(.app-ficha__btn--primario):hover {
+  background: color-mix(in srgb, var(--color-pixel) 10%, transparent);
+}
+
+/* vista previa dibujada: la ventana de la app con su panel lateral y el grafo */
+.app-ficha__vista {
+  overflow: hidden;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface-2);
+}
+.app-ficha__vista-barra {
+  display: flex;
+  gap: 4px;
+  padding: 6px 8px;
+  background: linear-gradient(135deg, #2c2059, #171029);
+}
+.app-ficha__vista-barra i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.32);
+}
+.app-ficha__vista-barra i:first-child {
+  background: #f5b400;
+}
+.app-ficha__vista-cuerpo {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  align-items: stretch;
+}
+.app-ficha__vista-lateral {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  padding: 8px 6px;
+  border-right: 1px solid var(--color-line);
+}
+.app-ficha__vista-lateral i {
+  height: 6px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-pixel) 22%, transparent);
+}
+.app-ficha__vista-lateral i:nth-child(2) {
+  width: 78%;
+}
+.app-ficha__vista-lateral i:nth-child(3) {
+  width: 60%;
+}
+.app-ficha__vista-grafo {
+  width: 100%;
+  height: auto;
+  color: var(--color-ink);
+}
+.app-ficha__vista-pie {
+  margin-top: -0.45rem;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--color-dim);
+}
+
+.app-ficha__capacidades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.app-ficha__capacidades li {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-pixel) 10%, transparent);
+  padding: 0.2rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--color-pixel-soft);
+}
+
+.app-ficha__meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-line);
+}
+.app-ficha__meta dt {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+.app-ficha__meta dd {
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  color: var(--color-ink);
+}
+
+/* == Marco de ventana alrededor de TODA la demo (2026-09-23) ===========================
+   Samuel: "que visualmente sea como la aplicacion, para evitar que la gente se aburra y no
+   la use". Antes la caja de la demo era un panel neutro y la carcasa de app solo aparecia
+   al terminar de procesar: hasta el final no se entendia que esto es una app de escritorio.
+   Ahora la ventana esta desde el primer segundo y dentro cambia el contenido.
+   ==================================================================================== */
+.app-marco {
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  box-shadow: 0 30px 64px -44px color-mix(in srgb, var(--color-ink) 70%, transparent);
+}
+.app-marco__barra {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.85rem;
+  background: linear-gradient(135deg, #2c2059, #171029);
+  color: #fff;
+}
+.app-marco__semaforo {
+  display: inline-flex;
+  gap: 0.3rem;
+}
+.app-marco__semaforo i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+.app-marco__semaforo i:first-child {
+  background: #f5b400;
+}
+.app-marco__titulo {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  opacity: 0.92;
+  overflow-wrap: anywhere;
+}
+.app-marco__etiqueta {
+  margin-left: auto;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 0.1rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+.app-marco__lienzo {
+  padding: 1.1rem;
+}
+@media (min-width: 640px) {
+  .app-marco__lienzo {
+    padding: 1.4rem;
+  }
+}
+/* dentro del marco, la carcasa de resultado ya no necesita borde ni sombra propios */
+.app-marco__lienzo .app-shell {
+  border: 0;
+  border-radius: var(--radius-s);
+  box-shadow: none;
+  outline: 1px solid var(--color-line);
+}
+
+/* los tres puntos de la entrada, en fila: ocupan un tercio y la demo sube en pantalla */
+@media (min-width: 820px) {
+  .escucha-intro {
+    max-width: none;
+  }
+  .escucha-intro__lista {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .escucha-intro__punto {
+    align-content: start;
+  }
 }

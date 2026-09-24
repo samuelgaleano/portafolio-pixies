@@ -96,10 +96,12 @@ test('respaldo de ingeniería: manda el producto, la persona va como firma', asy
   // primero lo que sostiene los productos, el nombre abajo y chico. Sigue enlazando a /samuel.
   await page.goto('/web');
   const respaldo = page.locator('.respaldo');
-  // habla del EQUIPO, no de una persona (Samuel, 2026-09-22)
+  // habla del ÁREA, no de una persona, y en registro profesional (Samuel, 2026-09-23)
   await expect(respaldo.locator('.respaldo__eyebrow')).toHaveText(/ingeniería y desarrollo/i);
-  await expect(respaldo.locator('.respaldo__linea')).toContainText('El equipo de ingeniería y desarrollo');
-  await expect(respaldo.locator('.respaldo__lidera')).toHaveText(/lo lidera/i);
+  await expect(respaldo.locator('.respaldo__linea')).toContainText('área propia de ingeniería');
+  // Samuel DIRIGE el área: el rótulo y el cargo tienen que decirlo
+  await expect(respaldo.locator('.respaldo__lidera')).toHaveText(/dirige el área/i);
+  await expect(respaldo.locator('.respaldo__rol')).toHaveText('Arquitecto de Datos y Soluciones');
   const quien = respaldo.locator('.respaldo__quien');
   await expect(quien).toHaveAttribute('href', '/samuel');
   await expect(quien).toContainText('Samuel Galeano');
@@ -139,7 +141,7 @@ test('/samuel y un post renderizan (highlight de código incluido)', async ({ pa
 test('launcher: un acceso salta a su sección', async ({ page }) => {
   await page.goto('/web');
   const nav = page.getByRole('navigation', { name: 'Categorías del portafolio' });
-  await nav.getByRole('link', { name: /sistema para mi operación/ }).click();
+  await nav.getByRole('link', { name: /ERP que organice mi pyme/ }).click();
   await expect(page.locator('#erp')).toBeInViewport();
 });
 
@@ -167,9 +169,10 @@ test('catálogo oprimible: la tarjeta entera y la fila del menú llevan a su des
   }
 
   // 2) el catálogo (2026-09-22): fila entera oprimible, con título directo y evidencia
-  const fila = page.locator('.catalogo-item').filter({ hasText: 'sistema para mi operación' }).first();
+  const fila = page.locator('.catalogo-item').filter({ hasText: 'ERP que organice mi pyme' }).first();
   await expect(fila).toHaveAttribute('href', '#erp');
-  await expect(fila.locator('.catalogo-item__evidencia')).toContainText('Demo en vivo');
+  // la evidencia NOMBRA la solución y cuánto de ella existe, no un conteo suelto (2026-09-23)
+  await expect(fila.locator('.catalogo-item__evidencia')).toContainText('ERP · 45 módulos');
   // elementFromPoint usa coordenadas de VIEWPORT: hay que dejar la fila EN EL CENTRO (si
   // no, el punto cae fuera del viewport o debajo del header fijo y devuelve el logo). El
   // sitio tiene `scroll-behavior: smooth`, así que el salto va en 'instant': con el suave,

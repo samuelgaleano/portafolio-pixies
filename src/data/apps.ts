@@ -15,6 +15,10 @@ export interface PixiesApp {
   hook: string; // la frase que explica qué hace, sin jerga (viene del producto, un solo dueño)
   descripcion: string; // qué se puede hacer desde su página — NO repite el hook
   capacidades: string[]; // chips: solo lo que de verdad existe hoy
+  /** Ficha tipo tienda de aplicaciones (Samuel, 2026-09-23: "un recuadro tipo App Store").
+   * Son datos VERIFICABLES: versión publicada, plataforma, formato y precio. Deliberadamente
+   * NO hay estrellas ni número de descargas — no los tenemos y no se inventan. */
+  ficha: { desarrollador: string; categoria: string; plataforma: string; version: string; formato: string; precio: string };
 }
 
 export const APPS_BASE = '/aplicaciones';
@@ -31,10 +35,18 @@ export const apps: PixiesApp[] = [
     // "Ejemplo real" solo se promete cuando el ejemplo curado existe de verdad (honestidad
     // sobre sensacionalismo: nada de anunciar contenido que hoy renderiza "en preparación").
     capacidades: [
-      'Probar gratis en el navegador',
       'Grafo de contexto',
+      'Citas con el segundo exacto',
+      'Contexto por proyecto',
       ...(escuchaProduct.example.ready ? ['Ejemplo real'] : []),
-      'Descargar para Windows',
     ],
+    ficha: {
+      desarrollador: 'Pixies Design Group',
+      categoria: 'Productividad y conocimiento',
+      plataforma: 'Windows',
+      version: '1.0.1',
+      formato: 'Instalador y portable',
+      precio: 'Gratis, con código de acceso',
+    },
   },
 ];

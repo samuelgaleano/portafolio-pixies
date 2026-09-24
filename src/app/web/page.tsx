@@ -32,10 +32,12 @@ export default function WebPage() {
       <SchemaOrg type="organization" />
       <Hero />
 
-      {/* Aplicaciones propias ARRIBA, no enterradas en el portafolio (Samuel, 2026-09-23) */}
-      <AplicacionesSection />
-
+      {/* Orden pedido por Samuel (2026-09-23): justo después del hero va el CATÁLOGO —es lo
+          que el cliente vino a buscar— y las aplicaciones propias van inmediatamente después.
+          Las dos siguen arriba del resto; lo que cambió es cuál va primera. */}
       <PortfolioSection />
+
+      <AplicacionesSection />
 
       <Statement />
 

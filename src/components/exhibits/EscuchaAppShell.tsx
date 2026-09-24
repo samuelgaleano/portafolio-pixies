@@ -35,17 +35,9 @@ export default function EscuchaAppShell({
   ];
 
   return (
+    // sin barra de ventana propia: la pone el marco de ProductDemoExhibit, que ya envuelve la
+    // demo entera desde antes de procesar. Dos barras seguidas se veían como dos ventanas.
     <div className="app-shell">
-      <div className="app-shell__barra">
-        <span className="app-shell__semaforo" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </span>
-        <span className="app-shell__titulo">{t.escucha.shellTitulo}</span>
-        <span className="app-shell__etiqueta">{t.escucha.shellDemo}</span>
-      </div>
-
       <div className="app-shell__cuerpo">
         <aside className="app-shell__lateral" aria-label={t.escucha.shellLateral}>
           <p className="app-shell__grupo">{t.escucha.shellProyectos}</p>

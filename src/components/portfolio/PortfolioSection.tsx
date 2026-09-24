@@ -13,7 +13,7 @@ export default function PortfolioSection() {
       <header data-reveal="wipe" className="mb-8">
         <p className="font-mono text-sm text-data">{t.portfolio.eyebrow}</p>
         <h2 className="mt-2 font-display text-h2 font-semibold">
-          <GradientText text={t.portfolio.title} em="ya corren" />
+          <GradientText text={t.portfolio.title} em="soluciones" />
         </h2>
         <p className="mt-3 max-w-xl text-dim">{t.portfolio.intro}</p>
       </header>

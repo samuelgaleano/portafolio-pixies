@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { t } from '@/i18n';
+import CasoRuta from './CasoRuta';
 
 const ETIQUETA_LADO = { creative: 'equipo Creative', web: 'equipo Web', ambas: 'los dos equipos' } as const;
 
@@ -42,6 +43,9 @@ export default function ProcesoUnificado() {
             </li>
           ))}
         </ol>
+
+        {/* el método arriba; debajo, el mismo recorrido vivido por un cliente de verdad */}
+        <CasoRuta />
 
         <div data-reveal className="ruta-cierre">
           <div>
