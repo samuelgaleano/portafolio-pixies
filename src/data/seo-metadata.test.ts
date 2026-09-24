@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { escuchaProduct } from './escucha-comprendiendo';
 import { es } from '@/i18n/es';
+import { metadata as webMetadata } from '@/app/web/page';
 
 // Guardia contra la regresión de la auditoría SEO del 2026-09-24: la descripción de
 // metadatos de escuchacomprendiendo.IA llegó a producción con 309 caracteres — Google la
@@ -24,5 +25,10 @@ describe('longitud de metadatos (auditoría SEO)', () => {
     // el campo de metadatos es corto A PROPÓSITO; el de la página no debería serlo también
     // por error de copiar y pegar el campo equivocado
     expect(escuchaProduct.descripcion.length).toBeGreaterThan(TOPE_DESCRIPCION);
+  });
+
+  test('el título y la meta-descripción de /web caben en un resultado de búsqueda', () => {
+    expect((webMetadata.title as string).length).toBeLessThanOrEqual(60);
+    expect((webMetadata.description as string).length).toBeLessThanOrEqual(TOPE_DESCRIPCION);
   });
 });

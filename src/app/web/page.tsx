@@ -19,8 +19,9 @@ export const metadata: Metadata = {
   // "y soluciones digitales". La tagline completa sigue en el hero (`t.hero.tagline`); el
   // <title> solo necesita el nombre y qué se construye, no el catálogo entero.
   title: 'Pixies Digital Web Design · Páginas, ERP, datos e IA',
+  // 174 caracteres también se truncaban a mitad de frase (mismo hallazgo que el título).
   description:
-    'Software a medida que corre en producción: páginas web, ERP, análisis de datos, IA y ciberseguridad para PyMEs y medianas empresas. El código está en producción, no en Figma.',
+    'Software a medida en producción: páginas web, ERP, análisis de datos, IA y ciberseguridad para PyMEs y medianas empresas. No en Figma, en producción.',
   alternates: { canonical: '/web' },
   openGraph: {
     type: 'website',
