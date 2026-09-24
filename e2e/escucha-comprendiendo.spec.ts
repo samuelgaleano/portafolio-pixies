@@ -224,11 +224,17 @@ test('el resultado se muestra como la app: grafo por defecto, contexto marcado y
               noSeSabe: [],
             },
           ],
+          // etiquetas largas A PROPÓSITO: con el lienzo estrecho original se salían del
+          // viewBox y se veían cortadas contra el borde (capturado en producción, 2026-09-23)
           nodos: [
-            { id: 'n1', etiqueta: 'Presupuesto', tipo: 'concepto' },
-            { id: 'n2', etiqueta: 'Contador', tipo: 'persona' },
+            { id: 'n1', etiqueta: 'Presupuesto del trimestre', tipo: 'concepto' },
+            { id: 'n2', etiqueta: 'Contador de la empresa', tipo: 'persona' },
+            { id: 'n3', etiqueta: 'Explotación petrolera extranjera', tipo: 'concepto' },
           ],
-          vinculos: [{ de: 'n1', a: 'n2', relacion: 'depende de' }],
+          vinculos: [
+            { de: 'n1', a: 'n2', relacion: 'depende de' },
+            { de: 'n1', a: 'n3', relacion: 'limita' },
+          ],
         },
       }),
     })
@@ -244,8 +250,22 @@ test('el resultado se muestra como la app: grafo por defecto, contexto marcado y
 
   // el grafo manda: es la pestaña activa al llegar
   await expect(page.getByRole('tab', { name: 'Grafo' })).toHaveAttribute('aria-selected', 'true');
-  await expect(page.locator('.escucha-grafo__relaciones li')).toHaveCount(1);
+  await expect(page.locator('.escucha-grafo__relaciones li')).toHaveCount(2);
   await expect(page.getByText('depende de')).toBeVisible();
+
+  // ninguna etiqueta puede salirse del lienzo: las de los lados se escriben hacia afuera
+  const desbordadas = await page.evaluate(() => {
+    const svg = document.querySelector('.escucha-grafo__svg') as SVGSVGElement | null;
+    if (!svg) return ['sin svg'];
+    const ancho = svg.viewBox.baseVal.width;
+    return [...svg.querySelectorAll('text')]
+      .filter((t) => {
+        const b = (t as SVGTextElement).getBBox();
+        return b.x < 0 || b.x + b.width > ancho;
+      })
+      .map((t) => t.textContent ?? '');
+  });
+  expect(desbordadas).toEqual([]);
 
   // lo deducido y lo dudoso van marcados; lo afirmado no lleva etiqueta (sería ruido)
   await page.getByRole('tab', { name: 'Contexto' }).click();

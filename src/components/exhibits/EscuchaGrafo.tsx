@@ -4,9 +4,14 @@ import type { EscuchaNodo, EscuchaVinculo } from '@/lib/escucha';
 // librería de grafos — un layout radial determinista en SVG: el nodo con más vínculos manda
 // al centro y el resto se reparte en un anillo. Determinista a propósito: el mismo resultado
 // siempre se dibuja igual, así que una captura de pantalla es reproducible.
-const ANCHO = 460;
-const ALTO = 270;
-const RADIO = 128;
+// El lienzo es ANCHO a propósito: las etiquetas de los nodos de los lados se escriben hacia
+// afuera, así que necesitan sitio a izquierda y derecha. Con 460 de ancho se cortaban contra
+// el borde ("…ergías del pa…" en la captura de producción del 2026-09-23).
+const ANCHO = 580;
+const ALTO = 280;
+const RADIO = 132;
+const MAX_ETIQUETA_ANILLO = 18;
+const MAX_ETIQUETA_CENTRO = 24;
 
 const COLOR: Record<EscuchaNodo['tipo'], string> = {
   concepto: '#7c5cff',
@@ -74,7 +79,7 @@ export default function EscuchaGrafo({ nodos, vinculos }: { nodos: EscuchaNodo[]
             <g key={n.id}>
               <circle cx={p.x} cy={p.y} r={esCentro ? 9 : 6} fill={COLOR[n.tipo]} />
               <text x={e.x} y={e.y} textAnchor={e.anchor} className="escucha-grafo__etiqueta" fontSize={esCentro ? 13 : 11}>
-                {recortar(n.etiqueta, esCentro ? 22 : 16)}
+                {recortar(n.etiqueta, esCentro ? MAX_ETIQUETA_CENTRO : MAX_ETIQUETA_ANILLO)}
               </text>
             </g>
           );
