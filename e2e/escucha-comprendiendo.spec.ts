@@ -1,20 +1,22 @@
 import { test, expect } from '@playwright/test';
 
-// escuchacomprendiendo.ai: en la home ("Aplicaciones by Pixies") solo hay una tarjeta-teaser
-// clicable; TODO lo interactivo vive en /aplicaciones/escuchacomprendiendo-ai. El ejemplo
-// curado todavía no está listo (Samuel no lo completó aún) → esa página arranca en la
-// pestaña "en vivo", nunca mostrando el placeholder como si fuera contenido real.
+// escuchacomprendiendo.IA: en /web hay una tarjeta-teaser clicable dentro de la sección
+// DIRECTA "Aplicaciones · by Pixies" (2026-09-23: se sacó del portafolio, donde quedaba
+// demasiado abajo); TODO lo interactivo vive en /aplicaciones/escuchacomprendiendo-ai. El
+// ejemplo curado todavía no está listo, así que esa página va directa a la demo en vivo y
+// NO muestra una pestaña "Ejemplo real" que prometa contenido inexistente.
 
 test('home: la tarjeta de la app es un teaser entero clicable que lleva a su página propia', async ({ page }) => {
-  // grupo-y-marketing (2026-09): "Aplicaciones by Pixies" vive dentro del portafolio, que
-  // se movió de / a /web.
+  // 2026-09-23: la sección ya no vive dentro del portafolio — está arriba, justo bajo el
+  // hero de /web, con la misma ancla `#productos`.
   // Sin el ancla `#productos` a propósito: entrar por hash dispara el `scroll-behavior:
   // smooth` del sitio y ese desplazamiento sigue corriendo mientras se calcula el punto del
   // clic. Lo que se prueba aquí es que la tarjeta entera sea oprimible, no el salto al ancla.
   await page.goto('/web');
   const seccion = page.locator('#productos');
-  await expect(seccion.getByRole('heading', { name: 'Aplicaciones by Pixies' })).toBeVisible();
-  await expect(seccion.getByText('escuchacomprendiendo.ai')).toBeVisible();
+  await expect(seccion.getByRole('heading', { name: 'Aplicaciones' })).toBeVisible();
+  await expect(seccion.getByText('by Pixies')).toBeVisible();
+  await expect(seccion.locator('.app-card__nombre')).toHaveText('escuchacomprendiendo.IA');
   // la home NO despliega el demo: ni pestañas ni dropzone acá
   await expect(seccion.getByRole('tab')).toHaveCount(0);
   await expect(seccion.locator('input[type="file"]')).toHaveCount(0);
@@ -24,7 +26,7 @@ test('home: la tarjeta de la app es un teaser entero clicable que lleva a su pá
   // acomodando un buen rato (swap de fuentes y reveals), y un punto calculado antes de que
   // pare cae fuera de la tarjeta — falló 2 de 6 veces hasta que se comprobó con
   // elementFromPoint. Con la espera: 8 de 8 (2026-09-22).
-  const tarjeta = seccion.getByRole('link', { name: /escuchacomprendiendo\.ai — probar en vivo o descargar/ });
+  const tarjeta = seccion.getByRole('link', { name: /escuchacomprendiendo\.IA — probar en vivo o descargar/ });
   await tarjeta.scrollIntoViewIfNeeded();
   let anterior = '';
   let quietas = 0;
@@ -42,23 +44,26 @@ test('home: la tarjeta de la app es un teaser entero clicable que lleva a su pá
     .toBeGreaterThanOrEqual(4);
   await tarjeta.click();
   await expect(page).toHaveURL(/\/aplicaciones\/escuchacomprendiendo-ai$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('escuchacomprendiendo.ai');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('escuchacomprendiendo.IA');
 });
 
-test('arranca en la demo en vivo y se puede cambiar a la pestaña de ejemplo (en preparación)', async ({ page }) => {
+test('al entrar: explicación concreta, condiciones desplegables y la demo lista para usar', async ({ page }) => {
   await page.goto('/aplicaciones/escuchacomprendiendo-ai');
 
-  const tabVivo = page.getByRole('tab', { name: 'Prueba con tu audio' });
-  const tabCurada = page.getByRole('tab', { name: 'Ejemplo real' });
-  await expect(tabVivo).toHaveAttribute('aria-selected', 'true');
+  // la explicación va ANTES de la demo y son exactamente tres puntos, no dos párrafos largos
+  const puntos = page.locator('.escucha-intro__punto');
+  await expect(puntos).toHaveCount(3);
+  await expect(puntos.first()).toContainText('No se queda en transcribir');
+
+  // las condiciones de la demo existen, arrancan plegadas y dicen qué procesa de menos
+  const condiciones = page.locator('.escucha-condiciones');
+  await expect(condiciones).not.toHaveAttribute('open', '');
+  await condiciones.locator('summary').click();
+  await expect(condiciones.getByText(/90 segundos/)).toBeVisible();
+
+  // sin ejemplo curado NO se ofrece una pestaña que prometa uno: se cae directo en la demo
+  await expect(page.getByRole('tab', { name: 'Ejemplo real' })).toBeHidden();
   await expect(page.getByText('Suelta o elige un audio corto')).toBeVisible();
-
-  await tabCurada.click();
-  await expect(tabCurada).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByText('Ejemplo en preparación')).toBeVisible();
-
-  await page.getByText('Probar con mi propio audio →').click();
-  await expect(tabVivo).toHaveAttribute('aria-selected', 'true');
 });
 
 test('subir un audio corto muestra el resultado estructurado (API mockeada)', async ({ page }) => {
@@ -183,4 +188,75 @@ test('formulario de código de acceso: código incorrecto avisa, código correct
   await input.fill('clave-correcta');
   await page.getByRole('button', { name: 'Descargar instalador (Windows)' }).click();
   await page.waitForURL(/descargado=1/);
+});
+
+// El valor agregado que Samuel pidió mostrar (2026-09-23): el resultado no se queda en
+// "transcribe y resume". Se comprueba que aparezca la carcasa tipo app de escritorio, que la
+// vista por defecto sea el GRAFO cuando lo hay, que la transcripción quede relegada a su
+// pestaña, y que lo deducido o dudoso salga marcado en vez de presentarse como un hecho.
+test('el resultado se muestra como la app: grafo por defecto, contexto marcado y transcripción al final', async ({ page }) => {
+  await page.route('**/api/escucha-demo/transcribe', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ok: true,
+        durationSec: 40,
+        transcript: { text: 'texto crudo del transcriptor', segments: [{ start: 0, end: 40, text: 'texto crudo del transcriptor' }] },
+      }),
+    })
+  );
+  await page.route('**/api/escucha-demo/structure', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ok: true,
+        structured: {
+          resumen: 'Revisión de presupuesto',
+          areas: [
+            {
+              nombre: 'Presupuesto',
+              conceptos: [{ texto: 'Se revisa contra el margen', citas: [0], certeza: 'afirmado' }],
+              decisiones: [],
+              tareas: [{ texto: 'Confirmar con el contador', citas: [0], certeza: 'implicito' }],
+              riesgos: [{ texto: 'Puede bajar el volumen', citas: [0], certeza: 'incierto' }],
+              noSeSabe: [],
+            },
+          ],
+          nodos: [
+            { id: 'n1', etiqueta: 'Presupuesto', tipo: 'concepto' },
+            { id: 'n2', etiqueta: 'Contador', tipo: 'persona' },
+          ],
+          vinculos: [{ de: 'n1', a: 'n2', relacion: 'depende de' }],
+        },
+      }),
+    })
+  );
+
+  await page.goto('/aplicaciones/escuchacomprendiendo-ai');
+  await page.getByText('O prueba con un audio de muestra →').click();
+
+  // carcasa de aplicación, con el proyecto y las notas del audio en el panel lateral
+  const shell = page.locator('.app-shell');
+  await expect(shell).toBeVisible();
+  await expect(shell.getByText('Presupuesto').first()).toBeVisible();
+
+  // el grafo manda: es la pestaña activa al llegar
+  await expect(page.getByRole('tab', { name: 'Grafo' })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('.escucha-grafo__relaciones li')).toHaveCount(1);
+  await expect(page.getByText('depende de')).toBeVisible();
+
+  // lo deducido y lo dudoso van marcados; lo afirmado no lleva etiqueta (sería ruido)
+  await page.getByRole('tab', { name: 'Contexto' }).click();
+  // se filtra por la clase: "lo que quedó en duda" también aparece en el texto de la
+  // introducción, y un getByText suelto haría match doble
+  await expect(page.locator('.certeza--implicito')).toHaveText('deducido');
+  await expect(page.locator('.certeza--incierto')).toHaveText('quedó en duda');
+  await expect(page.locator('.certeza')).toHaveCount(2);
+
+  // la transcripción existe, pero relegada a su pestaña y avisando que no es el resultado
+  await page.getByRole('tab', { name: 'Transcripción' }).click();
+  await expect(page.getByText('texto crudo del transcriptor')).toBeVisible();
+  await expect(page.getByText(/Es la materia prima, no el resultado/)).toBeVisible();
 });

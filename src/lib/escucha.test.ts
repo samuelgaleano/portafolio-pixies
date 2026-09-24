@@ -175,3 +175,94 @@ describe('parseStructuredResponse', () => {
     expect(parseStructuredResponse(raw)?.areas[0].conceptos[0].citas).toEqual([1, 2]);
   });
 });
+
+// Grafo de contexto (2026-09-23): es la parte que Samuel pidió mostrar porque es el valor
+// agregado frente a "transcribir y resumir". Se prueba sobre todo lo que NO debe pasar: un
+// vínculo que apunta a un nodo inexistente es exactamente la alucinación que la app dice
+// evitar, así que no puede llegar nunca a la pantalla.
+describe('parseStructuredResponse · grafo y certeza', () => {
+  const base = {
+    resumen: 'x',
+    areas: [{ nombre: 'A', conceptos: [], decisiones: [], tareas: [], riesgos: [], noSeSabe: [] }],
+  };
+
+  test('devuelve nodos y vinculos cuando vienen bien formados', () => {
+    const raw = JSON.stringify({
+      ...base,
+      nodos: [
+        { id: 'n1', etiqueta: 'Presupuesto', tipo: 'concepto' },
+        { id: 'n2', etiqueta: 'Recortar pauta', tipo: 'decision' },
+      ],
+      vinculos: [{ de: 'n1', a: 'n2', relacion: 'obliga a' }],
+    });
+    const out = parseStructuredResponse(raw);
+    expect(out?.nodos).toHaveLength(2);
+    expect(out?.vinculos).toEqual([{ de: 'n1', a: 'n2', relacion: 'obliga a' }]);
+  });
+
+  test('descarta el vinculo que apunta a un nodo inexistente', () => {
+    const raw = JSON.stringify({
+      ...base,
+      nodos: [
+        { id: 'n1', etiqueta: 'A', tipo: 'concepto' },
+        { id: 'n2', etiqueta: 'B', tipo: 'tarea' },
+      ],
+      vinculos: [
+        { de: 'n1', a: 'n2', relacion: 'lleva a' },
+        { de: 'n1', a: 'n99', relacion: 'inventado' },
+      ],
+    });
+    expect(parseStructuredResponse(raw)?.vinculos).toEqual([{ de: 'n1', a: 'n2', relacion: 'lleva a' }]);
+  });
+
+  test('un grafo sin vinculos utiles no se muestra', () => {
+    const raw = JSON.stringify({
+      ...base,
+      nodos: [{ id: 'n1', etiqueta: 'Solo', tipo: 'concepto' }],
+      vinculos: [{ de: 'n1', a: 'n1', relacion: 'consigo misma' }],
+    });
+    const out = parseStructuredResponse(raw);
+    expect(out).not.toBeNull();
+    expect(out?.nodos).toBeUndefined();
+  });
+
+  test('si falta el grafo, el resto del resultado sigue siendo valido', () => {
+    const out = parseStructuredResponse(JSON.stringify(base));
+    expect(out?.resumen).toBe('x');
+    expect(out?.nodos).toBeUndefined();
+  });
+
+  test('un tipo de nodo desconocido cae a concepto en vez de tumbar el parseo', () => {
+    const raw = JSON.stringify({
+      ...base,
+      nodos: [
+        { id: 'n1', etiqueta: 'A', tipo: 'inventado' },
+        { id: 'n2', etiqueta: 'B', tipo: 'riesgo' },
+      ],
+      vinculos: [{ de: 'n1', a: 'n2', relacion: 'r' }],
+    });
+    expect(parseStructuredResponse(raw)?.nodos?.[0]?.tipo).toBe('concepto');
+  });
+
+  test('la certeza solo se conserva si es uno de los tres valores permitidos', () => {
+    const raw = JSON.stringify({
+      resumen: 'x',
+      areas: [
+        {
+          nombre: 'A',
+          conceptos: [
+            { texto: 'a', citas: [], certeza: 'incierto' },
+            { texto: 'b', citas: [], certeza: 'muy-seguro' },
+          ],
+          decisiones: [],
+          tareas: [],
+          riesgos: [],
+          noSeSabe: [],
+        },
+      ],
+    });
+    const conceptos = parseStructuredResponse(raw)?.areas[0]?.conceptos;
+    expect(conceptos?.[0]?.certeza).toBe('incierto');
+    expect(conceptos?.[1]?.certeza).toBeUndefined();
+  });
+});

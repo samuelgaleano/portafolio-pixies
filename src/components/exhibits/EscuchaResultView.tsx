@@ -4,7 +4,12 @@ import type { EscuchaArea, EscuchaCitedItem, EscuchaStructured } from '@/lib/esc
 // Renderer del contexto estructurado (§ plan "productos propios"): UN SOLO componente para
 // el ejemplo curado y para el resultado en vivo, así ambas vistas tienen la misma calidad
 // visual — ni la demo se siente "menos real" ni el ejemplo se siente "de mentira".
-const LISTS: { key: keyof Pick<EscuchaArea, 'decisiones' | 'tareas' | 'riesgos' | 'conceptos' | 'noSeSabe'>; labelKey: keyof typeof t.escucha; color: string }[] = [
+// labelKey se acota a las etiquetas de área: `keyof typeof t.escucha` dejó de servir cuando
+// el bloque escucha pasó a tener también arrays (condiciones, introPuntos) — no todo valor de
+// ese objeto es renderizable como texto.
+type AreaLabelKey = 'areaDecisiones' | 'areaTareas' | 'areaRiesgos' | 'areaConceptos' | 'areaNoSeSabe';
+
+const LISTS: { key: keyof Pick<EscuchaArea, 'decisiones' | 'tareas' | 'riesgos' | 'conceptos' | 'noSeSabe'>; labelKey: AreaLabelKey; color: string }[] = [
   { key: 'decisiones', labelKey: 'areaDecisiones', color: 'text-ok' },
   { key: 'tareas', labelKey: 'areaTareas', color: 'text-pixel-soft' },
   { key: 'riesgos', labelKey: 'areaRiesgos', color: 'text-err' },
@@ -17,6 +22,14 @@ function formatTime(seconds: number): string {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
 
+// Nivel de certeza de cada afirmación: la pieza anti-alucinación. Un ítem "afirmado" no se
+// marca (es el caso normal y llenar la pantalla de etiquetas verdes sería ruido); se marcan
+// los que el modelo NO sostiene del todo, que es lo que hay que saber antes de actuar.
+const CERTEZA_ETIQUETA: Record<string, { texto: string; clase: string }> = {
+  implicito: { texto: 'deducido', clase: 'certeza certeza--implicito' },
+  incierto: { texto: 'quedó en duda', clase: 'certeza certeza--incierto' },
+};
+
 function CitedList({ items, onCiteClick }: { items: EscuchaCitedItem[]; onCiteClick?: (seconds: number) => void }) {
   if (items.length === 0) return null;
   return (
@@ -27,6 +40,9 @@ function CitedList({ items, onCiteClick }: { items: EscuchaCitedItem[]; onCiteCl
             ▸
           </span>
           <span>{item.texto}</span>
+          {item.certeza && CERTEZA_ETIQUETA[item.certeza] ? (
+            <span className={CERTEZA_ETIQUETA[item.certeza]!.clase}>{CERTEZA_ETIQUETA[item.certeza]!.texto}</span>
+          ) : null}
           {item.citas.map((s, j) => (
             <button
               key={j}

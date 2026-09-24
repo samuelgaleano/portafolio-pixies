@@ -13,7 +13,7 @@ const SIGNAL = '#FF5D73';
 const AMBER = '#F5B400';
 const LINE = '#262C3D';
 
-// titleSize: 84px por defecto; un título de una sola palabra larga (escuchacomprendiendo.ai,
+// titleSize: 84px por defecto; un título de una sola palabra larga (escuchacomprendiendo.IA,
 // 23 caracteres sin quiebre) no cabe en los 1056px útiles a ese tamaño y Satori lo cortaría.
 // accent (2026-09-22): 'creative' pinta el eyebrow y la celda firma en ámbar — la tarjeta de
 // /marketing lleva el color de su división, igual que el hilo de color del sitio.

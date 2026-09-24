@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { validateAudioFile, clampSegmentsToWindow, type TranscriptSegment } from '@/lib/escucha';
 import { createRateLimiter } from '@/lib/rate-limit';
 
-// POST /api/escucha-demo/transcribe — primera etapa de la demo lite de escuchacomprendiendo.ai
+// POST /api/escucha-demo/transcribe — primera etapa de la demo lite de escuchacomprendiendo.IA
 // (§ plan "productos propios"). Recibe un audio corto, lo transcribe con Groq (capa gratuita,
 // $0 costo) y devuelve texto + segmentos con timestamp. El audio nunca se persiste: vive en
 // memoria de la función mientras dura la petición y se descarta al responder.

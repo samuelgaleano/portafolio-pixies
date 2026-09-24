@@ -21,7 +21,9 @@ export default function PortfolioSection() {
       <CategoryLauncher />
 
       <div className="mt-16 flex flex-col gap-20">
-        {categories.map((category) => (
+        {/* `seccionPropia` = ya se renderiza arriba en su propia seccion; apilarla aqui
+            duplicaria el id del ancla y volveria a enterrarla */}
+        {categories.filter((c) => !c.seccionPropia).map((category) => (
           <CategoryBlock key={category.id} category={category} />
         ))}
       </div>

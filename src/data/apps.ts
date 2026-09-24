@@ -6,7 +6,7 @@ import { escuchaProduct } from './escucha-comprendiendo';
 //
 // Este arreglo es la ÚNICA lista de apps: de acá salen la home, el sitemap y las rutas
 // (`appPath`). El `slug` debe coincidir con la carpeta en src/app/aplicaciones/<slug>/.
-export type AppIconId = 'audio-a-lista';
+export type AppIconId = 'audio-a-grafo';
 
 export interface PixiesApp {
   slug: string;
@@ -23,15 +23,16 @@ export const appPath = (slug: string) => `${APPS_BASE}/${slug}`;
 export const apps: PixiesApp[] = [
   {
     slug: 'escuchacomprendiendo-ai',
-    nombre: 'escuchacomprendiendo.ai',
-    icon: 'audio-a-lista',
+    nombre: 'escuchacomprendiendo.IA',
+    icon: 'audio-a-grafo',
     hook: escuchaProduct.tagline,
     descripcion:
-      'Producto propio. La app completa corre en tu computador (Windows); entra para probar una versión ligera en el navegador con tu propio audio, o para descargarla con tu código de acceso.',
+      'Como Obsidian con esteroides, combinado con transcripción: motor propio de IA que arma el grafo de lo que dijiste y lo acumula por proyecto. La versión completa corre en tu computador (Windows).',
     // "Ejemplo real" solo se promete cuando el ejemplo curado existe de verdad (honestidad
     // sobre sensacionalismo: nada de anunciar contenido que hoy renderiza "en preparación").
     capacidades: [
-      'Probar en vivo',
+      'Probar gratis en el navegador',
+      'Grafo de contexto',
       ...(escuchaProduct.example.ready ? ['Ejemplo real'] : []),
       'Descargar para Windows',
     ],

@@ -20,7 +20,13 @@ export function __resetRateLimit() {
   limiter.reset();
 }
 
-const SYSTEM_PROMPT = `Eres un analista que estructura transcripciones de audio en contexto citado.
+// 2026-09-23 (Samuel): "transcribir y resumir lo hace Whisper y otras aplicaciones; quiero
+// que se vea el valor agregado". Por eso el prompt ya no pide solo listas: pide también el
+// GRAFO (nodos + vínculos) y el nivel de CERTEZA de cada ítem, que son las dos cosas que
+// distinguen a la app — estructurar y relacionar, y no presentar como hecho lo que fue una
+// deducción. Ambos campos se parsean de forma tolerante: si el modelo los omite o los
+// devuelve mal, el resto del resultado sigue sirviendo (ver parseGrafo en lib/escucha.ts).
+const SYSTEM_PROMPT = `Eres un analista que estructura transcripciones de audio en contexto citado y relacionado.
 A partir del transcript con segmentos con timestamp que recibes, devuelve SOLO un objeto JSON
 (sin texto alrededor, sin markdown, sin backticks) con esta forma exacta:
 {
@@ -28,17 +34,32 @@ A partir del transcript con segmentos con timestamp que recibes, devuelve SOLO u
   "areas": [
     {
       "nombre": "nombre corto del área o tema",
-      "conceptos": [{ "texto": "afirmación breve", "citas": [12.4] }],
-      "decisiones": [{ "texto": "...", "citas": [45.1] }],
-      "tareas": [{ "texto": "...", "citas": [50.0] }],
-      "riesgos": [{ "texto": "...", "citas": [61.3] }],
-      "noSeSabe": [{ "texto": "...", "citas": [70.0] }]
+      "conceptos": [{ "texto": "afirmación breve", "citas": [12.4], "certeza": "afirmado" }],
+      "decisiones": [{ "texto": "...", "citas": [45.1], "certeza": "afirmado" }],
+      "tareas": [{ "texto": "...", "citas": [50.0], "certeza": "implicito" }],
+      "riesgos": [{ "texto": "...", "citas": [61.3], "certeza": "incierto" }],
+      "noSeSabe": [{ "texto": "...", "citas": [70.0], "certeza": "incierto" }]
     }
-  ]
+  ],
+  "nodos": [{ "id": "n1", "etiqueta": "nombre corto de la pieza", "tipo": "concepto" }],
+  "vinculos": [{ "de": "n1", "a": "n2", "relacion": "verbo corto que los une" }]
 }
 Las "citas" son el valor "start" (en segundos) del segmento de donde sale cada afirmación —
 nunca inventes un número que no esté entre los segmentos recibidos. Si una lista queda vacía,
-devuélvela como array vacío, nunca la omitas. Máximo 3 áreas, máximo 5 ítems por lista.`;
+devuélvela como array vacío, nunca la omitas. Máximo 3 áreas, máximo 5 ítems por lista.
+
+"certeza" indica cuánto sostiene el audio esa afirmación, y es obligatoria en cada ítem:
+- "afirmado": se dijo explícitamente, casi con esas palabras.
+- "implicito": se deduce de lo dicho, pero nadie lo dijo así.
+- "incierto": quedó en el aire, a medias o en duda.
+Prefiere "implicito" o "incierto" antes que forzar un "afirmado": marcar de menos es un error
+más grave que marcar de más.
+
+"nodos" y "vinculos" son el grafo de contexto: las piezas con nombre propio que aparecen en el
+audio y cómo se relacionan. "tipo" es uno de: concepto, decision, tarea, riesgo, persona. Los
+"id" son cortos y únicos ("n1", "n2", ...). En "vinculos", "de" y "a" DEBEN ser ids que existan
+en "nodos" — nunca inventes un id. Entre 3 y 10 nodos y entre 2 y 12 vínculos; si el audio no
+da para relacionar nada, devuelve ambos como arrays vacíos antes que inventar relaciones.`;
 
 interface GroqChatCompletion {
   choices?: Array<{ message?: { content?: string } }>;

@@ -42,7 +42,7 @@ arquitectura web → construcción → despliegue y pruebas → medición → op
   auditoría de cada movimiento de inventario. Demo en vivo en [/demos/erp](/demos/erp).
 - **Análisis de datos**: pipelines reproducibles en R y Python, de datos crudos a
   informe final, sin pasos manuales ([/proyectos/analisis-saber11](/proyectos/analisis-saber11)).
-- **IA y automatización**: productos propios como escuchacomprendiendo.ai (transcripción
+- **IA y automatización**: productos propios como escuchacomprendiendo.IA (transcripción
   y generación de contexto citado para IA) y un chatbot de WhatsApp corriendo en
   Cloudflare Workers.
 - **Ciberseguridad**: auditorías reales sobre sistemas propios en producción, con
@@ -68,7 +68,7 @@ arquitectura web → construcción → despliegue y pruebas → medición → op
 
 ## Aplicaciones by Pixies
 
-- **escuchacomprendiendo.ai**: convierte audio (notas de voz, reuniones) en contexto
+- **escuchacomprendiendo.IA**: convierte audio (notas de voz, reuniones) en contexto
   estructurado y citado — conceptos, decisiones, tareas, riesgos y lo que no se sabe,
   cada afirmación con el segundo exacto del audio de donde salió. La versión completa
   corre en escritorio; hay una demo liviana funcional directo en el navegador (con audio

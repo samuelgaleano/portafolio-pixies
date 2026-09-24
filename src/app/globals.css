@@ -3812,3 +3812,510 @@ main {
     transform: translateX(103%);
   }
 }
+
+/* == Aplicaciones by Pixies (2026-09-23) ==============================================
+   Seccion DIRECTA arriba de /web: antes vivia dentro del portafolio y quedaba tan abajo
+   que se llegaba saturado (Samuel). El titulo es "Aplicaciones" y "by Pixies" va debajo,
+   como una firma. La muestra deja de ser una franja horizontal: es un RECUADRO vertical
+   con el logo de protagonista. ==================================================== */
+.apps-seccion {
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  background:
+    radial-gradient(70% 60% at 82% 0%, color-mix(in srgb, var(--color-pixel) 10%, transparent), transparent 70%),
+    var(--color-void);
+}
+.apps-seccion__head {
+  max-width: 46ch;
+}
+.apps-seccion__titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+/* "by Pixies" cuelga del titulo, en mono y atenuado: firma, no subtitulo */
+.apps-seccion__by {
+  margin-top: 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  letter-spacing: 0.14em;
+  color: var(--color-pixel-soft);
+}
+.apps-seccion__intro {
+  margin-top: 1rem;
+  color: var(--color-dim);
+}
+.apps-seccion__grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+@media (min-width: 900px) {
+  .apps-seccion__grid {
+    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+    gap: 3rem;
+    align-items: center;
+  }
+}
+.apps-seccion__notas {
+  display: grid;
+  gap: 1.1rem;
+  align-content: center;
+}
+.apps-seccion__nota {
+  display: grid;
+  gap: 0.2rem;
+  padding-left: 1rem;
+  border-left: 2px solid color-mix(in srgb, var(--color-pixel) 45%, var(--color-line));
+}
+.apps-seccion__nota b {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.02rem;
+  color: var(--color-ink);
+}
+.apps-seccion__nota span {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-dim);
+}
+
+/* la tarjeta: recuadro vertical, logo arriba sobre placa oscura */
+.app-card {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  border: 1.5px solid var(--color-line);
+  background: var(--color-surface);
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+@media (hover: hover) {
+  .app-card:hover,
+  .app-card:focus-within {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--color-pixel) 55%, var(--color-line));
+    box-shadow: 0 28px 54px -30px color-mix(in srgb, var(--color-pixel) 85%, transparent);
+  }
+}
+.app-card__placa {
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+  /* la placa repite los colores del logo: violeta, ambar y cian sobre tinta */
+  background:
+    radial-gradient(60% 70% at 24% 82%, color-mix(in srgb, #f5b400 26%, transparent), transparent 70%),
+    radial-gradient(60% 70% at 78% 22%, color-mix(in srgb, #35c9e8 22%, transparent), transparent 70%),
+    linear-gradient(135deg, #2c2059, #171029);
+}
+.app-card__logo {
+  width: clamp(88px, 22vw, 116px);
+  height: auto;
+  filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.45));
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@media (hover: hover) {
+  .app-card:hover .app-card__logo {
+    transform: translateY(-3px) scale(1.04);
+  }
+}
+.app-card__cuerpo {
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  padding: 1.35rem 1.35rem 1.5rem;
+}
+.app-card__nombre {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--color-pixel-soft);
+  overflow-wrap: anywhere;
+}
+.app-card__hook {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.16rem;
+  line-height: 1.22;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+.app-card__desc {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--color-dim);
+}
+.app-card__capacidades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.15rem;
+}
+.app-card__chip {
+  border-radius: var(--radius-s);
+  border: 1px solid var(--color-line);
+  padding: 0.22rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-dim);
+}
+.app-card__cta {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.7rem;
+  border-radius: var(--radius-s);
+  background: var(--color-pixel);
+  padding: 0.6rem 1.05rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #fff;
+  transition: filter 0.2s ease;
+}
+.app-card:hover .app-card__cta {
+  filter: brightness(1.08);
+}
+.app-card__flecha {
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.app-card:hover .app-card__flecha {
+  transform: translateX(3px);
+}
+/* enlace estirado: la tarjeta entera es oprimible */
+.app-card__enlace {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-m);
+}
+.app-card__enlace:focus-visible {
+  outline: 2px solid var(--color-pixel);
+  outline-offset: 3px;
+}
+
+/* == escuchacomprendiendo.IA: entrada, condiciones, carcasa de app y grafo (2026-09-23) ==
+   Samuel: al entrar, explicacion muy concreta y la demo justo debajo; un desplegable con las
+   condiciones (la demo procesa MENOS que la app descargada); y el resultado dentro de algo
+   que se parezca a la aplicacion que se descarga, porque ahi es donde se entiende la logica.
+   ==================================================================================== */
+.escucha-intro {
+  margin-top: 1.75rem;
+  max-width: 62ch;
+}
+.escucha-intro__titulo {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+.escucha-intro__lista {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.9rem;
+}
+.escucha-intro__punto {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 0.7rem;
+}
+.escucha-intro__num {
+  grid-row: 1 / span 2;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--color-pixel);
+}
+.escucha-intro__punto b {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-ink);
+}
+.escucha-intro__punto > span:last-child {
+  font-size: 0.94rem;
+  line-height: 1.55;
+  color: var(--color-dim);
+}
+.escucha-intro__obsidian {
+  margin-top: 1.1rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-s);
+  border-left: 3px solid var(--color-pixel);
+  background: color-mix(in srgb, var(--color-pixel) 7%, transparent);
+  font-size: 0.94rem;
+  line-height: 1.55;
+  color: var(--color-ink);
+}
+
+.escucha-condiciones {
+  margin-top: 1.5rem;
+  max-width: 62ch;
+  border-radius: var(--radius-s);
+  border: 1px dashed var(--color-line);
+  padding: 0.7rem 1rem;
+}
+.escucha-condiciones > summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--color-pixel-soft);
+  list-style: none;
+}
+.escucha-condiciones > summary::-webkit-details-marker {
+  display: none;
+}
+.escucha-condiciones > summary::after {
+  content: " +";
+}
+.escucha-condiciones[open] > summary::after {
+  content: " –";
+}
+.escucha-condiciones ul {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+  padding-left: 1.1rem;
+  list-style: disc;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--color-dim);
+}
+
+/* la carcasa: ventana de escritorio */
+.app-shell {
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+  box-shadow: 0 28px 60px -40px color-mix(in srgb, var(--color-ink) 60%, transparent);
+}
+.app-shell__barra {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.85rem;
+  background: linear-gradient(135deg, #2c2059, #171029);
+  color: #fff;
+}
+.app-shell__semaforo {
+  display: inline-flex;
+  gap: 0.3rem;
+}
+.app-shell__semaforo i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+.app-shell__semaforo i:first-child {
+  background: #f5b400;
+}
+.app-shell__titulo {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  opacity: 0.92;
+  overflow-wrap: anywhere;
+}
+.app-shell__etiqueta {
+  margin-left: auto;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 0.1rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+.app-shell__cuerpo {
+  display: grid;
+}
+@media (min-width: 760px) {
+  .app-shell__cuerpo {
+    grid-template-columns: 13.5rem minmax(0, 1fr);
+  }
+}
+.app-shell__lateral {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  padding: 0.9rem;
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-surface-2);
+}
+@media (min-width: 760px) {
+  .app-shell__lateral {
+    border-bottom: 0;
+    border-right: 1px solid var(--color-line);
+  }
+}
+.app-shell__grupo {
+  margin-top: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+.app-shell__proyecto {
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+.app-shell__notas {
+  display: grid;
+  gap: 0.2rem;
+}
+.app-shell__notas li {
+  padding: 0.25rem 0.4rem;
+  border-radius: var(--radius-s);
+  background: color-mix(in srgb, var(--color-pixel) 8%, transparent);
+  font-size: 0.82rem;
+  color: var(--color-ink);
+}
+.app-shell__nota-pie {
+  margin-top: 0.9rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--color-dim);
+}
+.app-shell__principal {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+}
+.app-shell__pestanas {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 0.6rem 0;
+  border-bottom: 1px solid var(--color-line);
+}
+.app-shell__pestana {
+  border-radius: var(--radius-s) var(--radius-s) 0 0;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  padding: 0.42rem 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--color-dim);
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+.app-shell__pestana:hover {
+  color: var(--color-ink);
+}
+.app-shell__pestana.is-activa {
+  border-color: var(--color-line);
+  background: var(--color-surface);
+  color: var(--color-pixel-soft);
+  margin-bottom: -1px;
+}
+.app-shell__panel {
+  padding: 1.1rem;
+  min-width: 0;
+}
+.app-shell__transcripcion {
+  display: grid;
+}
+.app-shell__aviso {
+  margin-bottom: 0.7rem;
+  font-size: 0.8rem;
+  color: var(--color-dim);
+}
+.app-shell__texto {
+  max-height: 22rem;
+  overflow-y: auto;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface-2);
+  padding: 0.85rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--color-ink) 85%, transparent);
+}
+
+/* marcas de certeza: solo se marca lo que NO esta plenamente sostenido */
+.certeza {
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  white-space: nowrap;
+}
+.certeza--implicito {
+  background: color-mix(in srgb, var(--color-data) 14%, transparent);
+  color: var(--color-data);
+}
+.certeza--incierto {
+  background: color-mix(in srgb, var(--color-marketing) 30%, transparent);
+  color: var(--color-marketing-texto);
+}
+
+/* el grafo */
+.escucha-grafo {
+  display: grid;
+  gap: 1rem;
+}
+.escucha-grafo__svg {
+  width: 100%;
+  height: auto;
+  color: var(--color-ink);
+  border-radius: var(--radius-s);
+  background:
+    radial-gradient(60% 60% at 50% 45%, color-mix(in srgb, var(--color-pixel) 8%, transparent), transparent 70%),
+    var(--color-surface-2);
+}
+.escucha-grafo__etiqueta {
+  fill: var(--color-ink);
+  font-family: var(--font-mono);
+}
+.escucha-grafo__pie {
+  display: grid;
+  gap: 0.75rem;
+}
+.escucha-grafo__leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-dim);
+}
+.escucha-grafo__leyenda li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.escucha-grafo__leyenda span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.escucha-grafo__relaciones {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.84rem;
+  color: var(--color-dim);
+}
+.escucha-grafo__relaciones li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.escucha-grafo__relaciones b {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.escucha-grafo__relaciones span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-pixel-soft);
+}

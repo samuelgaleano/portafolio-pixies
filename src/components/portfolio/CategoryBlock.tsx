@@ -7,7 +7,6 @@ import ProblemSolution from '@/components/exhibits/ProblemSolution';
 import ErpScrollytelling from '@/components/exhibits/ErpScrollytelling';
 import DataScrollytelling from '@/components/exhibits/DataScrollytelling';
 import AgentExhibit from '@/components/exhibits/AgentExhibit';
-import AppsShowcase from '@/components/exhibits/AppsShowcase';
 
 export default function CategoryBlock({ category }: { category: Category }) {
   // Mejor 1 caso real que 7 esqueletos: las tarjetas sin nombre real no se muestran.
@@ -30,8 +29,6 @@ export default function CategoryBlock({ category }: { category: Category }) {
         <DataScrollytelling />
       ) : category.exhibit === 'agent-replay' ? (
         <AgentExhibit />
-      ) : category.exhibit === 'product-demo' ? (
-        <AppsShowcase />
       ) : items.length === 0 ? (
         // estado vacío DISEÑADO que convierte: el hueco se vuelve puerta a WhatsApp
         <div className="grid-bg mt-6 rounded-(--radius-m) border border-dashed border-line px-6 py-12">

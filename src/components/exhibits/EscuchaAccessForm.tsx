@@ -49,8 +49,8 @@ export default function EscuchaAccessForm() {
 
   const waUrl = buildWhatsAppUrl(site.whatsapp, {
     nombre: 'Samuel',
-    tipoProyecto: 'Producto propio (escuchacomprendiendo.ai)',
-    mensaje: 'Vi la demo de escuchacomprendiendo.ai en el portafolio. ¿Me compartes el código de acceso para la app de escritorio?',
+    tipoProyecto: 'Producto propio (escuchacomprendiendo.IA)',
+    mensaje: 'Vi la demo de escuchacomprendiendo.IA en el portafolio. ¿Me compartes el código de acceso para la app de escritorio?',
   });
 
   return (

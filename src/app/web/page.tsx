@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import SchemaOrg from '@/components/seo/SchemaOrg';
 import Hero from '@/components/hero/Hero';
+import AplicacionesSection from '@/components/apps/AplicacionesSection';
 import PortfolioSection from '@/components/portfolio/PortfolioSection';
 import Statement from '@/components/cta/Statement';
 import MidCta from '@/components/cta/MidCta';
@@ -30,6 +31,9 @@ export default function WebPage() {
     <>
       <SchemaOrg type="organization" />
       <Hero />
+
+      {/* Aplicaciones propias ARRIBA, no enterradas en el portafolio (Samuel, 2026-09-23) */}
+      <AplicacionesSection />
 
       <PortfolioSection />
 

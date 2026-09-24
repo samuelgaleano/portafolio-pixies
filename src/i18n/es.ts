@@ -108,6 +108,20 @@ export const es = {
     erpSolution: 'La solución',
     psHint: 'ver la solución →',
   },
+  // Sección directa de aplicaciones propias, arriba en /web (Samuel, 2026-09-23). El título es
+  // "Aplicaciones" y "by Pixies" va DEBAJO, como una firma — no "Aplicaciones by Pixies" en
+  // una sola línea.
+  apps: {
+    eyebrow: '/aplicaciones',
+    titulo: 'Aplicaciones',
+    by: 'by Pixies',
+    intro: 'Software propio, no encargos. Se prueba gratis en el navegador y se descarga para trabajar en tu computador.',
+    notas: [
+      { titulo: 'Se prueban antes de pedir nada', cuerpo: 'La demo corre aquí mismo, con tu propio audio y sin registro.' },
+      { titulo: 'La versión completa es de escritorio', cuerpo: 'Se descarga para Windows y trabaja contra tus archivos, en tu máquina.' },
+      { titulo: 'Nacen de un problema real', cuerpo: 'Se construyeron para usarlas a diario dentro de Pixies; por eso están en producción y no en una presentación.' },
+    ],
+  },
   escucha: {
     tabCurada: 'Ejemplo real',
     tabVivo: 'Prueba con tu audio',
@@ -124,7 +138,7 @@ export const es = {
     stageTranscribir: 'Transcribiendo',
     stageTranscribirDesc: 'Convirtiendo tu audio en texto, con Groq.',
     stageEstructurar: 'Estructurando',
-    stageEstructurarDesc: 'Sacando conceptos, decisiones y tareas citadas.',
+    stageEstructurarDesc: 'Sacando conceptos, decisiones y tareas citadas, y armando el grafo que las conecta.',
     errorFormato: 'Formato no soportado — usa .mp3, .m4a, .wav, .webm u .ogg.',
     errorTamano: 'El archivo pesa más de 4 MB — prueba con un audio más corto.',
     errorGenerico: 'Algo falló al procesar el audio. Inténtalo de nuevo.',
@@ -151,8 +165,52 @@ export const es = {
     accessErrorRate: 'Demasiados intentos seguidos — espera unos minutos.',
     accessErrorGenerico: 'Algo falló. Inténtalo de nuevo.',
     accessSolicitar: '¿No tienes uno? Pídemelo por WhatsApp →',
+    // Entrada de la página de la app (Samuel, 2026-09-23): "cuando se entra, una explicación
+    // muy concreta de lo que hace, y justo abajo ya la demo". Tres puntos, ni uno más.
+    introQue: 'Qué hace, en concreto',
+    introPuntos: [
+      {
+        titulo: 'No se queda en transcribir',
+        cuerpo: 'Un transcriptor te devuelve el texto. Aquí ese texto se parte en piezas —conceptos, decisiones, tareas, riesgos y lo que quedó en duda— cada una con el segundo exacto en que se dijo.',
+      },
+      {
+        titulo: 'Las conecta entre sí',
+        cuerpo: 'Arma el grafo de lo que dijiste: qué tiene que ver con qué. En la app de escritorio ese grafo crece con cada audio y se acumula por proyecto: es el segundo cerebro.',
+      },
+      {
+        titulo: 'Dice de qué se fía',
+        cuerpo: 'Marca lo que se afirmó, lo que solo se deduce y lo que quedó en el aire, en vez de presentarlo todo con la misma seguridad. Es lo que evita que el resumen te invente certezas.',
+      },
+    ],
+    introObsidian:
+      'Piénsalo como Obsidian con esteroides, combinado con un transcriptor: las notas enlazadas del primero, el audio del segundo, y un motor propio de IA que arma los enlaces por ti y prepara el contexto para dárselo a otra IA sin que alucine.',
+    // Desplegable de condiciones: la demo procesa MENOS que la app descargada y hay que
+    // decirlo, no esconderlo (regla de la casa: no prometemos lo que no controlamos).
+    condicionesTitulo: 'Condiciones de esta demo',
+    condiciones: [
+      'Procesa los primeros 90 segundos y hasta 4 MB de audio. La app de escritorio no tiene ese tope.',
+      'Corre sobre modelos abiertos en la nube, en su capa gratuita. La app de escritorio trabaja con un motor más potente y contra tus propios archivos.',
+      'Cada prueba arranca de cero: aquí no hay proyecto que acumule. En la app, cada audio nuevo se enlaza con lo que ya tenías.',
+      'El audio no se guarda: se procesa en memoria y se descarta al responder.',
+      'Hay un tope de intentos seguidos para que la demo siga siendo gratis para todo el mundo.',
+    ],
+    // Carcasa tipo app de escritorio y vistas del resultado (Samuel, 2026-09-23)
+    shellTitulo: 'escuchacomprendiendo.IA',
+    shellDemo: 'demo en el navegador',
+    shellLateral: 'Proyecto y notas',
+    shellProyectos: 'Proyectos',
+    shellProyectoActual: '▸ Prueba desde la web',
+    shellNotas: 'Notas de este audio',
+    shellAcumula: 'En la app de escritorio cada audio nuevo entra a un proyecto y se enlaza con lo que ya había. Aquí la prueba arranca vacía cada vez.',
+    shellVistas: 'Vistas del resultado',
+    vistaGrafo: 'Grafo',
+    vistaContexto: 'Contexto',
+    vistaTranscripcion: 'Transcripción',
+    transcripcionAviso: 'Esto es lo que devuelve un transcriptor. Es la materia prima, no el resultado: el valor está en las otras dos pestañas.',
     demoHeading: 'Pruébala en el navegador',
     appEnter: 'Entrar a la app →',
+    // sin flecha: en la tarjeta la flecha es un <span> aparte que se anima al hover
+    appEnterCorto: 'Entrar a la app',
     appEnterAria: 'probar en vivo o descargar',
     appEyebrow: '/aplicaciones · by Pixies',
     appBack: '← Volver a las aplicaciones',
@@ -332,7 +390,7 @@ export const es = {
       chip1n: '45/240',
       chip1t: 'módulos y tablas del ERP',
       chip2n: '1.0.1',
-      chip2t: 'escuchacomprendiendo.ai',
+      chip2t: 'escuchacomprendiendo.IA',
       cta: 'Ver el portafolio',
       href: '/web',
     },
@@ -361,7 +419,7 @@ export const es = {
     ],
     cierreTitle: 'Y lo que aprendemos vuelve a entrar',
     cierreBody:
-      'Reuniones, entrevistas y notas de voz se convierten en contexto citado con escuchacomprendiendo.ai, nuestra propia aplicación. Ese conocimiento alimenta la siguiente campaña y el siguiente sistema.',
+      'Reuniones, entrevistas y notas de voz se convierten en contexto citado con escuchacomprendiendo.IA, nuestra propia aplicación. Ese conocimiento alimenta la siguiente campaña y el siguiente sistema.',
     cierreCta: 'Probar la aplicación →',
     cierreHref: '/aplicaciones/escuchacomprendiendo-ai',
     cta: 'Cuéntanos tu caso',

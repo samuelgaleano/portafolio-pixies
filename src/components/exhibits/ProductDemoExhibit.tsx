@@ -7,7 +7,7 @@ import EscuchaCuratedTour from './EscuchaCuratedTour';
 import EscuchaLiveDemo from './EscuchaLiveDemo';
 import EscuchaAccessForm from './EscuchaAccessForm';
 
-// Experiencia completa de escuchacomprendiendo.ai — vive en su página propia
+// Experiencia completa de escuchacomprendiendo.IA — vive en su página propia
 // (/aplicaciones/escuchacomprendiendo-ai), NO en la home (§ pedido de Samuel: la home solo
 // muestra la tarjeta-teaser). Dos pestañas: un ejemplo real ya procesado (siempre funciona,
 // sin red) y una demo en vivo real pero limitada. Si el ejemplo curado todavía no está listo,
@@ -20,7 +20,10 @@ export default function ProductDemoExhibit() {
       {/* Outline: h1 (nombre de la app) → h2 (este bloque) → h3 (áreas del resultado).
           Visualmente las pestañas ya lo dicen; el h2 es para lectores de pantalla y crawlers. */}
       <h2 className="sr-only">{t.escucha.demoHeading}</h2>
-      <div role="tablist" className="flex gap-2">
+      {/* Sin ejemplo curado no hay nada que elegir: mostrar una pestaña "Ejemplo real" que
+          lleva a "en preparación" promete contenido que no existe (Samuel, 2026-09-23: "de
+          una vez llega como demo"). Cuando example.ready pase a true, las pestañas vuelven. */}
+      <div role="tablist" className={`flex gap-2${escuchaProduct.example.ready ? '' : ' hidden'}`}>
         <button
           type="button"
           role="tab"

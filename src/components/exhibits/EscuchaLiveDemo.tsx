@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { t } from '@/i18n';
-import EscuchaResultView from './EscuchaResultView';
+import EscuchaAppShell from './EscuchaAppShell';
 import type { EscuchaStructured, TranscriptSegment } from '@/lib/escucha';
 
 type Status =
@@ -217,8 +217,9 @@ export default function EscuchaLiveDemo({ onFallbackToCurated }: { onFallbackToC
       {status === 'resultado' && structured && (
         <>
           <audio ref={audioRef} src={objectUrl ?? undefined} controls className="w-full" />
-          <EscuchaResultView
+          <EscuchaAppShell
             structured={structured}
+            transcript={transcript}
             onCiteClick={(s) => {
               if (audioRef.current) audioRef.current.currentTime = s;
             }}

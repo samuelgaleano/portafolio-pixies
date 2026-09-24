@@ -19,8 +19,12 @@ export interface Category {
   /** Ícono en píxeles 5×5 (mismo lenguaje del wordmark), una fila por string. */
   icono: string[];
   projectType: string; // valor para el select del lead form
-  exhibit?: 'erp-tour' | 'agent-replay' | 'data-tour' | 'product-demo'; // si existe, se renderiza la isla en vez de tarjetas
+  exhibit?: 'erp-tour' | 'agent-replay' | 'data-tour'; // si existe, se renderiza la isla en vez de tarjetas
   preview?: string; // imagen representativa que aparece al hover del tile del launcher
+  /** La categoría NO se apila dentro del portafolio: tiene su propia sección arriba de /web y
+   * el catálogo sigue enlazándola por su ancla (Samuel, 2026-09-23: "está muy abajo, cuando
+   * lleguen ahí ya van a estar saturados; quiero que sea una sección directa al inicio"). */
+  seccionPropia?: true;
 }
 
 export const categories: Category[] = [
@@ -101,7 +105,7 @@ export const categories: Category[] = [
     heroLabel: 'apps by pixies',
     title: 'Aplicaciones by Pixies',
     description: 'Herramientas que construí para mi propio uso — entra, pruébalas en vivo o descárgalas.',
-    projectType: 'Producto propio (escuchacomprendiendo.ai)',
-    exhibit: 'product-demo',
+    projectType: 'Producto propio (escuchacomprendiendo.IA)',
+    seccionPropia: true,
   },
 ];
