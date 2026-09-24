@@ -9,6 +9,11 @@ export interface Post {
   slug: string;
   title: string;
   description: string;
+  // 2026-09-24 (auditoría SEO): opcional. El `title` es el H1 — puede ser largo y llamativo.
+  // El `<title>` de la pestaña lleva además " — Foro de Samuel" y Google lo trunca pasados
+  // ~60 caracteres; cuando el título es largo, `seoTitle` da una versión corta solo para eso.
+  // Si falta, se usa `title` tal cual (la mayoría de posts no lo necesita).
+  seoTitle?: string;
   pubDate: Date;
   tags?: string[];
   draft: boolean;
@@ -29,10 +34,13 @@ export function parsePost(raw: string, filename: string): Post {
   if (data.pubDate === undefined) invalid(filename, 'pubDate', 'es obligatorio');
   const pubDate = new Date(data.pubDate);
   if (Number.isNaN(pubDate.getTime())) invalid(filename, 'pubDate', 'no es una fecha válida');
+  if (data.seoTitle !== undefined && (typeof data.seoTitle !== 'string' || !data.seoTitle.trim()))
+    invalid(filename, 'seoTitle', 'si está presente no puede ser vacío');
   return {
     slug: filename.replace(/\.mdx?$/, ''),
     title: data.title,
     description: data.description,
+    seoTitle: data.seoTitle,
     pubDate,
     tags: data.tags,
     draft: Boolean(data.draft),

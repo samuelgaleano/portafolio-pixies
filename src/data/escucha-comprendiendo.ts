@@ -13,6 +13,11 @@ export interface EscuchaExample {
 export interface EscuchaProduct {
   tagline: string;
   descripcion: string;
+  // 2026-09-24 (auditoría SEO): `descripcion` vive en la página y puede ser larga; los
+  // metadatos (<meta description>, OG) tienen un tope real de ~155-160 caracteres antes de
+  // que Google la trunque a mitad de frase. Campo aparte para no forzar ese límite sobre el
+  // copy de la página.
+  metaDescripcion: string;
   example: EscuchaExample;
 }
 
@@ -24,6 +29,8 @@ export const escuchaProduct: EscuchaProduct = {
   // No promete "un ejemplo real" acá: eso lo anuncia la pestaña sola cuando example.ready sea true.
   descripcion:
     'Producto propio. Transcribe como Whisper, pero no se detiene ahí: un motor propio de IA arma el grafo de conceptos, decisiones, tareas y riesgos de cada audio, lo enlaza con lo que ya sabías y marca qué tan sostenida está cada afirmación. Entra y pruébalo con tu propio audio, o descárgalo para tu computador.',
+  metaDescripcion:
+    'Convierte audio en un grafo de contexto: conceptos, decisiones y tareas conectados, no solo transcritos. Pruébalo gratis en el navegador o descárgalo para Windows.',
   example: {
     ready: false,
     audioSrc: '',

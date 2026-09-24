@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = getPost(slug);
   if (!post) return {};
   return {
-    title: `${post.title} — Foro de Samuel`,
+    title: `${post.seoTitle ?? post.title} — Foro de Samuel`,
     description: post.description,
     alternates: { canonical: `/samuel/posts/${post.slug}` },
     openGraph: { type: 'article', title: post.title, description: post.description, publishedTime: post.pubDate.toISOString() },

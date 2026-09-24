@@ -474,8 +474,11 @@ export const es = {
   // las secciones internas (servicios, método, casos) conservan el copy del brief aprobado.
   marketing: {
     metaTitle: 'Pixies Creative · Advertising, branding y contenido con margen comprobado',
+    // 2026-09-24 (auditoría SEO): la descripción de 203 caracteres se truncaba a mitad de
+    // frase en el resultado de Google (tope real ~155-160). Versión corta solo para
+    // metadatos; el copy largo sigue en la página, en `servicios.intro` y el hero.
     metaDescription:
-      'Publicidad, marca y contenido medidos contra el margen real de cada producto, no contra los likes. Estrategia creativa, campañas, social media y pauta por datos para empresas y marcas personales jóvenes.',
+      'Publicidad, marca y contenido medidos contra el margen real, no contra los likes. Estrategia, campañas y social media por datos, para empresas y marcas jóvenes.',
     title: 'Pixies Creative',
     tagline: 'Advertising · Branding · Campaigns · Content · Social Media · Creative Strategy',
     tesis:

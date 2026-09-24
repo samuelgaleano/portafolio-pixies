@@ -15,7 +15,10 @@ import { t } from '@/i18n';
 // como vivía en la home antes de la bifurcación — mismo Hero, mismo portafolio, sin
 // reescribir nada. `/` ahora es la landing del grupo (Hero compartido + GrupoSplit).
 export const metadata: Metadata = {
-  title: 'Pixies Digital Web Design · Web design, data, AI y soluciones digitales',
+  // 2026-09-24 (auditoría SEO): el título tenía 71 caracteres y Google lo truncaba antes de
+  // "y soluciones digitales". La tagline completa sigue en el hero (`t.hero.tagline`); el
+  // <title> solo necesita el nombre y qué se construye, no el catálogo entero.
+  title: 'Pixies Digital Web Design · Páginas, ERP, datos e IA',
   description:
     'Software a medida que corre en producción: páginas web, ERP, análisis de datos, IA y ciberseguridad para PyMEs y medianas empresas. El código está en producción, no en Figma.',
   alternates: { canonical: '/web' },

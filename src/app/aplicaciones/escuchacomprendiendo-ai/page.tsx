@@ -4,6 +4,7 @@ import { appPath } from '@/data/apps';
 import { t } from '@/i18n';
 import ProductDemoExhibit from '@/components/exhibits/ProductDemoExhibit';
 import SubpageNav from '@/components/layout/SubpageNav';
+import SchemaOrg from '@/components/seo/SchemaOrg';
 
 // Página propia de escuchacomprendiendo.IA (§ pedido de Samuel): acá vive TODO lo interactivo
 // — ejemplo real, demo en vivo con audio propio o de muestra, y la descarga gateada. En la
@@ -12,15 +13,17 @@ const SLUG = 'escuchacomprendiendo-ai'; // = nombre de esta carpeta y del slug e
 
 export const metadata: Metadata = {
   title: 'escuchacomprendiendo.IA — de audio a contexto conectado',
-  // La descripción sale del producto (dueño único): así el buscador, la tarjeta y la página
-  // cuentan lo mismo, y cambiar el posicionamiento se hace en un solo sitio.
-  description: escuchaProduct.descripcion,
+  // La descripción de METADATOS sale del producto (dueño único) pero es la versión CORTA:
+  // la larga (`descripcion`) vive en la página; `<meta description>` la trunca a mitad de
+  // frase pasados ~160 caracteres, así que usa su propio campo (auditoría SEO, 2026-09-24).
+  description: escuchaProduct.metaDescripcion,
   alternates: { canonical: appPath(SLUG) },
 };
 
 export default function EscuchaComprendiendoPage() {
   return (
     <article className="mx-auto w-full max-w-[960px] px-4 pt-28 pb-20 sm:px-6">
+      <SchemaOrg type="softwareApplication" appSlug={SLUG} />
       <p className="font-mono text-sm text-data">{t.escucha.appEyebrow}</p>
       {/* El nombre es UNA palabra de 23 caracteres sin punto de quiebre: --text-hero (piso 36px)
           la desbordaba en todo móvil. Tamaño fluido calibrado para caber en una línea a 320px,

@@ -285,3 +285,13 @@ test('glifo C/W: morph progresivo celda por celda al hover del panel', async ({ 
   await panel.hover();
   await expect(celdasIn.last()).toHaveCSS('opacity', '1', { timeout: 2000 });
 });
+
+// Auditoría SEO 2026-09-24: el informe técnico de Saber 11 no llevaba structured data.
+test('informe de Saber 11: lleva Article en JSON-LD', async ({ page }) => {
+  await page.goto('/proyectos/analisis-saber11');
+  const bloques = await page.locator('script[type="application/ld+json"]').allTextContents();
+  const art = bloques.map((b) => JSON.parse(b)).find((d) => d['@type'] === 'Article');
+  expect(art).toBeTruthy();
+  expect(art.headline).toBeTruthy();
+  expect(art.author).toMatchObject({ name: 'Samuel Galeano' });
+});

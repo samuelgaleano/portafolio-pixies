@@ -271,3 +271,22 @@ test('el resultado se muestra como la app: grafo por defecto, contexto marcado y
   await expect(page.getByText('texto crudo del transcriptor')).toBeVisible();
   await expect(page.getByText(/Es la materia prima, no el resultado/)).toBeVisible();
 });
+
+// Auditoría SEO 2026-09-24: la página del producto no llevaba NINGÚN structured data. Se usa
+// el navegador real (no fetch/curl) a propósito — el skill de auditoría SEO del arsenal
+// advierte que ese JSON-LD lo inyecta React en el cliente y curl nunca lo vería.
+test('la página de la app lleva SoftwareApplication en JSON-LD, sin rating inventado', async ({ page }) => {
+  await page.goto('/aplicaciones/escuchacomprendiendo-ai');
+  const bloques = await page.locator('script[type="application/ld+json"]').allTextContents();
+  const app = bloques.map((b) => JSON.parse(b)).find((d) => d['@type'] === 'SoftwareApplication');
+  expect(app).toBeTruthy();
+  expect(app.name).toBe('escuchacomprendiendo.IA');
+  expect(app.operatingSystem).toBe('Windows');
+  expect(app.offers).toMatchObject({ price: '0' });
+  // nada de estrellas ni descargas inventadas: no existen y no se declaran
+  expect(app.aggregateRating).toBeUndefined();
+
+  // el <title> de la pestaña cabe en un resultado de búsqueda sin truncarse a mitad de frase
+  const title = await page.title();
+  expect(title.length).toBeLessThanOrEqual(60);
+});

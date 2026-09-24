@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { dataTour, dataFacts as f } from '@/data/data-tour';
 import SubpageNav from '@/components/layout/SubpageNav';
+import SchemaOrg from '@/components/seo/SchemaOrg';
+import { site } from '@/data/site';
 
 // Informe completo del análisis Saber 11 (ICFES 2015-1) hecho en R. TODAS las cifras
 // vienen de dataFacts (misma fuente que el tour de la home): un número, un lugar.
@@ -87,6 +89,14 @@ export default function InformeSaber11() {
   const [sLimpieza, sDistribucion, sBrecha, sCorrelacion, sRegresion] = dataTour.steps;
   return (
     <article className="mx-auto w-full max-w-[860px] px-4 pt-28 pb-20 sm:px-6">
+      <SchemaOrg
+        type="article"
+        article={{
+          title: dataTour.name,
+          description: dataTour.tagline,
+          url: `${site.url}/proyectos/analisis-saber11`,
+        }}
+      />
       <p className="font-mono text-sm text-data">/proyectos · analítica de datos · R</p>
       <h1 className="mt-3 font-display text-hero font-bold text-ink">{dataTour.name}</h1>
       <p className="mt-5 max-w-2xl text-lg text-dim">{dataTour.tagline}</p>
